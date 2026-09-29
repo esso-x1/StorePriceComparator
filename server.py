@@ -1,7 +1,8 @@
 import os
 from typing import List, Optional
 from fastapi import FastAPI, Query
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from aggregator import PriceAggregator
 from stores.sams_shop import SamsShopAdapter
@@ -18,7 +19,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize Aggregator with ALL stores (Active + Pending/Offline)
+os.makedirs("static", exist_ok=True)
+os.makedirs("static/icons", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+@app.get("/manifest.json")
+def get_manifest():
+    return FileResponse("static/manifest.json", media_type="application/manifest+json")
+
+@app.get("/sw.js")
+def get_sw():
+    return FileResponse("static/sw.js", media_type="application/javascript")
+
+# Initialize Aggregator with ALL stores
 aggregator = PriceAggregator()
 
 # 11 Active Connected Stores
@@ -110,30 +123,45 @@ def index():
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>مقارن أسعار المتاجر الرقمية | Store Price Aggregator</title>
+  
+  <!-- Apple & PWA Meta Tags -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#070a13" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="StorePrices" />
+  <link rel="apple-touch-icon" href="/static/icons/icon-192.png" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg: #090d16;
-      --sidebar-bg: #0d1322;
-      --card-bg: rgba(20, 29, 48, 0.85);
-      --card-border: rgba(45, 65, 100, 0.4);
-      --accent: #3b82f6;
-      --accent-glow: rgba(59, 130, 246, 0.25);
+      --bg: #070a13;
+      --glass-surface: rgba(22, 28, 48, 0.65);
+      --glass-surface-hover: rgba(30, 41, 68, 0.8);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-focus: rgba(0, 113, 227, 0.6);
+      --glass-blur: blur(28px) saturate(190%);
+      --apple-blue: #0071e3;
+      --apple-blue-glow: rgba(0, 113, 227, 0.35);
       --green: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.2);
-      --gold: #f59e0b;
-      --red: #ef4444;
+      --green-glow: rgba(16, 185, 129, 0.25);
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    
     body {
-      font-family: 'Cairo', sans-serif;
-      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Cairo', sans-serif;
+      background: radial-gradient(circle at 12% 10%, rgba(0, 113, 227, 0.16) 0%, transparent 45%),
+                  radial-gradient(circle at 88% 88%, rgba(168, 85, 247, 0.14) 0%, transparent 45%),
+                  var(--bg);
+      background-attachment: fixed;
       color: var(--text);
       min-height: 100vh;
       display: flex;
@@ -145,28 +173,32 @@ def index():
       display: flex;
       width: 100%;
       min-height: 100vh;
+      position: relative;
     }
 
-    /* Left Sidebar: Shows ALL Stores */
+    /* Left Sidebar: Apple Glass Sidebar */
     .sidebar {
       width: 320px;
       min-width: 320px;
-      background: var(--sidebar-bg);
-      border-left: 1px solid var(--card-border);
+      background: rgba(13, 17, 28, 0.75);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border-left: 1px solid var(--glass-border);
       padding: 1.8rem 1.4rem;
       display: flex;
       flex-direction: column;
       gap: 1.2rem;
-      box-shadow: -4px 0 25px rgba(0,0,0,0.4);
-      z-index: 20;
+      box-shadow: -4px 0 30px rgba(0,0,0,0.5);
+      z-index: 30;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .sidebar-header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
       padding-bottom: 1rem;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--glass-border);
     }
     .sidebar-header h2 {
       font-size: 1.15rem;
@@ -180,28 +212,29 @@ def index():
       gap: 0.65rem;
       flex: 1;
       overflow-y: auto;
+      padding-right: 2px;
     }
     .store-item {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
       padding: 0.75rem 0.9rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.2s;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
       cursor: pointer;
       user-select: none;
     }
     .store-item:hover {
-      background: rgba(59, 130, 246, 0.12);
-      border-color: var(--accent);
+      background: rgba(0, 113, 227, 0.15);
+      border-color: rgba(0, 113, 227, 0.5);
       transform: translateX(-3px);
     }
     .store-item.selected {
-      background: rgba(59, 130, 246, 0.22);
-      border-color: var(--accent);
-      box-shadow: 0 0 16px var(--accent-glow);
+      background: rgba(0, 113, 227, 0.25);
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 16px var(--apple-blue-glow);
     }
     .store-info {
       display: flex;
@@ -219,7 +252,7 @@ def index():
       box-shadow: 0 0 10px var(--green);
     }
     .status-dot.offline {
-      background: var(--red);
+      background: #ef4444;
       box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
     .store-name {
@@ -234,72 +267,111 @@ def index():
     .status-badge {
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 2px 7px;
-      border-radius: 6px;
+      padding: 3px 8px;
+      border-radius: 8px;
     }
     .status-badge.online {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--green);
-    }
-    .status-badge.offline {
-      background: rgba(239, 68, 68, 0.15);
-      color: #f87171;
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
     }
 
     /* Main Content */
     .main-content {
       flex: 1;
-      padding: 2.2rem 2.5rem;
+      padding: 2.2rem 2.5rem 6rem;
       max-width: 1100px;
       margin: 0 auto;
       overflow-y: auto;
     }
 
     header {
-      margin-bottom: 2rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
     }
     h1 {
-      font-size: 2.2rem;
+      font-size: 2.1rem;
       font-weight: 900;
-      margin-bottom: 0.4rem;
-      background: linear-gradient(135deg, #60a5fa, #38bdf8, #a855f7);
+      margin-bottom: 0.3rem;
+      background: linear-gradient(135deg, #ffffff 0%, #93c5fd 60%, #60a5fa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
     }
     p.subtitle {
       color: var(--text-muted);
-      font-size: 0.98rem;
+      font-size: 0.95rem;
     }
 
-    /* Search Box */
+    /* Top Action Bar (Push Notifications & Install PWA) */
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .apple-glass-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .apple-glass-pill:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-1px);
+    }
+    .apple-glass-pill.active {
+      background: rgba(16, 185, 129, 0.18);
+      color: #34d399;
+      border-color: rgba(16, 185, 129, 0.4);
+    }
+
+    /* Search Box: Apple Liquid Glass */
     .search-box {
       position: relative;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
     .search-box input {
       width: 100%;
-      padding: 1.15rem 1.4rem 1.15rem 3.6rem;
-      border-radius: 16px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      padding: 1.2rem 1.4rem 1.2rem 3.8rem;
+      border-radius: 22px;
+      background: rgba(22, 28, 48, 0.65);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
       color: #fff;
       font-size: 1.15rem;
       font-family: inherit;
       outline: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .search-box input:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 4px var(--accent-glow);
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 4px var(--apple-blue-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     .search-icon {
       position: absolute;
       left: 1.4rem;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       pointer-events: none;
+      opacity: 0.7;
     }
 
     /* Quick tags */
@@ -310,30 +382,35 @@ def index():
       margin-bottom: 2rem;
     }
     .tag {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid var(--card-border);
-      padding: 0.35rem 0.95rem;
-      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
       font-size: 0.85rem;
       cursor: pointer;
       color: var(--text-muted);
-      transition: all 0.15s ease;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .tag:hover {
-      background: var(--accent-glow);
+      background: rgba(0, 113, 227, 0.2);
       color: #fff;
-      border-color: var(--accent);
+      border-color: var(--apple-blue);
+      transform: translateY(-1px);
     }
 
-    /* Store Feed / Notifications Panel */
+    /* Store Feed Panel */
     .store-feed-panel {
       display: none;
-      background: linear-gradient(180deg, rgba(20, 29, 48, 0.95) 0%, rgba(13, 19, 34, 0.98) 100%);
-      border: 1.5px solid var(--accent);
-      border-radius: 20px;
+      background: rgba(22, 28, 48, 0.75);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1.5px solid var(--apple-blue);
+      border-radius: 24px;
       padding: 1.8rem;
       margin-bottom: 2rem;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 25px rgba(59, 130, 246, 0.15);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px var(--apple-blue-glow);
       animation: fadeIn 0.25s ease-out;
     }
     .store-feed-panel.active { display: block; }
@@ -341,7 +418,7 @@ def index():
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--glass-border);
       padding-bottom: 1.2rem;
       margin-bottom: 1.5rem;
       flex-wrap: wrap;
@@ -353,8 +430,8 @@ def index():
       gap: 12px;
     }
     .feed-store-badge {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid var(--accent);
+      background: rgba(0, 113, 227, 0.2);
+      border: 1px solid var(--apple-blue);
       color: #93c5fd;
       padding: 3px 10px;
       border-radius: 8px;
@@ -365,7 +442,7 @@ def index():
       background: rgba(239, 68, 68, 0.15);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.35);
-      border-radius: 10px;
+      border-radius: 12px;
       padding: 0.5rem 1.1rem;
       cursor: pointer;
       font-weight: 800;
@@ -377,16 +454,17 @@ def index():
       transition: all 0.2s;
     }
     .feed-close-btn:hover {
-      background: rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.25);
       color: #fff;
-      transform: scale(1.02);
     }
 
     /* Stores Availability Summary */
     .stores-found-banner {
-      background: rgba(30, 41, 59, 0.7);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
+      background: rgba(22, 28, 48, 0.65);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
       padding: 1rem 1.25rem;
       margin-bottom: 1.8rem;
       display: none;
@@ -410,8 +488,8 @@ def index():
       flex-wrap: wrap;
     }
     .store-chip {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.35);
+      background: rgba(0, 113, 227, 0.18);
+      border: 1px solid rgba(0, 113, 227, 0.4);
       color: #93c5fd;
       padding: 3px 10px;
       border-radius: 8px;
@@ -419,66 +497,74 @@ def index():
       font-weight: 600;
     }
 
-    /* Best deal banner */
+    /* Best deal banner: Apple Liquid Glass Glow */
     .best-banner {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(59, 130, 246, 0.15));
-      border: 2px solid rgba(16, 185, 129, 0.6);
-      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(0, 113, 227, 0.12) 100%);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1.5px solid rgba(16, 185, 129, 0.5);
+      border-radius: 22px;
       padding: 1.5rem 1.8rem;
       margin-bottom: 2rem;
       display: none;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+      box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      gap: 15px;
+      flex-wrap: wrap;
     }
     .best-banner.active { display: flex; }
     .best-badge {
       display: inline-block;
       background: var(--green);
-      color: #000;
+      color: #022c22;
       font-weight: 800;
       font-size: 0.75rem;
-      padding: 2px 10px;
+      padding: 3px 10px;
       border-radius: 6px;
       margin-bottom: 0.5rem;
     }
     .best-name { font-size: 1.35rem; font-weight: 800; color: #fff; }
-    .best-details { font-size: 0.9rem; color: #cbd5e1; margin-top: 4px; display: flex; gap: 15px; }
+    .best-details { font-size: 0.9rem; color: #cbd5e1; margin-top: 4px; display: flex; gap: 15px; flex-wrap: wrap; }
     .best-price {
       font-family: 'JetBrains Mono', monospace;
       font-size: 2.1rem;
       font-weight: 900;
-      color: var(--green);
+      color: #34d399;
       text-align: left;
     }
 
     /* Products Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.3rem;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 1.4rem;
     }
 
-    /* Item Card according to user requirements */
+    /* Apple Liquid Glass Product Card */
     .product-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 1.5rem;
+      background: var(--glass-surface);
+      backdrop-filter: var(--glass-blur);
+      -webkit-backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 1.4rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .product-card:hover {
       transform: translateY(-4px);
-      border-color: rgba(96, 165, 250, 0.6);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 16px 40px rgba(0, 113, 227, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
     }
     .product-card.is-cheapest {
-      border: 2px solid var(--green);
-      background: linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, var(--card-bg) 40%);
+      border: 1.5px solid var(--green);
+      background: linear-gradient(180deg, rgba(16, 185, 129, 0.12) 0%, rgba(22, 28, 48, 0.75) 45%);
     }
 
     .card-top-badge {
@@ -486,38 +572,78 @@ def index():
       top: 1rem;
       left: 1rem;
       background: var(--green);
-      color: #000;
+      color: #022c22;
       font-size: 0.72rem;
       font-weight: 800;
       padding: 3px 10px;
-      border-radius: 6px;
+      border-radius: 9999px;
+      box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
     }
 
+    /* Product Header with Image and Details */
+    .card-header-flex {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 1.1rem;
+    }
+    .product-img-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+    .product-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+    }
+    .product-main-meta {
+      flex: 1;
+      min-width: 0;
+    }
     .store-label {
       display: inline-block;
-      background: rgba(59, 130, 246, 0.15);
+      background: rgba(0, 113, 227, 0.18);
+      border: 1px solid rgba(0, 113, 227, 0.35);
       color: #93c5fd;
       border-radius: 8px;
-      padding: 3px 9px;
-      font-size: 0.8rem;
+      padding: 2px 8px;
+      font-size: 0.78rem;
       font-weight: 700;
-      margin-bottom: 0.9rem;
-    }
-
-    /* Specified format by user */
-    .item-row {
-      margin-bottom: 0.6rem;
-      line-height: 1.5;
-    }
-    .item-label {
-      font-weight: 800;
-      color: #e2e8f0;
-      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
     }
     .item-value-name {
-      font-size: 1.12rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: #fff;
+      line-height: 1.35;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Item Details Rows */
+    .item-row {
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .item-label {
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 0.85rem;
     }
     .item-value-price {
       font-family: 'JetBrains Mono', monospace;
@@ -526,44 +652,52 @@ def index():
       color: #38bdf8;
     }
     .item-value-stock {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       font-weight: 700;
       color: #a7f3d0;
     }
     .item-value-date {
-      font-size: 0.82rem;
+      font-size: 0.78rem;
       color: #94a3b8;
       font-family: 'JetBrains Mono', monospace;
     }
 
     .card-footer {
-      margin-top: 1.2rem;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 1.1rem;
+      padding-top: 0.9rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
     }
-    .buy-btn {
-      background: var(--accent);
+
+    /* Apple Pill Button */
+    .apple-btn {
+      background: linear-gradient(135deg, #0071e3 0%, #38bdf8 100%);
       color: #fff;
-      text-decoration: none;
-      padding: 0.55rem 1.3rem;
-      border-radius: 10px;
+      border: none;
+      padding: 0.62rem 1.4rem;
+      border-radius: 9999px;
       font-weight: 800;
-      font-size: 0.9rem;
-      transition: opacity 0.15s, transform 0.15s;
+      font-size: 0.92rem;
+      font-family: inherit;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 6px;
+      text-decoration: none;
+      box-shadow: 0 4px 15px rgba(0, 113, 227, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
     }
-    .buy-btn:hover {
-      opacity: 0.9;
+    .apple-btn:hover {
       transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 113, 227, 0.6);
     }
-    .buy-btn.cheapest-btn {
-      background: var(--green);
-      color: #000;
+    .apple-btn.cheapest-btn {
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      color: #022c22;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
     }
 
     .initial-prompt {
@@ -588,43 +722,143 @@ def index():
       padding: 4rem 0;
       font-size: 1.2rem;
     }
+
+    /* Floating Mobile Glass Dock (Apple Style) */
+    .mobile-glass-dock {
+      display: none;
+      position: fixed;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 30px);
+      max-width: 480px;
+      background: rgba(18, 24, 40, 0.82);
+      backdrop-filter: blur(30px) saturate(200%);
+      -webkit-backdrop-filter: blur(30px) saturate(200%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 28px;
+      padding: 0.6rem 1rem;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      z-index: 99;
+      justify-content: space-around;
+      align-items: center;
+    }
+    .dock-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .dock-item:hover, .dock-item.active {
+      color: #fff;
+    }
+    .dock-item.active {
+      color: #38bdf8;
+    }
+    .dock-item .dock-icon {
+      font-size: 1.35rem;
+    }
+
+    /* iOS Install Modal */
+    .ios-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .ios-modal.active { display: flex; }
+    .ios-modal-card {
+      background: rgba(22, 28, 48, 0.95);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      max-width: 400px;
+      width: 100%;
+      padding: 1.8rem;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .sidebar {
+        position: fixed;
+        right: -320px;
+        top: 0;
+        bottom: 0;
+      }
+      .sidebar.open {
+        transform: translateX(-320px);
+      }
+      .main-content {
+        padding: 1.4rem 1.2rem 6.5rem;
+      }
+      .mobile-glass-dock {
+        display: flex;
+      }
+      h1 {
+        font-size: 1.6rem;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="app-layout">
     
-    <!-- Left Sidebar: Shows ALL Stores (Active and Inactive) -->
-    <aside class="sidebar">
+    <!-- Left Sidebar: Stores List -->
+    <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
-        <span style="font-size:1.4rem;">🏪</span>
-        <div>
-          <h2>قائمة المتاجر</h2>
-          <div id="sidebarSubtitle" style="font-size:0.75rem; color:var(--text-muted);">المتاجر المتصلة</div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">🏪</span>
+          <div>
+            <h2>قائمة المتاجر</h2>
+            <div id="sidebarSubtitle" style="font-size:0.75rem; color:var(--text-muted);">المتاجر المتصلة</div>
+          </div>
         </div>
+        <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;" class="close-sidebar-btn">✖</button>
       </div>
 
-      <div id="storeList" class="store-list">
-        <!-- Rendered dynamically -->
-      </div>
+      <div id="storeList" class="store-list"></div>
 
-      <div style="margin-top: 0.8rem; padding: 0.8rem 0; border-top: 1px solid var(--card-border); text-align: center;">
-        <button id="crawlBtn" onclick="runCrawlerNow()" style="width: 100%; background: linear-gradient(135deg, #2563eb, #7c3aed); color: #fff; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 0.65rem 0.8rem; font-weight: 700; cursor: pointer; font-size: 0.82rem; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 14px rgba(37,99,235,0.3); transition: all 0.2s;">
+      <div style="margin-top: 0.8rem; padding: 0.8rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <button id="crawlBtn" onclick="runCrawlerNow()" class="apple-btn" style="width: 100%; border-radius: 14px; font-size: 0.82rem; padding: 0.65rem 0.8rem;">
           <span>🤖</span>
           <span id="crawlBtnText">تحديث عروض البوتات (الزاحف)</span>
         </button>
         <div id="crawlStatus" style="font-size:0.75rem; color:var(--text-muted); margin-top:6px; min-height:16px;"></div>
       </div>
-
-      <div style="padding-top: 0.6rem; border-top: 1px solid var(--card-border); font-size: 0.75rem; color: var(--text-muted); text-align: center;">
-        يتم الفرز وفق أحدث تاريخ بوست وأقل سعر
-      </div>
     </aside>
 
-    <!-- Main Search Area -->
+    <!-- Main Content Area -->
     <main class="main-content">
       <header>
-        <h1>🛍️ مقارن الأسعار الذكي للمتاجر الرقمية</h1>
-        <p class="subtitle">ابحث عن أي سلعة أو اشتراك، ويعرض المحرك كافة المتاجر المتوفرة بها مع ترشيح أقل سعر بناءً على أحدث تاريخ بوست</p>
+        <div>
+          <h1>🛍️ مقارن الأسعار الذكي للمتاجر الرقمية</h1>
+          <p class="subtitle">محرك البحث والمقارنة الأسرع مع صور حية وروابط الشراء المباشرة</p>
+        </div>
+        
+        <!-- Apple Glass Pills for Notifications and PWA Install -->
+        <div class="top-actions">
+          <button id="pushNotifBtn" onclick="togglePushNotifications()" class="apple-glass-pill" title="تفعيل الإشعارات الفورية">
+            <span id="pushIcon">🔔</span>
+            <span id="pushText">تفعيل الإشعارات</span>
+          </button>
+          <button id="installPwaBtn" onclick="handleInstallClick()" class="apple-glass-pill" style="display:none;" title="تثبيت التطبيق على جهازك">
+            <span>📲</span>
+            <span>تثبيت التطبيق</span>
+          </button>
+        </div>
       </header>
 
       <div class="search-box">
@@ -667,7 +901,7 @@ def index():
         <div id="feedItemsGrid" class="grid"></div>
       </div>
 
-      <!-- Initial Prompt (When nothing is searched yet) -->
+      <!-- Initial Prompt -->
       <div id="initialPrompt" class="initial-prompt">
         <div class="icon">🔎</div>
         <h3>اكتب اسم المنتج للبدء بالبحث</h3>
@@ -696,7 +930,7 @@ def index():
         </div>
         <div>
           <div id="bestPrice" class="best-price">0.00 USDT</div>
-          <a id="bestLink" href="#" target="_blank" class="buy-btn cheapest-btn" style="margin-top:8px;">طلب السلعة الآن 👈</a>
+          <a id="bestLink" href="#" target="_blank" class="apple-btn cheapest-btn" style="margin-top:8px;">طلب السلعة الآن 👈</a>
         </div>
       </div>
 
@@ -705,6 +939,41 @@ def index():
       <div id="emptyState" class="empty" style="display:none;">لم يتم العثور على نتائج مطابقة لهذا البحث.</div>
       <div id="loadingState" class="loading" style="display:none;">جاري البحث ومقارنة الأسعار من المتاجر...</div>
     </main>
+
+    <!-- Floating Mobile Glass Dock (Apple Style) -->
+    <div class="mobile-glass-dock">
+      <div class="dock-item active" onclick="focusSearch()">
+        <span class="dock-icon">🔍</span>
+        <span>البحث</span>
+      </div>
+      <div class="dock-item" onclick="toggleSidebar()">
+        <span class="dock-icon">🏪</span>
+        <span>المتاجر</span>
+      </div>
+      <div class="dock-item" onclick="openFirstStoreFeed()">
+        <span class="dock-icon">📢</span>
+        <span>الإشعارات</span>
+      </div>
+      <div class="dock-item" onclick="handleInstallClick()">
+        <span class="dock-icon">📲</span>
+        <span>تثبيت</span>
+      </div>
+    </div>
+
+    <!-- iOS PWA Install Modal -->
+    <div id="iosModal" class="ios-modal" onclick="closeIosModal()">
+      <div class="ios-modal-card" onclick="event.stopPropagation()">
+        <div style="font-size:2.5rem; margin-bottom:0.5rem;">📲</div>
+        <h3 style="font-size:1.2rem; font-weight:800; color:#fff; margin-bottom:0.5rem;">تثبيت التطبيق على iPhone</h3>
+        <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.6; margin-bottom:1.2rem;">
+          لتثبيت المنصة كتطبيق على شاشتك الرئيسية:<br>
+          1. اضغط على زر المشاركة <b style="color:#38bdf8;">(Share ⎋)</b> أسفل متصفح Safari.<br>
+          2. مرر للأسفل واختر <b style="color:#34d399;">«إضافة إلى الشاشة الرئيسية» ⊞</b>.
+        </p>
+        <button class="apple-btn" onclick="closeIosModal()" style="width:100%;">فهمت ذلك 👌</button>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -718,12 +987,118 @@ def index():
     const initialPrompt = document.getElementById('initialPrompt');
     const emptyState = document.getElementById('emptyState');
     const loadingState = document.getElementById('loadingState');
+    const sidebar = document.getElementById('sidebar');
 
     let debounceTimer;
     let currentActiveStore = null;
+    let deferredPrompt = null;
+
+    // Register Service Worker for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(err => {
+          console.log('SW registration error:', err);
+        });
+      });
+    }
+
+    // PWA Install Prompt Listeners
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const btn = document.getElementById('installPwaBtn');
+      if (btn) btn.style.display = 'inline-flex';
+    });
+
+    const isIos = () => /iphone|ipad|ipod/.test(window.navigator.userAgent.toLowerCase());
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+    if (isIos() && !isInStandaloneMode()) {
+      const btn = document.getElementById('installPwaBtn');
+      if (btn) btn.style.display = 'inline-flex';
+    }
+
+    function handleInstallClick() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            document.getElementById('installPwaBtn').style.display = 'none';
+          }
+          deferredPrompt = null;
+        });
+      } else if (isIos()) {
+        document.getElementById('iosModal').classList.add('active');
+      } else {
+        alert('يمكنك تثبيت التطبيق من قائمة خيارات المتصفح (Add to Home Screen).');
+      }
+    }
+
+    function closeIosModal() {
+      document.getElementById('iosModal').classList.remove('active');
+    }
+
+    // Push Notifications Toggle
+    function togglePushNotifications() {
+      if (!('Notification' in window)) {
+        alert('متصفحك لا يدعم الإشعارات الفورية.');
+        return;
+      }
+
+      if (Notification.permission === 'granted') {
+        new Notification('مقارن الأسعار الذكي ⚡', {
+          body: 'الإشعارات مفعلة بالفعل! سنخطرك بأقوى الصفقات وانخفاض الأسعار فوراً.',
+          icon: '/static/icons/icon-192.png'
+        });
+        updatePushBtnState(true);
+      } else {
+        Notification.requestPermission().then(permission => {
+          if (permission === 'granted') {
+            new Notification('تم تفعيل التنبيهات بنجاح! 🔔', {
+              body: 'ستصلك الآن كافة التحديثات وأحدث عروض المتاجر أولاً بأول.',
+              icon: '/static/icons/icon-192.png'
+            });
+            updatePushBtnState(true);
+          } else {
+            alert('تم رفض إذن الإشعارات.');
+            updatePushBtnState(false);
+          }
+        });
+      }
+    }
+
+    function updatePushBtnState(enabled) {
+      const btn = document.getElementById('pushNotifBtn');
+      const text = document.getElementById('pushText');
+      if (enabled) {
+        btn.classList.add('active');
+        text.innerText = 'الإشعارات مفعلة';
+      } else {
+        btn.classList.remove('active');
+        text.innerText = 'تفعيل الإشعارات';
+      }
+    }
+
+    if ('Notification' in window && Notification.permission === 'granted') {
+      updatePushBtnState(true);
+    }
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+    }
+
+    function focusSearch() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      searchInput.focus();
+    }
+
+    function openFirstStoreFeed() {
+      if (allActiveStores && allActiveStores.length > 0) {
+        openStoreFeed(allActiveStores[0].name);
+      }
+    }
 
     searchInput.addEventListener('input', () => {
-      // If store feed is open, close it immediately and return page to search mode!
       if (currentActiveStore || document.getElementById('storeFeedPanel').classList.contains('active')) {
         document.getElementById('storeFeedPanel').classList.remove('active');
         currentActiveStore = null;
@@ -768,8 +1143,8 @@ def index():
     // Open Feed / Latest Notifications of a clicked store
     async function openStoreFeed(storeName) {
       currentActiveStore = storeName;
+      if (window.innerWidth <= 860) sidebar.classList.remove('open');
       
-      // Update selected store in sidebar
       document.querySelectorAll('.store-item').forEach(el => {
         const nameEl = el.querySelector('.store-name');
         if (nameEl && nameEl.textContent.trim() === storeName) {
@@ -779,7 +1154,6 @@ def index():
         }
       });
 
-      // Hide comparison and prompt elements
       initialPrompt.style.display = 'none';
       bestBanner.classList.remove('active');
       storesBanner.classList.remove('active');
@@ -787,7 +1161,6 @@ def index():
       emptyState.style.display = 'none';
       loadingState.style.display = 'none';
 
-      // Open store feed panel
       const feedPanel = document.getElementById('storeFeedPanel');
       const feedStoreName = document.getElementById('feedStoreName');
       const feedStoreBot = document.getElementById('feedStoreBot');
@@ -799,6 +1172,8 @@ def index():
       feedStoreBot.textContent = 'جاري جلب أحدث إشعارات وعروض المتجر...';
       feedLoading.style.display = 'block';
       feedItemsGrid.innerHTML = '';
+
+      window.scrollTo({ top: feedPanel.offsetTop - 30, behavior: 'smooth' });
 
       try {
         const res = await fetch(`/api/store/${encodeURIComponent(storeName)}/feed`);
@@ -821,14 +1196,14 @@ def index():
           card.className = 'product-card';
           card.innerHTML = `
             <div>
-              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
-                <span class="store-label" style="margin-bottom:0;">📦 ${escapeHtml(item.category || 'عرض رقمي')}</span>
-                <span style="font-size:0.75rem; color:var(--text-muted); font-family:'JetBrains Mono', monospace;">🕒 ${escapeHtml(item.updated_at || 'أحدث تاريخ')}</span>
-              </div>
-
-              <div class="item-row">
-                <span class="item-label">🛍️ المنتج:</span>
-                <span class="item-value-name">${escapeHtml(item.name)}</span>
+              <div class="card-header-flex">
+                <div class="product-img-box">
+                  <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}" class="product-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg'" loading="lazy" />
+                </div>
+                <div class="product-main-meta">
+                  <span class="store-label">📦 ${escapeHtml(item.category || 'عرض رقمي')}</span>
+                  <div class="item-value-name">${escapeHtml(item.name)}</div>
+                </div>
               </div>
 
               <div class="item-row">
@@ -840,10 +1215,15 @@ def index():
                 <span class="item-label">📊 المتوفر:</span>
                 <span class="item-value-stock">${item.in_stock} قطعة</span>
               </div>
+
+              <div class="item-row" style="margin-top:4px;">
+                <span class="item-label" style="font-size:0.75rem;">🕒 تاريخ البوست:</span>
+                <span class="item-value-date">${escapeHtml(item.updated_at || 'أحدث تاريخ')}</span>
+              </div>
             </div>
 
             <div class="card-footer">
-              <a href="${item.buy_url || '#'}" target="_blank" class="buy-btn cheapest-btn" style="width:100%; justify-content:center;">
+              <a href="${item.buy_url || '#'}" target="_blank" class="apple-btn cheapest-btn" style="width:100%;">
                 طلب السلعة الآن 🛒
               </a>
             </div>
@@ -870,13 +1250,12 @@ def index():
       }
     }
 
-    // Render Sidebar: shows only matching stores during search, or all active stores otherwise
     function renderSidebar(stores, isSearchResult = false, storeComparison = {}) {
       storeList.innerHTML = '';
       const titleSub = document.getElementById('sidebarSubtitle');
       
       if (isSearchResult) {
-        titleSub.innerHTML = `المتاجر المتوفر بها المنتج (<b style="color:var(--accent);">${stores.length}</b>)`;
+        titleSub.innerHTML = `المتاجر المتوفر بها المنتج (<b style="color:#38bdf8;">${stores.length}</b>)`;
       } else {
         titleSub.innerHTML = `المتاجر المتصلة (${stores.length})`;
       }
@@ -900,7 +1279,7 @@ def index():
           const comp = storeComparison[s.name];
           metaHtml = `
             <div style="text-align: left;">
-              <span class="status-badge online" style="background:rgba(16,185,129,0.18); color:#34d399; font-weight:700; border:1px solid rgba(16,185,129,0.3);">
+              <span class="status-badge online">
                 ${comp.lowest_price} ${comp.currency}
               </span>
               <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${comp.total_offers} عروض</div>
@@ -929,12 +1308,10 @@ def index():
       });
     }
 
-    // Load active stores into sidebar
     async function loadStores() {
       try {
         const res = await fetch('/api/stores');
         const stores = await res.json();
-        // Keep strictly stores with available stock
         allActiveStores = stores.filter(s => s.status === 'online' && s.product_count > 0);
         renderSidebar(allActiveStores, false, {});
       } catch (e) {
@@ -980,7 +1357,6 @@ def index():
       }
     }
 
-    // Search and display items matching requested format
     async function doSearch(query) {
       if (document.getElementById('storeFeedPanel')) {
         document.getElementById('storeFeedPanel').classList.remove('active');
@@ -1010,7 +1386,6 @@ def index():
           return;
         }
 
-        // DECISIVE FILTERING: Show ONLY stores with search results in the sidebar!
         const storesWithItems = data.stores_with_item || [];
         const matchingStores = allActiveStores.filter(s => storesWithItems.includes(s.name));
         storesWithItems.forEach(stName => {
@@ -1026,7 +1401,6 @@ def index():
         });
         renderSidebar(matchingStores, true, data.store_comparison || {});
 
-        // Show stores availability summary banner
         if (data.stores_with_item && data.stores_with_item.length > 0) {
           storesBanner.classList.add('active');
           storesChips.innerHTML = '';
@@ -1039,7 +1413,6 @@ def index():
           storesCountBadge.textContent = `(${data.stores_with_item.length} متاجر توفر نتائج)`;
         }
 
-        // Show best deal on latest date
         if (data.best_deal) {
           bestBanner.classList.add('active');
           document.getElementById('bestName').textContent = data.best_deal.name;
@@ -1050,7 +1423,6 @@ def index():
           document.getElementById('bestLink').href = data.best_deal.buy_url || '#';
         }
 
-        // Render Cards in exact specified format
         data.results.forEach((item, index) => {
           if (!item.in_stock || item.in_stock <= 0) return;
           const isCheapest = index === 0;
@@ -1059,12 +1431,14 @@ def index():
           card.innerHTML = `
             ${isCheapest ? '<span class="card-top-badge">🏆 الأقل سعراً</span>' : ''}
             <div>
-              <span class="store-label">🏪 المتجر: ${escapeHtml(item.store_name)}</span>
-              
-              <!-- Requested format -->
-              <div class="item-row">
-                <span class="item-label">🛍️ المنتج / Product:</span>
-                <span class="item-value-name">${escapeHtml(item.name)}</span>
+              <div class="card-header-flex">
+                <div class="product-img-box">
+                  <img src="${escapeHtml(item.image_url)}" alt="${escapeHtml(item.name)}" class="product-img" onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg'" loading="lazy" />
+                </div>
+                <div class="product-main-meta">
+                  <span class="store-label">🏪 ${escapeHtml(item.store_name)}</span>
+                  <div class="item-value-name">${escapeHtml(item.name)}</div>
+                </div>
               </div>
 
               <div class="item-row">
@@ -1073,18 +1447,18 @@ def index():
               </div>
 
               <div class="item-row">
-                <span class="item-label">📊 الكمية المتوفرة / Stock:</span>
+                <span class="item-label">📊 المتوفر / Stock:</span>
                 <span class="item-value-stock">${item.in_stock} قطعة</span>
               </div>
 
               <div class="item-row" style="margin-top:6px;">
-                <span class="item-label" style="font-size:0.8rem; color:var(--text-muted);">🕒 تاريخ البوست بالمتجر / Post Date:</span>
+                <span class="item-label" style="font-size:0.75rem;">🕒 تاريخ البوست بالمتجر:</span>
                 <span class="item-value-date">${escapeHtml(item.updated_at || 'أحدث تاريخ')}</span>
               </div>
             </div>
 
             <div class="card-footer">
-              <a href="${item.buy_url || '#'}" target="_blank" class="buy-btn ${isCheapest ? 'cheapest-btn' : ''}">
+              <a href="${item.buy_url || '#'}" target="_blank" class="apple-btn ${isCheapest ? 'cheapest-btn' : ''}">
                 طلب المنتج 🛒
               </a>
             </div>
@@ -1105,7 +1479,6 @@ def index():
       return div.innerHTML;
     }
 
-    // Initial load: load stores and wait for search
     loadStores();
     showInitialState();
   </script>
