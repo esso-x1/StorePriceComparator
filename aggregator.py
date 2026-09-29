@@ -3,6 +3,7 @@ import re
 import json
 import time
 import threading
+import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict, Any, Optional
 try:
@@ -16,6 +17,139 @@ CATEGORY_KEYWORDS = {
     "design": ["canva", "capcut", "adobe", "photoshop", "figma", "autodesk", "freepik", "envato", "illustrator"],
     "tools": ["vpn", "duolingo", "notion", "telegram", "discord", "tradingview", "nordvpn", "surfshark", "expressvpn", "office"]
 }
+
+# Equivalent term sets for intelligent search
+SYNONYM_GROUPS = [
+    {"gemini", "google ai", "google ai pro", "google gemini", "google one", "جوجل", "قوقل", "جيمني", "جيميني", "جمناي"},
+    {"chatgpt", "chat gpt", "gpt", "gpt4", "gpt-4", "gpt-4o", "openai", "شات جي بي تي"},
+    {"claude", "claude 3", "claude pro", "anthropic", "كلود"},
+    {"midjourney", "mid journey", "mj", "ميدجورني"},
+    {"canva", "كانفا"},
+    {"capcut", "كاب كات"},
+    {"netflix", "نتفلكس", "نتفليكس"},
+    {"spotify", "سبوتيفاي"},
+    {"youtube", "yt", "يوتيوب"},
+    {"telegram", "tg", "تليجرام", "تيليجرام"},
+    {"duolingo", "دولينجو"},
+    {"tradingview", "تريدنج فيو"},
+    {"notion", "نوشن"},
+    {"vpn", "nordvpn", "surfshark", "expressvpn", "في بي ان"}
+]
+
+ARABIC_EXPANSIONS = {
+    "برو": "pro",
+    "بلس": "plus",
+    "شات": "chat",
+    "ذكاء": "ai",
+    "رابط": "link",
+    "تفعيل": "activation",
+    "حساب": "account",
+    "سنة": "1y",
+    "شهر": "1m"
+}
+
+GENERIC_WORDS = {"account", "link", "pro", "plus", "free", "months", "month", "year", "years", "12", "1", "3", "6", "18", "no", "warranty"}
+STORE_KEYWORDS = {"sam", "sams", "insightx", "bite", "acczone", "diginest", "quickdigi", "mops"}
+
+def normalize_search_text(text: str) -> str:
+    """Normalize Arabic & English strings, strip diacritics, and expand common tokens"""
+    if not text:
+        return ""
+    text = unicodedata.normalize("NFKD", text)
+    text = re.sub(r'[إأآا]', 'ا', text)
+    text = re.sub(r'ة', 'ه', text)
+    text = re.sub(r'ى', 'ي', text)
+    text = re.sub(r'[^a-zA-Z0-9\u0600-\u06FF\s]', ' ', text)
+    tokens = text.lower().split()
+    expanded = []
+    for t in tokens:
+        expanded.append(t)
+        if t in ARABIC_EXPANSIONS:
+            expanded.append(ARABIC_EXPANSIONS[t])
+    return " ".join(expanded)
+
+def evaluate_product_match(query: str, product: Product) -> tuple[bool, float, int]:
+    """
+    Intelligent Substring & Partial Text Matcher.
+    Returns: (is_match, score, tier)
+      tier 1 = Direct/High-relevance match (exact phrase, entity+qualifiers, or exact synonym)
+      tier 2 = Broader/Partial match
+    """
+    q_norm = normalize_search_text(query)
+    if not q_norm:
+        return False, 0.0, 2
+
+    name_norm = normalize_search_text(product.name)
+    store_norm = normalize_search_text(product.store_name)
+    desc_norm = normalize_search_text(product.description or "")
+    name_tokens = name_norm.split()
+    name_tokens_set = set(name_tokens)
+
+    q_tokens = q_norm.split()
+    q_compact = q_norm.replace(" ", "")
+    name_compact = name_norm.replace(" ", "")
+
+    # 1. Full Contiguous Substring match in Name (e.g. 'google ai pro' in 'google ai pro 18 months...')
+    if q_norm in name_norm or q_compact in name_compact:
+        return True, 150.0, 1
+
+    # 2. Store name match ONLY if query mentions store keyword explicitly
+    if any(t in STORE_KEYWORDS or t.rstrip('s') in STORE_KEYWORDS for t in q_tokens):
+        if any(t.rstrip('s') in store_norm.split() or t.rstrip('s') in store_norm.replace(" ", "") for t in q_tokens if t.rstrip('s') in STORE_KEYWORDS):
+            return True, 100.0, 1
+
+    # 3. Check Synonym Group match with entity protection
+    target_group = None
+    for group in SYNONYM_GROUPS:
+        if any(term in q_norm for term in group) or any(t in group for t in q_tokens if t not in GENERIC_WORDS):
+            target_group = group
+            break
+
+    if target_group:
+        prod_in_group = any(term in name_norm for term in target_group) or any(t in target_group for t in name_tokens_set)
+        if prod_in_group:
+            # Check qualifiers (e.g. 'pro', '18', 'activation')
+            qualifiers = [t for t in q_tokens if t not in target_group and t not in {"google", "ai", "gemini", "chatgpt", "gpt", "claude"}]
+            if not qualifiers:
+                return True, 120.0, 1
+            else:
+                matched_qualifiers = 0
+                for qual in qualifiers:
+                    if qual in name_tokens_set:
+                        matched_qualifiers += 1
+                    elif len(qual) >= 3 and any(qual in t for t in name_tokens_set):
+                        matched_qualifiers += 1
+                    elif qual in name_compact:
+                        matched_qualifiers += 1
+                
+                if matched_qualifiers >= len(qualifiers):
+                    return True, 130.0, 1
+                elif matched_qualifiers > 0:
+                    return True, 90.0, 1
+        else:
+            # Belongs to a different entity brand, reject match
+            return False, 0.0, 2
+
+    # 4. Multi-token partial/substring search for generic queries
+    matched_count = 0
+    score = 0.0
+    for q_tok in q_tokens:
+        if q_tok in name_tokens_set:
+            matched_count += 1
+            score += 25.0
+        elif len(q_tok) >= 3 and any(q_tok in t for t in name_tokens_set):
+            matched_count += 1
+            score += 20.0
+        elif len(q_tok) >= 3 and q_tok in name_compact:
+            matched_count += 1
+            score += 15.0
+
+    if matched_count == len(q_tokens):
+        return True, score, 1
+    elif len(q_tokens) >= 3 and matched_count >= (len(q_tokens) - 1):
+        return True, score, 2
+
+    return False, 0.0, 2
 
 class PriceAggregator:
     def __init__(self, cache_ttl: int = 60, snapshot_file: str = "cache_snapshot.json"):
@@ -62,14 +196,20 @@ class PriceAggregator:
                 print(f"Failed to load cache snapshot: {e}")
 
     def _save_snapshot(self):
-        """Saves active memory cache to disk snapshot asynchronously"""
+        """Saves active memory cache to disk snapshot atomically and safely"""
         try:
             serialized = {}
             with self._lock:
                 for store_name, products in self._memory_cache.items():
-                    serialized[store_name] = [p.to_dict() for p in products]
-            with open(self.snapshot_file, "w", encoding="utf-8") as f:
+                    if products:
+                        serialized[store_name] = [p.to_dict() for p in products]
+            if not serialized:
+                return  # Never overwrite snapshot with empty content
+
+            tmp_file = f"{self.snapshot_file}.tmp"
+            with open(tmp_file, "w", encoding="utf-8") as f:
                 json.dump(serialized, f, ensure_ascii=False, indent=2)
+            os.replace(tmp_file, self.snapshot_file)
         except Exception as e:
             print(f"Failed to save snapshot: {e}")
 
@@ -216,8 +356,7 @@ class PriceAggregator:
                 "results": []
             }
 
-        query_tokens = [t.lower() for t in re.split(r'\s+', query_str) if t]
-        matched: List[Product] = []
+        matched_with_meta: List[tuple[Product, float, int]] = []
 
         # Category keyword match
         cat_keywords = CATEGORY_KEYWORDS.get(category.lower(), []) if category and category != "all" else []
@@ -226,7 +365,7 @@ class PriceAggregator:
             if p.in_stock <= 0 or p.price <= 0:
                 continue
 
-            name_clean = re.sub(r'[^a-zA-Z0-9\u0600-\u06FF\s]', ' ', p.name).lower()
+            name_clean = normalize_search_text(p.name)
             name_tokens = set(name_clean.split())
             name_compact = "".join(name_clean.split())
 
@@ -236,34 +375,26 @@ class PriceAggregator:
                 if not matches_cat:
                     continue
 
-            # Query match check if query is provided
-            if query_tokens:
-                is_match = True
-                for q_tok in query_tokens:
-                    q_compact = "".join(q_tok.split())
-                    if q_tok in name_tokens or q_compact in name_compact:
-                        continue
-                    if len(q_tok) >= 3 and any(q_tok in t for t in name_tokens):
-                        continue
-                    if q_tok == "gpt" and ("chatgpt" in name_compact or "gpt" in name_tokens):
-                        continue
-                    if q_tok == "gemini" and ("google" in name_tokens and "ai" in name_tokens):
-                        continue
-                    is_match = False
-                    break
-                
+            # Intelligent query match
+            if query_str:
+                is_match, score, tier = evaluate_product_match(query_str, p)
                 if not is_match:
                     continue
+                matched_with_meta.append((p, score, tier))
+            else:
+                # If only category was selected without query
+                matched_with_meta.append((p, 50.0, 1))
 
-            matched.append(p)
-
-        # Sorting logic
+        # Sorting logic: Direct matches (tier 1) prioritized over broad matches (tier 2),
+        # then sorted according to user selection
         if sort_by == "date_desc":
-            matched.sort(key=lambda x: (-x.timestamp, x.price))
+            matched_with_meta.sort(key=lambda x: (x[2], -x[0].timestamp, x[0].price))
         elif sort_by == "stock_desc":
-            matched.sort(key=lambda x: (-x.in_stock, x.price))
+            matched_with_meta.sort(key=lambda x: (x[2], -x[0].in_stock, x[0].price))
         else: # default: price_asc
-            matched.sort(key=lambda x: (x.price, -x.timestamp))
+            matched_with_meta.sort(key=lambda x: (x[2], x[0].price, -x[0].timestamp))
+
+        matched = [item[0] for item in matched_with_meta]
 
         stores_with_item = list(dict.fromkeys([p.store_name for p in matched]))
         best_deal = matched[0].to_dict() if matched else None

@@ -32,8 +32,10 @@ class DigitalAssetAdapter(StoreAdapter):
                         full_name = f"{cat_name} - {v.get('name')}"
                         stock_val = v.get("stock")
                         in_stock = int(stock_val) if stock_val is not None else 99
+                        v_id = str(v.get('id', ''))
+                        clean_id = f"{group_id}_{v_id}".replace('-', '_')
                         products.append(Product(
-                            id=f"{group_id}_{v.get('id')}",
+                            id=f"{group_id}_{v_id}",
                             store_name=self.name,
                             name=full_name,
                             price=float(v.get("price", 0.0)),

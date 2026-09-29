@@ -17,35 +17,36 @@ class SamsShopAdapter(StoreAdapter):
             "x-api-key": self.api_key,
             "Accept": "application/json"
         }
-        try:
-            resp = requests.get(url, headers=headers, timeout=4)
-            if resp.status_code == 200:
-                data = resp.json()
-                items = data.get("products", [])
-                products = []
-                for item in items:
-                    pid = str(item.get("id"))
-                    date_str, ts = extract_post_date(pid, item)
-                    products.append(Product(
-                        id=pid,
-                        store_name=self.name,
-                        name=item.get("name", "Unknown"),
-                        price=float(item.get("price", 0.0)),
-                        currency="USDT",
-                        in_stock=int(item.get("inStock", 0)),
-                        description=item.get("description", ""),
-                        updated_at=date_str,
-                        timestamp=ts,
-                        buy_url=f"https://t.me/Samsshop_bot?start=buy_{pid}",
-                        raw_data=item
-                    ))
-                return products
-            else:
-                print(f"[{self.name}] Error status: {resp.status_code} - {resp.text}")
-                return []
-        except Exception as e:
-            print(f"[{self.name}] Exception while fetching products: {e}")
-            return []
+        for attempt in range(2):
+            try:
+                resp = requests.get(url, headers=headers, timeout=10)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    items = data.get("products", [])
+                    products = []
+                    for item in items:
+                        pid = str(item.get("id"))
+                        date_str, ts = extract_post_date(pid, item)
+                        products.append(Product(
+                            id=pid,
+                            store_name=self.name,
+                            name=item.get("name", "Unknown"),
+                            price=float(item.get("price", 0.0)),
+                            currency="USDT",
+                            in_stock=int(item.get("inStock", 0)),
+                            description=item.get("description", ""),
+                            updated_at=date_str,
+                            timestamp=ts,
+                            buy_url=f"https://t.me/Samsshop_bot?start=buy_{pid}",
+                            raw_data=item
+                        ))
+                    return products
+                else:
+                    print(f"[{self.name}] Error status: {resp.status_code} - {resp.text}")
+            except Exception as e:
+                if attempt == 1:
+                    print(f"[{self.name}] Exception while fetching products: {e}")
+        return []
 
     def get_balance(self) -> float:
         url = f"{self.base_url}/balance"
