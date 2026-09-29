@@ -1,0 +1,153 @@
+{
+  "mode": "ready",
+  "user": {
+    "id": "5748290124",
+    "firstName": "Media",
+    "username": "MediaTech_Building",
+    "email": "magic.coderz@gmail.com",
+    "loginId": "",
+    "accountLinked": false,
+    "isOwner": false,
+    "balance": 0,
+    "currency": "USD",
+    "language": "EN",
+    "region": "UTC",
+    "joined": "Sep 29, 2026, 07:22 AM",
+    "notifications": {
+      "stock": false,
+      "info": true,
+      "wallet": true
+    }
+  },
+  "stats": {
+    "sales": 172,
+    "customers": 492,
+    "botStatus": "active"
+  },
+  "maintenance": {
+    "active": false,
+    "locked": false,
+    "bypass": null,
+    "enabledAt": null,
+    "title": "The shop will be back shortly",
+    "message": "We are making the shop safer and faster. Your wallet, orders, and account remain protected.",
+    "retryAfterSeconds": 120
+  },
+  "branding": {
+    "storeName": "DIGITAL SOCIALS",
+    "accentColor": "#D7FF72",
+    "revision": 1
+  },
+  "categories": [
+    {
+      "id": "product-10",
+      "productId": "10",
+      "brandKey": "lovable",
+      "name": "Lovable Pro 12m",
+      "tagline": "📆 Duration: 12 Month © Credit: 100 Per Month 🔗 Access: On Your Account 📌 O...",
+      "imageUrl": "https://evpnejwdftnhunlqgrof.supabase.co/functions/v1/mini-app/api/product-image/10?v=b3dtj1",
+      "description": "📆 Duration: 12 Month © Credit: 100 Per Month 🔗 Access: On Your Account 📌 Official Coupon Code 🚫 No Warranty After Activation 💳 Need Card to Activate. Delivery is automatic after payment confirmation.",
+      "howToBuy": "",
+      "howToUse": "",
+      "highlights": [
+        "🚫 No Warranty After Activation",
+        "💳 Need Card to Activate.",
+        "Delivery is automatic after payment confirmation.",
+        "Instant delivery after wallet payment."
+      ],
+      "color": "#ff5a8a",
+      "glyph": "L",
+      "variants": [
+        {
+          "id": "10",
+          "label": "Lovable Pro 12m",
+          "price": 35,
+          "stock": 1,
+          "manualDelivery": false,
+          "region": "GL",
+          "description": "📆 Duration: 12 Month © Credit: 100 Per Month 🔗 Access: On Your Account 📌 Official Coupon Code 🚫 No Warranty After Activation 💳 Need Card to Activate. Delivery is automatic after payment confirmation.",
+          "howToBuy": "",
+          "howToUse": "",
+          "highlights": [
+            "🚫 No Warranty After Activation",
+            "💳 Need Card to Activate."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "product-11",
+      "productId": "11",
+      "brandKey": "resend-pro-12m",
+      "name": "Resend Pro 12m",
+      "tagline": "⚡ Duration: 12 Month ⚡ Official Coupon Code ⚡ Full Warranty ⚡ On Your Account...",
+      "imageUrl": "https://evpnejwdftnhunlqgrof.supabase.co/functions/v1/mini-app/api/product-image/11?v=1fwkk1x",
+      "description": "⚡ Duration: 12 Month ⚡ Official Coupon Code ⚡ Full Warranty ⚡ On Your Account 💡 Quick Guide ⚡ Sign up for a free account at resend.com. ⚡ In the Resend dashboard, go to Settings → Transactional → Upgrade, then choose the Pro Plan. ⚡ At checkout, click Add Promotion Code and apply your code. A payment method is required to complete redemption. Delivery is automatic after payment confirmation.",
+      "howToBuy": "",
+      "howToUse": "",
+      "highlights": [
+        "⚡ Full Warranty",
+        "Delivery is automatic after payment confirmation.",
+        "Instant delivery after wallet payment."
+      ],
+      "color": "#10a37f",
+      "glyph": "R",
+      "variants": [
+        {
+          "id": "11",
+          "label": "Resend Pro 12m",
+          "price": 20,
+          "stock": 9999,
+          "manualDelivery": true,
+          "region": "GL",
+          "description": "⚡ Duration: 12 Month ⚡ Official Coupon Code ⚡ Full Warranty ⚡ On Your Account 💡 Quick Guide ⚡ Sign up for a free account at resend.com. ⚡ In the Resend dashboard, go to Settings → Transactional → Upgrade, then choose the Pro Plan. ⚡ At checkout, click Add Promotion Code and apply your code. A payment method is required to complete redemption. Delivery is automatic after payment confirmation.",
+          "howToBuy": "",
+          "howToUse": "",
+          "highlights": [
+            "⚡ Full Warranty",
+            "Delivery is automatic after payment confirmation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "product-26",
+      "productId": "26",
+      "brandKey": "duolingo-premium",
+      "name": "Duolingo Super 12m",
+      "tagline": "🖥 Plan: Super 📆 Duration: 12 Month 🔗 Access: On Your Account 📌 Official C...",
+      "imageUrl": "https://evpnejwdftnhunlqgrof.supabase.co/functions/v1/mini-app/api/product-image/26?v=1851bby",
+      "description": "🖥 Plan: Super 📆 Duration: 12 Month 🔗 Access: On Your Account 📌 Official Coupon Code 🚫 No Warranty After Activation Delivery is automatic after payment confirmation.",
+      "howToBuy": "",
+      "howToUse": "",
+      "highlights": [
+        "🚫 No Warranty After Activation",
+        "Delivery is automatic after payment confirmation.",
+        "Instant delivery after wallet payment."
+      ],
+      "color": "#f59e0b",
+      "glyph": "D",
+      "variants": [
+        {
+          "id": "26",
+          "label": "Duolingo Super 12m",
+          "price": 1,
+          "stock": 28,
+          "manualDelivery": false,
+          "region": "GL",
+          "description": "🖥 Plan: Super 📆 Duration: 12 Month 🔗 Access: On Your Account 📌 Official Coupon Code 🚫 No Warranty After Activation Delivery is automatic after payment confirmation.",
+          "howToBuy": "",
+          "howToUse": "",
+          "highlights": [
+            "🚫 No Warranty After Activation",
+            "Delivery is automatic after payment confirmation."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "product-27",
+      "productId": "27",
+      "brandKey": "email",
+      "name": "OUTLOOK MAIL ACCOUNTS [FRESH]",
+      "tagline": 
