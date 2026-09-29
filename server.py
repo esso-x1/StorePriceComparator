@@ -138,7 +138,7 @@ def index():
   
   <!-- Apple & PWA Meta Tags -->
   <link rel="manifest" href="/manifest.json" />
-  <meta name="theme-color" content="#070a13" />
+  <meta name="theme-color" content="#060911" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="StorePrices" />
@@ -150,16 +150,16 @@ def index():
   
   <style>
     :root {
-      --bg: #070a13;
-      --glass-surface: rgba(22, 28, 48, 0.7);
-      --glass-surface-hover: rgba(30, 41, 68, 0.85);
-      --glass-border: rgba(255, 255, 255, 0.12);
+      --bg: #060911;
+      --glass-surface: rgba(18, 24, 40, 0.72);
+      --glass-surface-hover: rgba(26, 35, 58, 0.85);
+      --glass-border: rgba(255, 255, 255, 0.08);
       --glass-border-focus: rgba(0, 113, 227, 0.6);
       --glass-blur: blur(28px) saturate(190%);
       --apple-blue: #0071e3;
       --apple-blue-glow: rgba(0, 113, 227, 0.35);
       --green: #10b981;
-      --green-glow: rgba(16, 185, 129, 0.25);
+      --green-glow: rgba(16, 185, 129, 0.3);
       --text: #f8fafc;
       --text-muted: #94a3b8;
     }
@@ -168,8 +168,8 @@ def index():
     
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Cairo', sans-serif;
-      background: radial-gradient(circle at 12% 10%, rgba(0, 113, 227, 0.16) 0%, transparent 45%),
-                  radial-gradient(circle at 88% 88%, rgba(168, 85, 247, 0.14) 0%, transparent 45%),
+      background: radial-gradient(circle at 10% 10%, rgba(0, 113, 227, 0.18) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 90%, rgba(139, 92, 246, 0.14) 0%, transparent 45%),
                   var(--bg);
       background-attachment: fixed;
       color: var(--text);
@@ -186,11 +186,11 @@ def index():
       position: relative;
     }
 
-    /* Left Sidebar: Apple Glass Sidebar */
+    /* Fixed Stationary Left Sidebar (No visible scrollbar, fixed with site) */
     .sidebar {
       width: 320px;
       min-width: 320px;
-      background: rgba(13, 17, 28, 0.82);
+      background: rgba(11, 16, 28, 0.94);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border-left: 1px solid var(--glass-border);
@@ -200,14 +200,19 @@ def index():
       gap: 1rem;
       box-shadow: -4px 0 30px rgba(0,0,0,0.5);
       z-index: 40;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .sidebar-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding-bottom: 0.8rem;
+      justify-content: flex-start;
+      gap: 10px;
+      padding-bottom: 0.9rem;
       border-bottom: 1px solid var(--glass-border);
     }
     .sidebar-header h2 {
@@ -216,19 +221,27 @@ def index():
       color: #fff;
     }
 
+    /* Store list without visible scrollbar */
     .store-list {
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.65rem;
       flex: 1;
       overflow-y: auto;
-      padding-right: 2px;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 1rem;
     }
+    .store-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Refined Store Item: matches uploaded image styling */
     .store-item {
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--glass-border);
-      border-radius: 14px;
-      padding: 0.7rem 0.85rem;
+      background: rgba(18, 24, 40, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 0.85rem 1rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -249,7 +262,7 @@ def index():
     .store-info {
       display: flex;
       align-items: center;
-      gap: 9px;
+      gap: 10px;
     }
     .status-dot {
       width: 9px;
@@ -258,32 +271,59 @@ def index():
       flex-shrink: 0;
     }
     .status-dot.online {
-      background: var(--green);
-      box-shadow: 0 0 10px var(--green);
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
     }
     .status-dot.offline {
       background: #ef4444;
       box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
     .store-name {
-      font-size: 0.88rem;
-      font-weight: 700;
+      font-size: 0.92rem;
+      font-weight: 800;
+      color: #fff;
     }
     .store-bot {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
       color: var(--text-muted);
       font-family: 'JetBrains Mono', monospace;
+      margin-top: 1px;
     }
-    .status-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
+
+    /* Store Price / Offer badge matching image */
+    .store-price-badge {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: #34d399;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 800;
       padding: 3px 8px;
       border-radius: 8px;
+      display: inline-block;
     }
-    .status-badge.online {
-      background: rgba(16, 185, 129, 0.18);
-      color: #34d399;
-      border: 1px solid rgba(16, 185, 129, 0.3);
+    .store-offers-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      text-align: left;
+    }
+
+    /* Click-outside backdrop overlay */
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 38;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    .sidebar-backdrop.active {
+      display: block;
+      opacity: 1;
     }
 
     /* Main Content */
@@ -376,27 +416,36 @@ def index():
       border-color: rgba(16, 185, 129, 0.4);
     }
 
-    /* Practical Search & Filters Container */
+    /* Practical Search & Filters Section */
     .search-filter-section {
-      background: rgba(18, 24, 40, 0.55);
+      background: rgba(18, 24, 40, 0.65);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
-      border-radius: 20px;
-      padding: 1.1rem;
+      border-radius: 22px;
+      padding: 1.15rem;
       margin-bottom: 1.5rem;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
     }
 
+    /* Search Input + Direct Product Picker Row */
+    .search-top-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
     .search-input-wrap {
       position: relative;
-      margin-bottom: 0.9rem;
+      flex: 1;
+      min-width: 250px;
     }
     .search-input-wrap input {
       width: 100%;
       padding: 0.95rem 1.2rem 0.95rem 3.6rem;
       border-radius: 16px;
-      background: rgba(13, 17, 28, 0.8);
+      background: rgba(11, 15, 26, 0.85);
       border: 1px solid var(--glass-border);
       color: #fff;
       font-size: 1.05rem;
@@ -430,6 +479,34 @@ def index():
       display: none;
     }
     .search-clear-btn.active { display: block; }
+
+    /* Product Filter Picker Dropdown */
+    .product-picker-wrap {
+      min-width: 240px;
+      flex: 0 0 auto;
+    }
+    .product-select {
+      width: 100%;
+      padding: 0.95rem 1.1rem;
+      border-radius: 16px;
+      background: rgba(11, 15, 26, 0.85);
+      border: 1px solid var(--glass-border);
+      color: #93c5fd;
+      font-size: 0.9rem;
+      font-weight: 700;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .product-select:focus {
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 0 3px var(--apple-blue-glow);
+    }
+    .product-select option, .product-select optgroup {
+      background: #0d121f;
+      color: #fff;
+    }
 
     /* Category Filter Chips & Sort Controls */
     .filter-controls-row {
@@ -481,7 +558,7 @@ def index():
       font-weight: 600;
     }
     .sort-select {
-      background: rgba(13, 17, 28, 0.85);
+      background: rgba(11, 15, 26, 0.85);
       border: 1px solid var(--glass-border);
       color: #fff;
       padding: 0.35rem 0.85rem;
@@ -914,6 +991,7 @@ def index():
         right: -320px;
         top: 0;
         bottom: 0;
+        height: 100vh;
       }
       .sidebar.open {
         transform: translateX(-320px);
@@ -927,6 +1005,13 @@ def index():
       h1 {
         font-size: 1.35rem;
       }
+      .search-top-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .product-picker-wrap {
+        width: 100%;
+      }
       .filter-controls-row {
         flex-direction: column;
         align-items: stretch;
@@ -938,19 +1023,19 @@ def index():
   </style>
 </head>
 <body>
+  <!-- Click-outside backdrop overlay for sidebar -->
+  <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
+
   <div class="app-layout">
     
-    <!-- Left Sidebar: Stores List -->
+    <!-- Fixed Stationary Left Sidebar (No visible scrollbar) -->
     <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:1.3rem;">🏪</span>
-          <div>
-            <h2>قائمة المتاجر</h2>
-            <div id="sidebarSubtitle" style="font-size:0.75rem; color:var(--text-muted);">المتاجر المتصلة</div>
-          </div>
+        <span style="font-size:1.35rem;">🏪</span>
+        <div>
+          <h2>قائمة المتاجر</h2>
+          <div id="sidebarSubtitle" style="font-size:0.75rem; color:var(--text-muted);">المتاجر المتصلة</div>
         </div>
-        <button onclick="toggleSidebar()" style="background:none; border:none; color:var(--text-muted); font-size:1.2rem; cursor:pointer;" class="close-sidebar-btn">✖</button>
       </div>
 
       <div id="storeList" class="store-list"></div>
@@ -968,7 +1053,7 @@ def index():
     <main class="main-content">
       <!-- Top Sticky App Bar -->
       <header class="top-app-bar">
-        <div class="app-brand">
+        <div class="app-brand" onclick="toggleSidebar()" style="cursor:pointer;" title="انقر لفتح قائمة المتاجر">
           <div class="app-logo-badge">🛍️</div>
           <div>
             <h1>مقارن الأسعار الذكي</h1>
@@ -998,10 +1083,44 @@ def index():
 
       <!-- Practical Search & Filter Section -->
       <section class="search-filter-section">
-        <div class="search-input-wrap">
-          <input type="text" id="searchInput" placeholder="ابحث عن اسم السلعة (مثال: Gemini, ChatGPT, Canva, Capcut, Duolingo, Netflix...)" autofocus />
-          <span class="search-icon">🔍</span>
-          <button id="clearSearchBtn" class="search-clear-btn" onclick="clearSearch()" title="مسح البحث">✕</button>
+        <div class="search-top-row">
+          <div class="search-input-wrap">
+            <input type="text" id="searchInput" placeholder="ابحث عن اسم السلعة (مثال: Gemini, ChatGPT, Canva...)" autofocus />
+            <span class="search-icon">🔍</span>
+            <button id="clearSearchBtn" class="search-clear-btn" onclick="clearSearch()" title="مسح البحث">✕</button>
+          </div>
+          <div class="product-picker-wrap">
+            <select id="productSelect" class="product-select" onchange="handleProductSelect()">
+              <option value="">🎯 فلتر تحديد المنتج مباشرة...</option>
+              <optgroup label="🤖 الذكاء الاصطناعي (AI)">
+                <option value="Gemini">Gemini Pro / Google AI</option>
+                <option value="ChatGPT">ChatGPT Plus / GPT-4</option>
+                <option value="Claude">Claude Pro / Anthropic</option>
+                <option value="Midjourney">Midjourney AI</option>
+                <option value="DeepSeek">DeepSeek</option>
+              </optgroup>
+              <optgroup label="🎨 التصميم والمونتاج">
+                <option value="Canva">Canva Pro</option>
+                <option value="CapCut">CapCut Pro</option>
+                <option value="Autodesk">Autodesk Admin / 3D</option>
+                <option value="Adobe">Adobe Creative Cloud</option>
+              </optgroup>
+              <optgroup label="🍿 البث والترفيه">
+                <option value="Netflix">Netflix Premium 4K</option>
+                <option value="Spotify">Spotify Premium</option>
+                <option value="YouTube">YouTube Premium</option>
+                <option value="Shahid">Shahid VIP</option>
+              </optgroup>
+              <optgroup label="⚡ الخدمات والأدوات">
+                <option value="Duolingo">Duolingo Super</option>
+                <option value="Telegram">Telegram Premium</option>
+                <option value="Discord">Discord Nitro</option>
+                <option value="TradingView">TradingView Pro</option>
+                <option value="Notion">Notion Plus</option>
+                <option value="VPN">VPN (NordVPN / Surfshark)</option>
+              </optgroup>
+            </select>
+          </div>
         </div>
 
         <div class="filter-controls-row">
@@ -1133,6 +1252,7 @@ def index():
   <script>
     const searchInput = document.getElementById('searchInput');
     const clearSearchBtn = document.getElementById('clearSearchBtn');
+    const productSelect = document.getElementById('productSelect');
     const resultsGrid = document.getElementById('resultsGrid');
     const storeList = document.getElementById('storeList');
     const bestBanner = document.getElementById('bestBanner');
@@ -1143,6 +1263,7 @@ def index():
     const emptyState = document.getElementById('emptyState');
     const loadingState = document.getElementById('loadingState');
     const sidebar = document.getElementById('sidebar');
+    const sidebarBackdrop = document.getElementById('sidebarBackdrop');
     const sortSelect = document.getElementById('sortSelect');
 
     let debounceTimer;
@@ -1242,9 +1363,29 @@ def index():
       updatePushBtnState(true);
     }
 
+    // Sidebar Toggle & Click Outside Behavior
     function toggleSidebar() {
       sidebar.classList.toggle('open');
+      if (sidebar.classList.contains('open')) {
+        sidebarBackdrop.classList.add('active');
+      } else {
+        sidebarBackdrop.classList.remove('active');
+      }
     }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarBackdrop.classList.remove('active');
+    }
+
+    // Dismiss sidebar when clicking outside
+    document.addEventListener('click', (e) => {
+      if (sidebar && sidebar.classList.contains('open')) {
+        if (!sidebar.contains(e.target) && !e.target.closest('.dock-item') && !e.target.closest('.app-brand')) {
+          closeSidebar();
+        }
+      }
+    });
 
     function focusSearch() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1257,8 +1398,18 @@ def index():
       }
     }
 
+    function handleProductSelect() {
+      const prod = productSelect.value;
+      if (prod) {
+        searchInput.value = prod;
+        clearSearchBtn.classList.add('active');
+        doSearch(prod);
+      }
+    }
+
     function clearSearch() {
       searchInput.value = '';
+      productSelect.value = '';
       clearSearchBtn.classList.remove('active');
       if (currentCategory === 'all') {
         showInitialState();
@@ -1291,6 +1442,7 @@ def index():
         clearSearchBtn.classList.add('active');
       } else {
         clearSearchBtn.classList.remove('active');
+        productSelect.value = '';
       }
 
       if (currentActiveStore || document.getElementById('storeFeedPanel').classList.contains('active')) {
@@ -1304,7 +1456,7 @@ def index():
         showInitialState();
         return;
       }
-      debounceTimer = setTimeout(() => doSearch(val), 100); // 100ms ultra-fast debounce
+      debounceTimer = setTimeout(() => doSearch(val), 100);
     });
 
     function showInitialState() {
@@ -1323,7 +1475,7 @@ def index():
 
     async function openStoreFeed(storeName) {
       currentActiveStore = storeName;
-      if (window.innerWidth <= 860) sidebar.classList.remove('open');
+      if (window.innerWidth <= 860) closeSidebar();
       
       document.querySelectorAll('.store-item').forEach(el => {
         const nameEl = el.querySelector('.store-name');
@@ -1462,17 +1614,17 @@ def index():
           const comp = storeComparison[s.name];
           metaHtml = `
             <div style="text-align: left;">
-              <span class="status-badge online">
+              <span class="store-price-badge">
                 ${comp.lowest_price} ${comp.currency}
               </span>
-              <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${comp.total_offers} عروض</div>
+              <div class="store-offers-text">${comp.total_offers} عروض</div>
             </div>
           `;
         } else {
           metaHtml = `
             <div style="text-align: left;">
-              <span class="status-badge online">نشط</span>
-              <div style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">${s.product_count} متوفر</div>
+              <span class="store-price-badge">نشط</span>
+              <div class="store-offers-text">${s.product_count} متوفر</div>
             </div>
           `;
         }
