@@ -18,7 +18,7 @@ class AcczoneAdapter(StoreAdapter):
         }
         params = {"key": self.api_key}
         try:
-            resp = requests.get(url, headers=headers, params=params, timeout=10)
+            resp = requests.get(url, headers=headers, params=params, timeout=4)
             if resp.status_code == 200:
                 raw_items = resp.json()
                 products = []

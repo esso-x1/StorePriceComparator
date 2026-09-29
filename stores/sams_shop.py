@@ -18,7 +18,7 @@ class SamsShopAdapter(StoreAdapter):
             "Accept": "application/json"
         }
         try:
-            resp = requests.get(url, headers=headers, timeout=10)
+            resp = requests.get(url, headers=headers, timeout=4)
             if resp.status_code == 200:
                 data = resp.json()
                 items = data.get("products", [])

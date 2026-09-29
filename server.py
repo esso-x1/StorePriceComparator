@@ -72,6 +72,9 @@ from stores.digital_socials import DigitalSocialsAdapter
 DS_INIT_DATA = "query_id=AAFM8p9WAgAAAEzyn1YdXi53&user=%7B%22id%22%3A5748290124%2C%22first_name%22%3A%22Media%22%2C%22last_name%22%3A%22Tech%22%2C%22username%22%3A%22MediaTech_Building%22%2C%22language_code%22%3A%22ar%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2F_aeV3vQ_7VvfNJv_Tq8IBywUw1JsyzYwQCHtLILyf-eBoRZmmw5QOb47U3pGaaJH.svg%22%7D&auth_date=1790677164&signature=gLAVh-dtXB5nl_9VEQnvtQLzeQFm_cdjSNkGDD7NRKFE8RnUYKVzgzUhRES2TJAx0JqBeuQ-7JR9M2SpBocuCA&hash=8a81e7acf05fc179357af2d1eb07329b88c5b92c441afc492ffac04293308c6d"
 aggregator.register_store(DigitalSocialsAdapter(init_data=DS_INIT_DATA))
 
+# Start background warm up & continuous sync worker (every 60s)
+aggregator.start_background_worker(interval=60)
+
 import subprocess
 import threading
 
@@ -89,7 +92,7 @@ def trigger_crawler():
         try:
             cmd = ["python", "userbot_scraper.py"]
             subprocess.run(cmd, cwd=os.path.dirname(os.path.abspath(__file__)), capture_output=True, text=True)
-            aggregator.clear_cache()
+            aggregator.refresh_cache_now(async_mode=False)
         finally:
             is_crawling = False
             
@@ -112,10 +115,17 @@ def get_store_feed(store_name: str):
 @app.get("/api/search")
 def search(
     q: str = Query("", description="Search term for product"),
-    stores: Optional[str] = Query(None, description="Comma-separated store names to include")
+    stores: Optional[str] = Query(None, description="Comma-separated store names to include"),
+    category: Optional[str] = Query(None, description="Category filter (ai, streaming, design, tools)"),
+    sort_by: str = Query("price_asc", description="Sort order (price_asc, date_desc, stock_desc)")
 ):
     enabled_stores = [s.strip() for s in stores.split(",")] if stores else None
-    return aggregator.search_and_compare(query=q, enabled_stores=enabled_stores)
+    return aggregator.search_and_compare(
+        query=q, 
+        enabled_stores=enabled_stores,
+        category=category,
+        sort_by=sort_by
+    )
 
 @app.get("/", response_class=HTMLResponse)
 def index():
@@ -141,8 +151,8 @@ def index():
   <style>
     :root {
       --bg: #070a13;
-      --glass-surface: rgba(22, 28, 48, 0.65);
-      --glass-surface-hover: rgba(30, 41, 68, 0.8);
+      --glass-surface: rgba(22, 28, 48, 0.7);
+      --glass-surface-hover: rgba(30, 41, 68, 0.85);
       --glass-border: rgba(255, 255, 255, 0.12);
       --glass-border-focus: rgba(0, 113, 227, 0.6);
       --glass-blur: blur(28px) saturate(190%);
@@ -180,16 +190,16 @@ def index():
     .sidebar {
       width: 320px;
       min-width: 320px;
-      background: rgba(13, 17, 28, 0.75);
+      background: rgba(13, 17, 28, 0.82);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border-left: 1px solid var(--glass-border);
-      padding: 1.8rem 1.4rem;
+      padding: 1.6rem 1.2rem;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1rem;
       box-shadow: -4px 0 30px rgba(0,0,0,0.5);
-      z-index: 30;
+      z-index: 40;
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -197,7 +207,7 @@ def index():
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-bottom: 1rem;
+      padding-bottom: 0.8rem;
       border-bottom: 1px solid var(--glass-border);
     }
     .sidebar-header h2 {
@@ -209,7 +219,7 @@ def index():
     .store-list {
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.55rem;
       flex: 1;
       overflow-y: auto;
       padding-right: 2px;
@@ -217,8 +227,8 @@ def index():
     .store-item {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--glass-border);
-      border-radius: 16px;
-      padding: 0.75rem 0.9rem;
+      border-radius: 14px;
+      padding: 0.7rem 0.85rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -242,8 +252,8 @@ def index():
       gap: 9px;
     }
     .status-dot {
-      width: 10px;
-      height: 10px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -256,7 +266,7 @@ def index():
       box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
     }
     .store-name {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
     }
     .store-bot {
@@ -279,35 +289,61 @@ def index():
     /* Main Content */
     .main-content {
       flex: 1;
-      padding: 2.2rem 2.5rem 6rem;
-      max-width: 1100px;
+      padding: 1.8rem 2.2rem 6.5rem;
+      max-width: 1160px;
       margin: 0 auto;
       overflow-y: auto;
     }
 
-    header {
-      margin-bottom: 1.8rem;
+    /* Top Sticky App Bar */
+    .top-app-bar {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 12px;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .app-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #0071e3 0%, #38bdf8 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 4px 15px rgba(0, 113, 227, 0.4);
     }
     h1 {
-      font-size: 2.1rem;
+      font-size: 1.55rem;
       font-weight: 900;
-      margin-bottom: 0.3rem;
       background: linear-gradient(135deg, #ffffff 0%, #93c5fd 60%, #60a5fa 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
     }
-    p.subtitle {
-      color: var(--text-muted);
-      font-size: 0.95rem;
+    .status-counter-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.75rem;
+      color: #a7f3d0;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-weight: 700;
     }
 
-    /* Top Action Bar (Push Notifications & Install PWA) */
+    /* Top Action Buttons */
     .top-actions {
       display: flex;
       align-items: center;
@@ -319,9 +355,9 @@ def index():
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       color: #fff;
-      padding: 0.5rem 1rem;
+      padding: 0.45rem 0.95rem;
       border-radius: 9999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 700;
       display: inline-flex;
       align-items: center;
@@ -335,69 +371,125 @@ def index():
       transform: translateY(-1px);
     }
     .apple-glass-pill.active {
-      background: rgba(16, 185, 129, 0.18);
+      background: rgba(16, 185, 129, 0.2);
       color: #34d399;
       border-color: rgba(16, 185, 129, 0.4);
     }
 
-    /* Search Box: Apple Liquid Glass */
-    .search-box {
-      position: relative;
-      margin-bottom: 1.2rem;
-    }
-    .search-box input {
-      width: 100%;
-      padding: 1.2rem 1.4rem 1.2rem 3.8rem;
-      border-radius: 22px;
-      background: rgba(22, 28, 48, 0.65);
+    /* Practical Search & Filters Container */
+    .search-filter-section {
+      background: rgba(18, 24, 40, 0.55);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.1rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .search-input-wrap {
+      position: relative;
+      margin-bottom: 0.9rem;
+    }
+    .search-input-wrap input {
+      width: 100%;
+      padding: 0.95rem 1.2rem 0.95rem 3.6rem;
+      border-radius: 16px;
+      background: rgba(13, 17, 28, 0.8);
+      border: 1px solid var(--glass-border);
       color: #fff;
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-family: inherit;
       outline: none;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .search-box input:focus {
+    .search-input-wrap input:focus {
       border-color: var(--apple-blue);
-      box-shadow: 0 0 0 4px var(--apple-blue-glow), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 0 3px var(--apple-blue-glow);
     }
     .search-icon {
       position: absolute;
-      left: 1.4rem;
+      left: 1.2rem;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 1.35rem;
+      font-size: 1.2rem;
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.6;
     }
-
-    /* Quick tags */
-    .tags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-      margin-bottom: 2rem;
-    }
-    .tag {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      padding: 0.4rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      cursor: pointer;
+    .search-clear-btn {
+      position: absolute;
+      right: 1.2rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
       color: var(--text-muted);
-      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: none;
     }
-    .tag:hover {
-      background: rgba(0, 113, 227, 0.2);
+    .search-clear-btn.active { display: block; }
+
+    /* Category Filter Chips & Sort Controls */
+    .filter-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .category-pills {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .cat-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .cat-pill:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+    .cat-pill.active {
+      background: var(--apple-blue);
       color: #fff;
       border-color: var(--apple-blue);
-      transform: translateY(-1px);
+      box-shadow: 0 2px 10px var(--apple-blue-glow);
+    }
+
+    .sort-control {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sort-control span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .sort-select {
+      background: rgba(13, 17, 28, 0.85);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 0.35rem 0.85rem;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      outline: none;
+      cursor: pointer;
     }
 
     /* Store Feed Panel */
@@ -407,8 +499,8 @@ def index():
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1.5px solid var(--apple-blue);
-      border-radius: 24px;
-      padding: 1.8rem;
+      border-radius: 22px;
+      padding: 1.6rem;
       margin-bottom: 2rem;
       box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 25px var(--apple-blue-glow);
       animation: fadeIn 0.25s ease-out;
@@ -419,8 +511,8 @@ def index():
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--glass-border);
-      padding-bottom: 1.2rem;
-      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      margin-bottom: 1.4rem;
       flex-wrap: wrap;
       gap: 12px;
     }
@@ -442,11 +534,11 @@ def index():
       background: rgba(239, 68, 68, 0.15);
       color: #f87171;
       border: 1px solid rgba(239, 68, 68, 0.35);
-      border-radius: 12px;
-      padding: 0.5rem 1.1rem;
+      border-radius: 10px;
+      padding: 0.45rem 1rem;
       cursor: pointer;
       font-weight: 800;
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       font-family: inherit;
       display: flex;
       align-items: center;
@@ -464,9 +556,9 @@ def index():
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
-      border-radius: 18px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.8rem;
+      border-radius: 16px;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 1.5rem;
       display: none;
       align-items: center;
       justify-content: space-between;
@@ -475,7 +567,7 @@ def index():
     }
     .stores-found-banner.active { display: flex; }
     .stores-found-title {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 700;
       color: #e2e8f0;
       display: flex;
@@ -491,21 +583,21 @@ def index():
       background: rgba(0, 113, 227, 0.18);
       border: 1px solid rgba(0, 113, 227, 0.4);
       color: #93c5fd;
-      padding: 3px 10px;
+      padding: 2px 9px;
       border-radius: 8px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
     }
 
-    /* Best deal banner: Apple Liquid Glass Glow */
+    /* Best deal banner: Apple Liquid Glass */
     .best-banner {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(0, 113, 227, 0.12) 100%);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(0, 113, 227, 0.15) 100%);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1.5px solid rgba(16, 185, 129, 0.5);
-      border-radius: 22px;
-      padding: 1.5rem 1.8rem;
-      margin-bottom: 2rem;
+      border-radius: 20px;
+      padding: 1.3rem 1.6rem;
+      margin-bottom: 1.6rem;
       display: none;
       align-items: center;
       justify-content: space-between;
@@ -519,48 +611,48 @@ def index():
       background: var(--green);
       color: #022c22;
       font-weight: 800;
-      font-size: 0.75rem;
-      padding: 3px 10px;
+      font-size: 0.72rem;
+      padding: 3px 9px;
       border-radius: 6px;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
-    .best-name { font-size: 1.35rem; font-weight: 800; color: #fff; }
-    .best-details { font-size: 0.9rem; color: #cbd5e1; margin-top: 4px; display: flex; gap: 15px; flex-wrap: wrap; }
+    .best-name { font-size: 1.25rem; font-weight: 800; color: #fff; }
+    .best-details { font-size: 0.88rem; color: #cbd5e1; margin-top: 4px; display: flex; gap: 15px; flex-wrap: wrap; }
     .best-price {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 2.1rem;
+      font-size: 1.95rem;
       font-weight: 900;
       color: #34d399;
       text-align: left;
     }
 
-    /* Products Grid */
+    /* Products Grid: 3-column responsive layout */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-      gap: 1.4rem;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.2rem;
     }
 
-    /* Apple Liquid Glass Product Card */
+    /* Practical Apple Liquid Glass Card */
     .product-card {
       background: var(--glass-surface);
       backdrop-filter: var(--glass-blur);
       -webkit-backdrop-filter: var(--glass-blur);
       border: 1px solid var(--glass-border);
-      border-radius: 24px;
-      padding: 1.4rem;
+      border-radius: 20px;
+      padding: 1.3rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.12);
       transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .product-card:hover {
-      transform: translateY(-4px);
+      transform: translateY(-3px);
       border-color: rgba(255, 255, 255, 0.25);
-      box-shadow: 0 16px 40px rgba(0, 113, 227, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      box-shadow: 0 15px 35px rgba(0, 113, 227, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
     }
     .product-card.is-cheapest {
       border: 1.5px solid var(--green);
@@ -569,42 +661,42 @@ def index():
 
     .card-top-badge {
       position: absolute;
-      top: 1rem;
-      left: 1rem;
+      top: 0.9rem;
+      left: 0.9rem;
       background: var(--green);
       color: #022c22;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       font-weight: 800;
-      padding: 3px 10px;
+      padding: 3px 9px;
       border-radius: 9999px;
       box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
     }
 
-    /* Product Header with Image and Details */
+    /* Card Top Flex */
     .card-header-flex {
       display: flex;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 1.1rem;
+      gap: 12px;
+      margin-bottom: 0.9rem;
     }
     .product-img-box {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.06);
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 8px;
+      padding: 7px;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .product-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
     }
     .product-main-meta {
       flex: 1;
@@ -615,14 +707,14 @@ def index():
       background: rgba(0, 113, 227, 0.18);
       border: 1px solid rgba(0, 113, 227, 0.35);
       color: #93c5fd;
-      border-radius: 8px;
-      padding: 2px 8px;
-      font-size: 0.78rem;
+      border-radius: 6px;
+      padding: 2px 7px;
+      font-size: 0.75rem;
       font-weight: 700;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.3rem;
     }
     .item-value-name {
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 800;
       color: #fff;
       line-height: 1.35;
@@ -632,9 +724,9 @@ def index():
       overflow: hidden;
     }
 
-    /* Item Details Rows */
+    /* Key Value Rows */
     .item-row {
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.45rem;
       display: flex;
       align-items: baseline;
       justify-content: space-between;
@@ -643,28 +735,38 @@ def index():
     .item-label {
       font-weight: 700;
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
     .item-value-price {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.45rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #38bdf8;
     }
     .item-value-stock {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #a7f3d0;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .stock-indicator-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      display: inline-block;
     }
     .item-value-date {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: #94a3b8;
       font-family: 'JetBrains Mono', monospace;
     }
 
     .card-footer {
-      margin-top: 1.1rem;
-      padding-top: 0.9rem;
+      margin-top: 0.9rem;
+      padding-top: 0.85rem;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
       align-items: center;
@@ -676,10 +778,10 @@ def index():
       background: linear-gradient(135deg, #0071e3 0%, #38bdf8 100%);
       color: #fff;
       border: none;
-      padding: 0.62rem 1.4rem;
+      padding: 0.58rem 1.25rem;
       border-radius: 9999px;
       font-weight: 800;
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-family: inherit;
       display: inline-flex;
       align-items: center;
@@ -702,42 +804,57 @@ def index():
 
     .initial-prompt {
       text-align: center;
-      padding: 4.5rem 1rem;
+      padding: 4rem 1rem;
       color: var(--text-muted);
     }
     .initial-prompt .icon {
-      font-size: 3.5rem;
-      margin-bottom: 1rem;
+      font-size: 3rem;
+      margin-bottom: 0.8rem;
       opacity: 0.8;
     }
     .initial-prompt h3 {
-      font-size: 1.3rem;
+      font-size: 1.25rem;
       color: #fff;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     .loading, .empty {
       text-align: center;
       color: var(--text-muted);
-      padding: 4rem 0;
-      font-size: 1.2rem;
+      padding: 3.5rem 0;
+      font-size: 1.15rem;
+    }
+
+    /* Skeleton Loading Cards */
+    .skeleton-card {
+      background: rgba(22, 28, 48, 0.4);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.3rem;
+      animation: shimmer 1.5s infinite;
+      height: 220px;
+    }
+    @keyframes shimmer {
+      0% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+      100% { opacity: 0.4; }
     }
 
     /* Floating Mobile Glass Dock (Apple Style) */
     .mobile-glass-dock {
       display: none;
       position: fixed;
-      bottom: 15px;
+      bottom: 12px;
       left: 50%;
       transform: translateX(-50%);
-      width: calc(100% - 30px);
-      max-width: 480px;
-      background: rgba(18, 24, 40, 0.82);
+      width: calc(100% - 24px);
+      max-width: 440px;
+      background: rgba(18, 24, 40, 0.85);
       backdrop-filter: blur(30px) saturate(200%);
       -webkit-backdrop-filter: blur(30px) saturate(200%);
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 28px;
-      padding: 0.6rem 1rem;
+      border-radius: 26px;
+      padding: 0.55rem 0.8rem;
       box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       z-index: 99;
       justify-content: space-around;
@@ -752,7 +869,7 @@ def index():
       font-size: 0.72rem;
       font-weight: 700;
       cursor: pointer;
-      padding: 4px 8px;
+      padding: 4px 10px;
       border-radius: 12px;
       transition: all 0.2s;
     }
@@ -763,7 +880,7 @@ def index():
       color: #38bdf8;
     }
     .dock-item .dock-icon {
-      font-size: 1.35rem;
+      font-size: 1.3rem;
     }
 
     /* iOS Install Modal */
@@ -771,7 +888,7 @@ def index():
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(8px);
       z-index: 100;
       align-items: center;
@@ -783,9 +900,9 @@ def index():
       background: rgba(22, 28, 48, 0.95);
       border: 1px solid var(--glass-border);
       border-radius: 24px;
-      max-width: 400px;
+      max-width: 380px;
       width: 100%;
-      padding: 1.8rem;
+      padding: 1.6rem;
       text-align: center;
       box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
@@ -802,13 +919,20 @@ def index():
         transform: translateX(-320px);
       }
       .main-content {
-        padding: 1.4rem 1.2rem 6.5rem;
+        padding: 1.2rem 1rem 6.5rem;
       }
       .mobile-glass-dock {
         display: flex;
       }
       h1 {
-        font-size: 1.6rem;
+        font-size: 1.35rem;
+      }
+      .filter-controls-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .sort-control {
+        justify-content: flex-end;
       }
     }
   </style>
@@ -820,7 +944,7 @@ def index():
     <aside id="sidebar" class="sidebar">
       <div class="sidebar-header">
         <div style="display:flex; align-items:center; gap:8px;">
-          <span style="font-size:1.4rem;">🏪</span>
+          <span style="font-size:1.3rem;">🏪</span>
           <div>
             <h2>قائمة المتاجر</h2>
             <div id="sidebarSubtitle" style="font-size:0.75rem; color:var(--text-muted);">المتاجر المتصلة</div>
@@ -831,62 +955,88 @@ def index():
 
       <div id="storeList" class="store-list"></div>
 
-      <div style="margin-top: 0.8rem; padding: 0.8rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
-        <button id="crawlBtn" onclick="runCrawlerNow()" class="apple-btn" style="width: 100%; border-radius: 14px; font-size: 0.82rem; padding: 0.65rem 0.8rem;">
+      <div style="margin-top: 0.6rem; padding: 0.6rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
+        <button id="crawlBtn" onclick="runCrawlerNow()" class="apple-btn" style="width: 100%; border-radius: 12px; font-size: 0.8rem; padding: 0.55rem 0.8rem;">
           <span>🤖</span>
           <span id="crawlBtnText">تحديث عروض البوتات (الزاحف)</span>
         </button>
-        <div id="crawlStatus" style="font-size:0.75rem; color:var(--text-muted); margin-top:6px; min-height:16px;"></div>
+        <div id="crawlStatus" style="font-size:0.72rem; color:var(--text-muted); margin-top:5px; min-height:16px;"></div>
       </div>
     </aside>
 
     <!-- Main Content Area -->
     <main class="main-content">
-      <header>
-        <div>
-          <h1>🛍️ مقارن الأسعار الذكي للمتاجر الرقمية</h1>
-          <p class="subtitle">محرك البحث والمقارنة الأسرع مع صور حية وروابط الشراء المباشرة</p>
+      <!-- Top Sticky App Bar -->
+      <header class="top-app-bar">
+        <div class="app-brand">
+          <div class="app-logo-badge">🛍️</div>
+          <div>
+            <h1>مقارن الأسعار الذكي</h1>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
+              <span id="storesCounterBadge" class="status-counter-tag">⚡ 11 متجر نشط</span>
+              <span style="font-size:0.75rem; color:var(--text-muted);">تحديث فوري <b style="color:#38bdf8;">0.01s</b></span>
+            </div>
+          </div>
         </div>
         
-        <!-- Apple Glass Pills for Notifications and PWA Install -->
+        <!-- Action Buttons -->
         <div class="top-actions">
+          <button id="refreshDataBtn" onclick="manualRefreshCache()" class="apple-glass-pill" title="تحديث البيانات من السيرفر">
+            <span id="refreshIcon">🔄</span>
+            <span>تحديث الأسعار</span>
+          </button>
           <button id="pushNotifBtn" onclick="togglePushNotifications()" class="apple-glass-pill" title="تفعيل الإشعارات الفورية">
             <span id="pushIcon">🔔</span>
-            <span id="pushText">تفعيل الإشعارات</span>
+            <span id="pushText">الإشعارات</span>
           </button>
-          <button id="installPwaBtn" onclick="handleInstallClick()" class="apple-glass-pill" style="display:none;" title="تثبيت التطبيق على جهازك">
+          <button id="installPwaBtn" onclick="handleInstallClick()" class="apple-glass-pill" style="display:none;" title="تثبيت التطبيق">
             <span>📲</span>
-            <span>تثبيت التطبيق</span>
+            <span>تثبيت</span>
           </button>
         </div>
       </header>
 
-      <div class="search-box">
-        <input type="text" id="searchInput" placeholder="ابحث عن اسم السلعة (مثال: Gemini, ChatGPT, Canva, Capcut, Duolingo...)" autofocus />
-        <span class="search-icon">🔍</span>
-      </div>
+      <!-- Practical Search & Filter Section -->
+      <section class="search-filter-section">
+        <div class="search-input-wrap">
+          <input type="text" id="searchInput" placeholder="ابحث عن اسم السلعة (مثال: Gemini, ChatGPT, Canva, Capcut, Duolingo, Netflix...)" autofocus />
+          <span class="search-icon">🔍</span>
+          <button id="clearSearchBtn" class="search-clear-btn" onclick="clearSearch()" title="مسح البحث">✕</button>
+        </div>
 
-      <div class="tags">
-        <span class="tag" onclick="quickSearch('Gemini')">✨ Gemini</span>
-        <span class="tag" onclick="quickSearch('ChatGPT')">🔥 ChatGPT</span>
-        <span class="tag" onclick="quickSearch('Canva')">🎨 Canva</span>
-        <span class="tag" onclick="quickSearch('CapCut')">🎬 CapCut</span>
-        <span class="tag" onclick="quickSearch('Duolingo')">🦉 Duolingo</span>
-        <span class="tag" onclick="quickSearch('Spotify')">🎵 Spotify</span>
-        <span class="tag" onclick="quickSearch('Netflix')">🍿 Netflix</span>
-      </div>
+        <div class="filter-controls-row">
+          <!-- Category Pills -->
+          <div class="category-pills">
+            <span class="cat-pill active" onclick="setCategory('all')">🌐 الكل</span>
+            <span class="cat-pill" onclick="setCategory('ai')">🤖 ذكاء اصطناعي</span>
+            <span class="cat-pill" onclick="setCategory('design')">🎨 تصميم ومونتاج</span>
+            <span class="cat-pill" onclick="setCategory('streaming')">🍿 بث وترفيه</span>
+            <span class="cat-pill" onclick="setCategory('tools')">⚡ أدوات وVPN</span>
+          </div>
+
+          <!-- Sort Select -->
+          <div class="sort-control">
+            <span>ترتيب حسب:</span>
+            <select id="sortSelect" class="sort-select" onchange="handleSortChange()">
+              <option value="price_asc">الأقل سعراً 🏆</option>
+              <option value="date_desc">أحدث تاريخ 🕒</option>
+              <option value="stock_desc">الأكثر توفراً 📊</option>
+            </select>
+          </div>
+        </div>
+      </section>
 
       <!-- Store Feed / Latest Notifications Panel -->
       <div id="storeFeedPanel" class="store-feed-panel">
         <div class="feed-header">
           <div class="feed-store-info">
-            <span style="font-size: 2rem;">📢</span>
+            <span style="font-size: 1.8rem;">📢</span>
             <div>
-              <div style="display:flex; align-items:center; gap:10px;">
-                <h2 id="feedStoreName" style="font-size:1.35rem; font-weight:800; color:#fff;">-</h2>
+              <div style="display:flex; align-items:center; gap:8px;">
+                <h2 id="feedStoreName" style="font-size:1.25rem; font-weight:800; color:#fff;">-</h2>
                 <span id="feedStoreBadge" class="feed-store-badge">أحدث الإشعارات والعروض</span>
               </div>
-              <div id="feedStoreBot" style="font-size:0.85rem; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-top:3px;">-</div>
+              <div id="feedStoreBot" style="font-size:0.8rem; color:var(--text-muted); font-family:'JetBrains Mono', monospace; margin-top:2px;">-</div>
             </div>
           </div>
           <button class="feed-close-btn" onclick="closeStoreFeed()">
@@ -895,7 +1045,7 @@ def index():
           </button>
         </div>
         
-        <div id="feedLoading" style="text-align:center; padding:2.5rem 0; color:var(--text-muted); font-size:1rem;">
+        <div id="feedLoading" style="text-align:center; padding:2rem 0; color:var(--text-muted); font-size:0.95rem;">
           جاري جلب أحدث إشعارات وعروض المتجر...
         </div>
         <div id="feedItemsGrid" class="grid"></div>
@@ -904,8 +1054,8 @@ def index():
       <!-- Initial Prompt -->
       <div id="initialPrompt" class="initial-prompt">
         <div class="icon">🔎</div>
-        <h3>اكتب اسم المنتج للبدء بالبحث</h3>
-        <p>اكتب اسم السلعة في شريط البحث أعلاه لجلب نتائج المقارنة من كافة المتاجر فورياً.</p>
+        <h3>اكتب اسم المنتج أو اختر قسماً للبدء</h3>
+        <p>البحث فوري في أجزاء من الثانية من كافة المتاجر الرقمية المتصلة.</p>
       </div>
 
       <!-- Stores Availability Summary -->
@@ -937,7 +1087,11 @@ def index():
       <!-- Results Grid -->
       <div id="resultsGrid" class="grid"></div>
       <div id="emptyState" class="empty" style="display:none;">لم يتم العثور على نتائج مطابقة لهذا البحث.</div>
-      <div id="loadingState" class="loading" style="display:none;">جاري البحث ومقارنة الأسعار من المتاجر...</div>
+      <div id="loadingState" class="grid" style="display:none;">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
     </main>
 
     <!-- Floating Mobile Glass Dock (Apple Style) -->
@@ -978,6 +1132,7 @@ def index():
 
   <script>
     const searchInput = document.getElementById('searchInput');
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
     const resultsGrid = document.getElementById('resultsGrid');
     const storeList = document.getElementById('storeList');
     const bestBanner = document.getElementById('bestBanner');
@@ -988,10 +1143,14 @@ def index():
     const emptyState = document.getElementById('emptyState');
     const loadingState = document.getElementById('loadingState');
     const sidebar = document.getElementById('sidebar');
+    const sortSelect = document.getElementById('sortSelect');
 
     let debounceTimer;
     let currentActiveStore = null;
     let deferredPrompt = null;
+    let currentCategory = 'all';
+    let currentSortBy = 'price_asc';
+    let allActiveStores = [];
 
     // Register Service Worker for PWA
     if ('serviceWorker' in navigator) {
@@ -1047,7 +1206,7 @@ def index():
 
       if (Notification.permission === 'granted') {
         new Notification('مقارن الأسعار الذكي ⚡', {
-          body: 'الإشعارات مفعلة بالفعل! سنخطرك بأقوى الصفقات وانخفاض الأسعار فوراً.',
+          body: 'الإشعارات مفعلة بالفعل! سنخطرك بأقوى الصفقات فوراً.',
           icon: '/static/icons/icon-192.png'
         });
         updatePushBtnState(true);
@@ -1075,7 +1234,7 @@ def index():
         text.innerText = 'الإشعارات مفعلة';
       } else {
         btn.classList.remove('active');
-        text.innerText = 'تفعيل الإشعارات';
+        text.innerText = 'الإشعارات';
       }
     }
 
@@ -1098,7 +1257,42 @@ def index():
       }
     }
 
+    function clearSearch() {
+      searchInput.value = '';
+      clearSearchBtn.classList.remove('active');
+      if (currentCategory === 'all') {
+        showInitialState();
+      } else {
+        doSearch('');
+      }
+      searchInput.focus();
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(el => {
+        if (el.textContent.includes(cat === 'ai' ? 'ذكاء' : cat === 'design' ? 'تصميم' : cat === 'streaming' ? 'بث' : cat === 'tools' ? 'أدوات' : 'الكل')) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+      doSearch(searchInput.value.trim());
+    }
+
+    function handleSortChange() {
+      currentSortBy = sortSelect.value;
+      doSearch(searchInput.value.trim());
+    }
+
     searchInput.addEventListener('input', () => {
+      const val = searchInput.value.trim();
+      if (val) {
+        clearSearchBtn.classList.add('active');
+      } else {
+        clearSearchBtn.classList.remove('active');
+      }
+
       if (currentActiveStore || document.getElementById('storeFeedPanel').classList.contains('active')) {
         document.getElementById('storeFeedPanel').classList.remove('active');
         currentActiveStore = null;
@@ -1106,25 +1300,12 @@ def index():
       }
 
       clearTimeout(debounceTimer);
-      const val = searchInput.value.trim();
-      if (!val) {
+      if (!val && currentCategory === 'all') {
         showInitialState();
         return;
       }
-      debounceTimer = setTimeout(() => doSearch(val), 250);
+      debounceTimer = setTimeout(() => doSearch(val), 100); // 100ms ultra-fast debounce
     });
-
-    function quickSearch(q) {
-      if (currentActiveStore || document.getElementById('storeFeedPanel').classList.contains('active')) {
-        document.getElementById('storeFeedPanel').classList.remove('active');
-        currentActiveStore = null;
-        document.querySelectorAll('.store-item').forEach(el => el.classList.remove('selected'));
-      }
-      searchInput.value = q;
-      doSearch(q);
-    }
-
-    let allActiveStores = [];
 
     function showInitialState() {
       if (document.getElementById('storeFeedPanel')) {
@@ -1140,7 +1321,6 @@ def index():
       renderSidebar(allActiveStores, false, {});
     }
 
-    // Open Feed / Latest Notifications of a clicked store
     async function openStoreFeed(storeName) {
       currentActiveStore = storeName;
       if (window.innerWidth <= 860) sidebar.classList.remove('open');
@@ -1213,7 +1393,10 @@ def index():
 
               <div class="item-row">
                 <span class="item-label">📊 المتوفر:</span>
-                <span class="item-value-stock">${item.in_stock} قطعة</span>
+                <span class="item-value-stock">
+                  <span class="stock-indicator-dot"></span>
+                  ${item.in_stock} قطعة
+                </span>
               </div>
 
               <div class="item-row" style="margin-top:4px;">
@@ -1243,7 +1426,7 @@ def index():
       document.querySelectorAll('.store-item').forEach(el => el.classList.remove('selected'));
       
       const query = searchInput.value.trim();
-      if (query) {
+      if (query || currentCategory !== 'all') {
         doSearch(query);
       } else {
         showInitialState();
@@ -1314,9 +1497,24 @@ def index():
         const stores = await res.json();
         allActiveStores = stores.filter(s => s.status === 'online' && s.product_count > 0);
         renderSidebar(allActiveStores, false, {});
+        const countBadge = document.getElementById('storesCounterBadge');
+        if (countBadge) countBadge.innerText = `⚡ ${allActiveStores.length} متجر نشط`;
       } catch (e) {
         console.error("Failed to load stores sidebar:", e);
       }
+    }
+
+    async function manualRefreshCache() {
+      const icon = document.getElementById('refreshIcon');
+      icon.style.display = 'inline-block';
+      icon.style.transform = 'rotate(360deg)';
+      icon.style.transition = 'transform 0.8s ease';
+      await loadStores();
+      const val = searchInput.value.trim();
+      if (val || currentCategory !== 'all') {
+        doSearch(val);
+      }
+      setTimeout(() => { icon.style.transform = 'rotate(0deg)'; }, 800);
     }
 
     async function runCrawlerNow() {
@@ -1345,7 +1543,7 @@ def index():
             statusEl.innerText = '✅ تم تحديث العروض بنجاح!';
             loadStores();
             const val = searchInput.value.trim();
-            if (val) doSearch(val);
+            if (val || currentCategory !== 'all') doSearch(val);
             setTimeout(() => { statusEl.innerText = ''; }, 4000);
           }
         }, 2000);
@@ -1363,22 +1561,22 @@ def index():
       }
       currentActiveStore = null;
 
-      if (!query || !query.trim()) {
+      if (!query && currentCategory === 'all') {
         showInitialState();
         return;
       }
 
       initialPrompt.style.display = 'none';
-      loadingState.style.display = 'block';
       emptyState.style.display = 'none';
-      resultsGrid.innerHTML = '';
-      bestBanner.classList.remove('active');
-      storesBanner.classList.remove('active');
 
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query.trim())}`);
+        const url = `/api/search?q=${encodeURIComponent(query || '')}&category=${encodeURIComponent(currentCategory)}&sort_by=${encodeURIComponent(currentSortBy)}`;
+        const res = await fetch(url);
         const data = await res.json();
-        loadingState.style.display = 'none';
+
+        resultsGrid.innerHTML = '';
+        bestBanner.classList.remove('active');
+        storesBanner.classList.remove('active');
 
         if (!data.results || data.results.length === 0) {
           emptyState.style.display = 'block';
@@ -1448,17 +1646,20 @@ def index():
 
               <div class="item-row">
                 <span class="item-label">📊 المتوفر / Stock:</span>
-                <span class="item-value-stock">${item.in_stock} قطعة</span>
+                <span class="item-value-stock">
+                  <span class="stock-indicator-dot"></span>
+                  ${item.in_stock} قطعة
+                </span>
               </div>
 
-              <div class="item-row" style="margin-top:6px;">
+              <div class="item-row" style="margin-top:4px;">
                 <span class="item-label" style="font-size:0.75rem;">🕒 تاريخ البوست بالمتجر:</span>
                 <span class="item-value-date">${escapeHtml(item.updated_at || 'أحدث تاريخ')}</span>
               </div>
             </div>
 
             <div class="card-footer">
-              <a href="${item.buy_url || '#'}" target="_blank" class="apple-btn ${isCheapest ? 'cheapest-btn' : ''}">
+              <a href="${item.buy_url || '#'}" target="_blank" class="apple-btn ${isCheapest ? 'cheapest-btn' : ''}" style="width:100%;">
                 طلب المنتج 🛒
               </a>
             </div>
@@ -1468,7 +1669,6 @@ def index():
 
       } catch (err) {
         console.error(err);
-        loadingState.textContent = 'حدث خطأ أثناء تحميل الأسعار.';
       }
     }
 
