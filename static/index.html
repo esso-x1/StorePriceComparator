@@ -1818,22 +1818,89 @@
             <span class="view-subtitle">تخصيص العرض، التنبيهات، وحماية التطبيق</span>
           </div>
         </div>
-        <div class="stat-card" style="max-width:600px; display:flex; flex-direction:column; gap:1.2rem;">
-          <div>
-            <label style="font-size:0.9rem; font-weight:700; color:#fff; display:block; margin-bottom:6px;">السمة البصرية (Theme)</label>
-            <select class="filter-select" style="width:100%;">
-              <option value="oled_dark">OLED Liquid Glass Dark (الافتراضي الموصى به)</option>
-            </select>
+        <div style="display:flex; flex-direction:column; gap:1.5rem; max-width:640px;">
+          <!-- User Profile & Session Persistence Card -->
+          <div class="stat-card" style="display:flex; flex-direction:column; gap:1rem;">
+            <h3 style="color:#fff; font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>المستخدم النشط وحفظ الجلسة</span>
+            </h3>
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:0.5rem 0; border-bottom:1px solid var(--panel-border);">
+              <div>
+                <div style="color:#fff; font-weight:700;" id="settingsUserName">المسؤول (Admin)</div>
+                <div style="color:var(--text-dim); font-size:0.8rem;" id="settingsLoginTime">جلسة العمل محفوظة على هذا المتصفح</div>
+              </div>
+              <span class="badge-cheapest" style="background:rgba(0,229,153,0.15); color:var(--mint);">جلسة نشطة ودائمة</span>
+            </div>
+            <div>
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">تعديل اسم المستخدم المعروض</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="customUserNameInput" class="filter-select" style="flex:1;" placeholder="مثال: المهندس أحمد / المدير" />
+                <button class="btn-action btn-mint" onclick="saveCustomUserName()" style="height:42px;">حفظ الاسم</button>
+              </div>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:4px;">
+              <button class="btn-action" style="color:var(--red);" onclick="logoutUserFully()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                  <polyline points="16 17 21 12 16 7"></polyline>
+                  <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg>
+                <span>تسجيل الخروج وإلغاء حفظ الجلسة</span>
+              </button>
+            </div>
           </div>
-          <div>
-            <label style="font-size:0.9rem; font-weight:700; color:#fff; display:block; margin-bottom:6px;">فترة التحديث التلقائي للأسعار في الخلفية</label>
-            <select class="filter-select" style="width:100%;">
-              <option value="60">كل دقيقة (60 ثانية)</option>
-              <option value="300">كل 5 دقائق</option>
-            </select>
+
+          <!-- Change PIN Card -->
+          <div class="stat-card" style="display:flex; flex-direction:column; gap:1rem;">
+            <h3 style="color:#fff; font-size:1.1rem; font-weight:800; display:flex; align-items:center; gap:8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <span>أمان التطبيق وتغيير كلمة السر (PIN)</span>
+            </h3>
+            <div>
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">الرمز السري الحالي</label>
+              <input type="password" id="currentPinInput" class="filter-select" style="width:100%; letter-spacing:4px;" placeholder="••••" />
+            </div>
+            <div>
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">الرمز السري الجديد (4 أرقام أو أكثر)</label>
+              <input type="password" id="newPinInput" class="filter-select" style="width:100%; letter-spacing:4px;" placeholder="••••" />
+            </div>
+            <div>
+              <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:5px;">تأكيد الرمز السري الجديد</label>
+              <input type="password" id="confirmNewPinInput" class="filter-select" style="width:100%; letter-spacing:4px;" placeholder="••••" />
+            </div>
+            <div>
+              <button class="btn-action btn-mint" onclick="submitChangePin()" style="height:42px;">
+                <span>حفظ الرمز السري الجديد</span>
+              </button>
+            </div>
           </div>
-          <div>
-            <button class="btn-action btn-mint" onclick="showToast('تم حفظ التفضيلات بنجاح', 'success')">حفظ الإعدادات</button>
+
+          <!-- General Preferences Card -->
+          <div class="stat-card" style="display:flex; flex-direction:column; gap:1.2rem;">
+            <h3 style="color:#fff; font-size:1.1rem; font-weight:800;">تفضيلات العرض والمزامنة</h3>
+            <div>
+              <label style="font-size:0.9rem; font-weight:700; color:#fff; display:block; margin-bottom:6px;">السمة البصرية (Theme)</label>
+              <select class="filter-select" style="width:100%;">
+                <option value="oled_dark">OLED Liquid Glass Dark (الافتراضي الموصى به)</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:0.9rem; font-weight:700; color:#fff; display:block; margin-bottom:6px;">فترة التحديث التلقائي للأسعار في الخلفية</label>
+              <select class="filter-select" style="width:100%;">
+                <option value="60">كل دقيقة (60 ثانية)</option>
+                <option value="300">كل 5 دقائق</option>
+              </select>
+            </div>
+            <div>
+              <button class="btn-action btn-mint" onclick="showToast('تم حفظ التفضيلات بنجاح', 'success')">حفظ التفضيلات</button>
+            </div>
           </div>
         </div>
       </section>
@@ -2007,9 +2074,16 @@
       </div>
       <div>
         <h2 style="font-size:1.3rem; color:#fff; font-weight:800; margin-bottom:4px;">تطبيق رادار السوق محمي</h2>
-        <p style="font-size:0.85rem; color:var(--text-muted);">أدخل الرمز السري للمتابعة (الافتراضي: 1234)</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);" id="pinModalHint">أدخل الرمز السري للمتابعة (الافتراضي: 1234)</p>
       </div>
-      <input type="password" id="pinInput" class="pin-input-field" maxlength="4" placeholder="••••" autofocus onkeyup="if(event.key==='Enter') submitPin()" />
+      <input type="password" id="pinInput" class="pin-input-field" maxlength="8" placeholder="••••" autofocus onkeyup="if(event.key==='Enter') submitPin()" />
+      
+      <!-- Remember Me Checkbox -->
+      <label style="display:flex; align-items:center; gap:8px; font-size:0.84rem; color:var(--text-muted); cursor:pointer; user-select:none;">
+        <input type="checkbox" id="rememberMeCheckbox" checked style="accent-color:var(--mint); width:16px; height:16px; cursor:pointer;" />
+        <span>تذكر تسجيل الدخول وحفظ المستخدم على هذا الجهاز</span>
+      </label>
+
       <button class="btn-action btn-mint" onclick="submitPin()" style="width:100%; height:44px; justify-content:center;">
         <span>دخول إلى التطبيق</span>
       </button>
@@ -2023,7 +2097,7 @@
   <script>
     // State management
     const state = {
-      authenticated: localStorage.getItem('pin_auth') === 'true',
+      authenticated: false,
       catalog: null,
       selectedCategory: 'ai',
       selectedProductFamily: 'Google Gemini',
@@ -2052,16 +2126,31 @@
     });
 
     // ----------------------------------------------------
-    // Authentication & PIN Lock
+    // Authentication & Persistent User Session
     // ----------------------------------------------------
     function checkAuthentication() {
-      if (!state.authenticated) {
+      const isCookieAuth = document.cookie.split(';').some(c => c.trim().startsWith('app_auth=1'));
+      const isLocalAuth = localStorage.getItem('pin_auth') === 'true' || sessionStorage.getItem('pin_auth') === 'true';
+
+      if (isCookieAuth || isLocalAuth) {
+        state.authenticated = true;
+        document.getElementById('pinLockModal').style.display = 'none';
+        updateUserDisplay();
+      } else {
+        state.authenticated = false;
         document.getElementById('pinLockModal').style.display = 'flex';
       }
     }
 
     async function submitPin() {
       const pin = document.getElementById('pinInput').value.trim();
+      const rememberMe = document.getElementById('rememberMeCheckbox').checked;
+
+      if (!pin) {
+        showToast('يرجى إدخال الرمز السري', 'error');
+        return;
+      }
+
       try {
         const res = await fetch('/api/auth/verify', {
           method: 'POST',
@@ -2070,10 +2159,23 @@
         });
         const data = await res.json();
         if (data.success) {
-          localStorage.setItem('pin_auth', 'true');
           state.authenticated = true;
           document.getElementById('pinLockModal').style.display = 'none';
-          showToast('تم تسجيل الدخول بنجاح', 'success');
+
+          if (rememberMe) {
+            localStorage.setItem('pin_auth', 'true');
+            document.cookie = "app_auth=1; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
+          } else {
+            sessionStorage.setItem('pin_auth', 'true');
+          }
+
+          if (!localStorage.getItem('auth_user_name')) {
+            localStorage.setItem('auth_user_name', data.user ? data.user.name : 'المسؤول (Admin)');
+          }
+          localStorage.setItem('auth_login_time', new Date().toLocaleString('ar-EG'));
+
+          updateUserDisplay();
+          showToast('مرحباً بك! تم تسجيل الدخول وحفظ الجلسة بنجاح', 'success');
         } else {
           showToast(data.message || 'الرمز السري غير صحيح', 'error');
         }
@@ -2082,8 +2184,90 @@
       }
     }
 
-    function lockAppScreen() {
+    function updateUserDisplay() {
+      const userName = localStorage.getItem('auth_user_name') || 'المسؤول (Admin)';
+      const loginTime = localStorage.getItem('auth_login_time') || 'جلسة عمل نشطة';
+      
+      const settingsName = document.getElementById('settingsUserName');
+      if (settingsName) settingsName.innerText = userName;
+      
+      const settingsTime = document.getElementById('settingsLoginTime');
+      if (settingsTime) settingsTime.innerText = `آخر تسجيل دخول: ${loginTime}`;
+      
+      const customInput = document.getElementById('customUserNameInput');
+      if (customInput) customInput.value = userName;
+
+      const avatarBtn = document.querySelector('.user-avatar-btn');
+      if (avatarBtn) {
+        const initials = userName.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase() || 'AD';
+        avatarBtn.innerText = initials;
+        avatarBtn.title = `المستخدم: ${userName} (انقر للإعدادات)`;
+        avatarBtn.onclick = () => switchView('settings');
+      }
+    }
+
+    function saveCustomUserName() {
+      const input = document.getElementById('customUserNameInput');
+      const newName = input ? input.value.trim() : '';
+      if (!newName) {
+        showToast('يرجى إدخال اسم مستخدم صالح', 'error');
+        return;
+      }
+      localStorage.setItem('auth_user_name', newName);
+      updateUserDisplay();
+      showToast('تم حفظ اسم المستخدم بنجاح', 'success');
+    }
+
+    async function submitChangePin() {
+      const currentPin = document.getElementById('currentPinInput').value.trim();
+      const newPin = document.getElementById('newPinInput').value.trim();
+      const confirmPin = document.getElementById('confirmNewPinInput').value.trim();
+
+      if (!currentPin || !newPin) {
+        showToast('يرجى تعبئة كافة حقول الرمز السري', 'error');
+        return;
+      }
+      if (newPin !== confirmPin) {
+        showToast('الرمز السري الجديد غير متطابق مع التأكيد', 'error');
+        return;
+      }
+      if (newPin.length < 4) {
+        showToast('يجب أن يتكون الرمز السري الجديد من 4 خانات على الأقل', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/change-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ current_pin: currentPin, new_pin: newPin })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message || 'تم تحديث الرمز السري بنجاح', 'success');
+          document.getElementById('currentPinInput').value = '';
+          document.getElementById('newPinInput').value = '';
+          document.getElementById('confirmNewPinInput').value = '';
+        } else {
+          showToast(data.message || 'فشل في تغيير الرمز السري', 'error');
+        }
+      } catch (e) {
+        showToast('خطأ في الاتصال بالخادم', 'error');
+      }
+    }
+
+    function logoutUserFully() {
       localStorage.removeItem('pin_auth');
+      localStorage.removeItem('auth_user_name');
+      sessionStorage.removeItem('pin_auth');
+      document.cookie = "app_auth=; max-age=0; path=/;";
+      state.authenticated = false;
+      document.getElementById('pinInput').value = '';
+      document.getElementById('pinLockModal').style.display = 'flex';
+      showToast('تم تسجيل الخروج وإلغاء حفظ الجلسة', 'info');
+    }
+
+    function lockAppScreen() {
       state.authenticated = false;
       document.getElementById('pinInput').value = '';
       document.getElementById('pinLockModal').style.display = 'flex';
@@ -2576,9 +2760,6 @@
       document.getElementById('alertMerchantSelect').value = state.activeModalOffer.store_name;
     }
 
-    // ----------------------------------------------------
-    // Comparative Multi-Merchant Chart
-    // ----------------------------------------------------
     function renderComparativeMarketChart(chartData) {
       const canvas = document.getElementById('marketComparisonChartCanvas');
       if (!canvas) return;
@@ -2591,62 +2772,89 @@
         return;
       }
 
-      const colors = ['#00e599', '#38bdf8', '#a855f7', '#f59e0b', '#ec4899', '#6366f1'];
+      const colors = ['#00e599', '#38bdf8', '#a855f7', '#f59e0b', '#ec4899', '#6366f1', '#14b8a6', '#f43f5e', '#eab308'];
       const datasets = chartData.merchants.map((merchantName, idx) => {
         const series = chartData.series[merchantName] || [];
         const color = colors[idx % colors.length];
         return {
           label: merchantName,
-          data: series.map(pt => ({ x: pt.timestamp * 1000, y: pt.price })),
+          data: Array.isArray(series) ? series : [],
           borderColor: color,
           backgroundColor: color,
           borderWidth: 2.2,
           pointRadius: 4,
-          tension: 0.3
+          pointHoverRadius: 6,
+          tension: 0.3,
+          spanGaps: true
         };
       });
 
       const ctx = canvas.getContext('2d');
       state.charts.market = new Chart(ctx, {
         type: 'line',
-        data: { datasets },
+        data: {
+          labels: chartData.dates || [],
+          datasets: datasets
+        },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
           plugins: {
             legend: {
-              labels: { color: '#f8fafc', font: { family: 'Cairo', weight: '600' } }
+              display: true,
+              position: 'top',
+              labels: {
+                color: '#f8fafc',
+                font: { family: 'Cairo', weight: '600', size: 12 },
+                usePointStyle: true,
+                padding: 12
+              }
             },
             tooltip: {
               backgroundColor: 'rgba(14, 20, 32, 0.95)',
               borderColor: 'rgba(255, 255, 255, 0.1)',
-              borderWidth: 1
+              borderWidth: 1,
+              titleFont: { family: 'Cairo', size: 12, weight: '700' },
+              bodyFont: { family: 'JetBrains Mono', size: 12 },
+              callbacks: {
+                label: (ctx) => ` ${ctx.dataset.label}: $${ctx.parsed.y}`
+              }
             }
           },
           scales: {
             x: {
-              type: 'linear',
               grid: { color: 'rgba(255, 255, 255, 0.05)' },
               ticks: {
                 color: '#94a3b8',
-                callback: (val) => new Date(val).toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' })
+                font: { family: 'Cairo', size: 11 }
               }
             },
             y: {
               grid: { color: 'rgba(255, 255, 255, 0.05)' },
-              ticks: { color: '#94a3b8', callback: (val) => `$${val}` }
+              ticks: {
+                color: '#94a3b8',
+                font: { family: 'JetBrains Mono', size: 11 },
+                callback: (val) => `$${val}`
+              }
             }
           }
         }
       });
     }
 
-    function setMarketChartPeriod(days, btn) {
+    async function setMarketChartPeriod(days, btn) {
       state.marketChartPeriodDays = days;
       document.querySelectorAll('.market-chart-section .period-tab').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      executeComparisonSearch();
+      const prod = (state.selectedProductFamily && state.selectedProductFamily !== 'all') ? state.selectedProductFamily : (state.searchQuery || 'Gemini');
+      try {
+        const res = await fetch(`/api/market-chart?product=${encodeURIComponent(prod)}&period_days=${days}`);
+        const data = await res.json();
+        renderComparativeMarketChart(data);
+      } catch (e) {
+        console.error('Market chart period error:', e);
+      }
     }
 
     // ----------------------------------------------------

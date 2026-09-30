@@ -75,17 +75,39 @@ aggregator.register_store(VerifierStoreAdapter())
 # Start background refresh worker (every 60s)
 aggregator.start_background_worker(interval=60)
 
-# Security: PIN Authentication
-APP_PIN = os.environ.get("APP_PIN", "1234")
-
+# Security: Persistent PIN Authentication & User Management
 class PinVerifyRequest(BaseModel):
     pin: str
 
+class ChangePinRequest(BaseModel):
+    current_pin: str
+    new_pin: str
+
 @app.post("/api/auth/verify")
 def verify_pin(req: PinVerifyRequest):
-    if req.pin.strip() == APP_PIN.strip():
-        return {"success": True, "token": "session_authenticated"}
+    active_pin = database.get_app_pin()
+    if req.pin.strip() == active_pin:
+        return {
+            "success": True, 
+            "token": "session_authenticated",
+            "user": {
+                "name": "المسؤول (Admin)",
+                "role": "admin",
+                "avatar": "AD"
+            }
+        }
     return {"success": False, "message": "الرمز السري غير صحيح"}
+
+@app.post("/api/auth/change-pin")
+def change_pin(req: ChangePinRequest):
+    active_pin = database.get_app_pin()
+    if req.current_pin.strip() != active_pin:
+        return {"success": False, "message": "الرمز السري الحالي غير صحيح"}
+    if len(req.new_pin.strip()) < 4:
+        return {"success": False, "message": "يجب أن يتكون الرمز السري من 4 أرقام على الأقل"}
+    database.set_app_pin(req.new_pin.strip())
+    return {"success": True, "message": "تم تحديث الرمز السري بنجاح"}
+
 
 # Background Userbot Crawler trigger
 is_crawling = False

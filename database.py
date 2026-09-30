@@ -206,50 +206,100 @@ def get_product_history(merchant_name: str, product_name: str, period_days: int 
     }
 
 def get_multi_merchant_comparison(product_query: str, period_days: int = 7) -> Dict[str, Any]:
-    """Returns price time series for all merchants offering this product to plot comparative chart"""
+    """
+    Returns aligned chronological daily price time series for all merchants
+    offering this product to plot comparative chart.
+    """
     now = time.time()
-    cutoff_time = now - (period_days * 86400)
+    day_sec = 86400
+    
+    # 1. Resolve family/query keywords
+    q_lower = product_query.lower() if product_query else "gemini"
+    kws = [q_lower]
+    if any(k in q_lower for k in ['gemini', 'google ai', 'google one', 'ذكاء']):
+        kws = ['gemini', 'google ai', 'google one']
+    elif any(k in q_lower for k in ['chatgpt', 'chat gpt', 'gpt', 'openai']):
+        kws = ['chatgpt', 'chat gpt', 'gpt']
+    elif 'claude' in q_lower:
+        kws = ['claude']
+    elif 'perplexity' in q_lower:
+        kws = ['perplexity']
+    elif 'canva' in q_lower:
+        kws = ['canva']
+    elif 'capcut' in q_lower:
+        kws = ['capcut']
+    elif 'adobe' in q_lower:
+        kws = ['adobe', 'express']
+    elif 'figma' in q_lower:
+        kws = ['figma']
+    elif 'duolingo' in q_lower:
+        kws = ['duolingo']
+    elif 'notion' in q_lower:
+        kws = ['notion']
+    elif 'cursor' in q_lower:
+        kws = ['cursor']
+    elif 'grok' in q_lower:
+        kws = ['grok']
+    elif 'elevenlabs' in q_lower:
+        kws = ['elevenlabs']
+    elif 'lovable' in q_lower:
+        kws = ['lovable']
+    elif 'replit' in q_lower:
+        kws = ['replit']
+    elif 'netflix' in q_lower:
+        kws = ['netflix']
+    elif 'youtube' in q_lower:
+        kws = ['youtube', 'yt']
+
+    clause = ' OR '.join(['product_name LIKE ?' for _ in kws])
+    params = [f'%{kw}%' for kw in kws]
     
     conn = get_connection()
     try:
         cursor = conn.cursor()
-        search_pattern = f"%{product_query}%"
-        cursor.execute("""
-        SELECT merchant_name, price, currency, timestamp_sec, recorded_at 
-        FROM price_history 
-        WHERE product_name LIKE ? AND timestamp_sec >= ?
-        ORDER BY timestamp_sec ASC
-        """, (search_pattern, cutoff_time))
-        rows = cursor.fetchall()
+        cursor.execute(f'SELECT DISTINCT merchant_name FROM price_history WHERE ({clause})', params)
+        merchants = [r[0] for r in cursor.fetchall()]
         
-        if not rows:
-            cursor.execute("""
-            SELECT merchant_name, price, currency, timestamp_sec, recorded_at 
-            FROM price_history 
-            WHERE product_name LIKE ?
-            ORDER BY timestamp_sec ASC
-            """, (search_pattern,))
+        # Build daily date buckets
+        date_labels = []
+        bucket_timestamps = []
+        months_ar = ['', 'يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر']
+        
+        for i in range(period_days - 1, -1, -1):
+            t = now - (i * day_sec)
+            bucket_timestamps.append(t)
+            from datetime import datetime
+            dt = datetime.fromtimestamp(t)
+            date_labels.append(f'{dt.day} {months_ar[dt.month]}')
+            
+        merchant_datasets = {}
+        for m in merchants:
+            cursor.execute(
+                f'SELECT price, timestamp_sec FROM price_history WHERE merchant_name = ? AND ({clause}) ORDER BY timestamp_sec ASC',
+                [m] + params
+            )
             rows = cursor.fetchall()
+            if not rows:
+                continue
+            
+            prices_per_day = []
+            for b_time in bucket_timestamps:
+                valid_pts = [r[0] for r in rows if r[1] <= (b_time + 43200)]
+                if valid_pts:
+                    prices_per_day.append(round(valid_pts[-1], 2))
+                else:
+                    prices_per_day.append(round(rows[0][0], 2))
+                    
+            merchant_datasets[m] = prices_per_day
+
+        return {
+            "product_name": product_query,
+            "dates": date_labels,
+            "merchants": list(merchant_datasets.keys()),
+            "series": merchant_datasets
+        }
     finally:
         conn.close()
-
-    merchant_series: Dict[str, List[Dict[str, Any]]] = {}
-    for r in rows:
-        m = r["merchant_name"]
-        if m not in merchant_series:
-            merchant_series[m] = []
-        merchant_series[m].append({
-            "price": float(r["price"]),
-            "currency": r["currency"],
-            "timestamp": r["timestamp_sec"],
-            "recorded_at": str(r["recorded_at"])
-        })
-
-    return {
-        "product_name": product_query,
-        "merchants": list(merchant_series.keys()),
-        "series": merchant_series
-    }
 
 def seed_initial_history_if_needed(products_by_store: Dict[str, List[Any]]):
     """Populates historical data points across 30 days in a fast batch transaction"""
@@ -461,3 +511,21 @@ def set_user_setting(key: str, value: str):
         conn.commit()
     finally:
         conn.close()
+
+def get_app_pin() -> str:
+    """Returns persistent application PIN, defaults to 1234 or environment variable"""
+    conn = get_connection()
+    try:
+        cursor = conn.cursor()
+        cursor.execute("SELECT value FROM user_settings WHERE key = 'app_pin'")
+        row = cursor.fetchone()
+        if row and row["value"]:
+            return str(row["value"]).strip()
+        return os.environ.get("APP_PIN", "1234").strip()
+    finally:
+        conn.close()
+
+def set_app_pin(new_pin: str):
+    """Saves new application PIN persistently in database"""
+    set_user_setting("app_pin", new_pin.strip())
+
