@@ -116,6 +116,7 @@ class ChangePinRequest(BaseModel):
     new_pin: str
 
 @app.post("/api/auth/verify")
+@app.post("/auth/verify")
 def verify_pin(req: PinVerifyRequest):
     input_pin = normalize_pin(req.pin)
     try:
@@ -138,6 +139,7 @@ def verify_pin(req: PinVerifyRequest):
     return {"success": False, "message": "الرمز السري غير صحيح"}
 
 @app.post("/api/auth/change-pin")
+@app.post("/auth/change-pin")
 def change_pin(req: ChangePinRequest):
     curr = normalize_pin(req.current_pin)
     new_p = normalize_pin(req.new_pin)
@@ -183,18 +185,22 @@ def crawler_status():
 
 # Catalog & Dependent Filters Endpoints
 @app.get("/api/catalog")
+@app.get("/catalog")
 def get_catalog():
     return aggregator.get_catalog_hierarchy()
 
 @app.get("/api/stores")
+@app.get("/stores")
 def get_stores():
     return aggregator.get_stores_info()
 
 @app.get("/api/store/{store_name}/feed")
+@app.get("/store/{store_name}/feed")
 def get_store_feed(store_name: str):
     return aggregator.get_store_feed(store_name)
 
 @app.get("/api/search")
+@app.get("/search")
 def search(
     q: str = Query("", description="Search query string"),
     category: Optional[str] = Query(None, description="Category filter"),
@@ -215,6 +221,7 @@ def search(
 
 # Historical Chart Endpoint (Reference Image 2)
 @app.get("/api/history")
+@app.get("/history")
 def get_product_history_endpoint(
     merchant: str = Query(..., description="Store/merchant name"),
     product: str = Query(..., description="Product name"),
@@ -224,6 +231,7 @@ def get_product_history_endpoint(
 
 # Comparative Multi-Merchant Chart Endpoint (Reference Image 1)
 @app.get("/api/market-chart")
+@app.get("/market-chart")
 def get_market_chart_endpoint(
     product: str = Query(..., description="Product search string or family"),
     period_days: int = Query(7, description="Period in days (7, 30)")
@@ -341,6 +349,7 @@ def update_setting(req: UpdateSettingRequest):
 
 # Instant Refresh Endpoint
 @app.post("/api/refresh")
+@app.post("/refresh")
 def refresh_all():
     aggregator.refresh_cache_now(async_mode=False)
     return {"success": True, "message": "تم تحديث كافة الأسعار بنجاح"}
