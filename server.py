@@ -34,19 +34,40 @@ app.add_middleware(
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_DIR = os.path.join(BASE_DIR, "static")
+if not os.path.exists(STATIC_DIR):
+    alt_static = os.path.join(BASE_DIR, "api", "static")
+    if os.path.exists(alt_static):
+        STATIC_DIR = alt_static
+
 INDEX_FILE = os.path.join(STATIC_DIR, "index.html")
 
-os.makedirs(STATIC_DIR, exist_ok=True)
-os.makedirs(os.path.join(STATIC_DIR, "icons"), exist_ok=True)
-app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+try:
+    os.makedirs(STATIC_DIR, exist_ok=True)
+    os.makedirs(os.path.join(STATIC_DIR, "icons"), exist_ok=True)
+except Exception:
+    pass
+
+try:
+    if os.path.exists(STATIC_DIR):
+        app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+except Exception:
+    pass
 
 @app.get("/manifest.json")
 def get_manifest():
-    return FileResponse(os.path.join(STATIC_DIR, "manifest.json"), media_type="application/manifest+json")
+    for p in [os.path.join(STATIC_DIR, "manifest.json"), "static/manifest.json", "api/static/manifest.json"]:
+        if os.path.exists(p):
+            with open(p, "r", encoding="utf-8") as f:
+                return Response(content=f.read(), media_type="application/manifest+json")
+    return Response(content="{}", media_type="application/manifest+json")
 
 @app.get("/sw.js")
 def get_sw():
-    return FileResponse(os.path.join(STATIC_DIR, "sw.js"), media_type="application/javascript")
+    for p in [os.path.join(STATIC_DIR, "sw.js"), "static/sw.js", "api/static/sw.js"]:
+        if os.path.exists(p):
+            with open(p, "r", encoding="utf-8") as f:
+                return Response(content=f.read(), media_type="application/javascript")
+    return Response(content="", media_type="application/javascript")
 
 
 # Initialize Aggregator with ALL 12 Stores
@@ -306,9 +327,38 @@ def refresh_all():
     return {"success": True, "message": "تم تحديث كافة الأسعار بنجاح"}
 
 # Main Application Entry Point
-@app.get("/", response_class=FileResponse)
+_INDEX_HTML_CACHE = None
+
+def get_index_html() -> str:
+    global _INDEX_HTML_CACHE
+    if _INDEX_HTML_CACHE:
+        return _INDEX_HTML_CACHE
+    search_paths = [
+        INDEX_FILE,
+        os.path.join(BASE_DIR, "static", "index.html"),
+        os.path.join(BASE_DIR, "api", "static", "index.html"),
+        os.path.join(os.getcwd(), "static", "index.html"),
+        os.path.join(os.getcwd(), "api", "static", "index.html"),
+        "static/index.html",
+        "api/static/index.html"
+    ]
+    for p in search_paths:
+        if os.path.exists(p):
+            try:
+                with open(p, "r", encoding="utf-8") as f:
+                    _INDEX_HTML_CACHE = f.read()
+                    return _INDEX_HTML_CACHE
+            except Exception:
+                pass
+    return "<h1>رادار السوق | Market Radar</h1>"
+
+@app.get("/", response_class=HTMLResponse)
+@app.get("/api", response_class=HTMLResponse)
+@app.get("/api/", response_class=HTMLResponse)
+@app.get("/api/index.py", response_class=HTMLResponse)
+@app.get("/index.html", response_class=HTMLResponse)
 def index():
-    return FileResponse(INDEX_FILE)
+    return HTMLResponse(content=get_index_html(), status_code=200, media_type="text/html; charset=utf-8")
 
 
 if __name__ == "__main__":
