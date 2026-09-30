@@ -238,6 +238,7 @@ def change_pin(req: ChangePinRequest, request: Request, response: Response):
 is_crawling = False
 
 @app.post("/api/crawler/run")
+@app.post("/api/crawl")
 def trigger_crawler():
     global is_crawling
     if is_crawling:
@@ -433,12 +434,7 @@ def refresh_all():
     return {"success": True, "message": "تم تحديث كافة الأسعار بنجاح"}
 
 # Main Application Entry Point
-_INDEX_HTML_CACHE = None
-
 def get_index_html() -> str:
-    global _INDEX_HTML_CACHE
-    if _INDEX_HTML_CACHE:
-        return _INDEX_HTML_CACHE
     search_paths = [
         INDEX_FILE,
         os.path.join(BASE_DIR, "static", "index.html"),

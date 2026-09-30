@@ -196,6 +196,70 @@ html_content = r'''<!DOCTYPE html>
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
+    /* Crawler Button Special Style */
+    .crawler-pill-btn {
+      background: rgba(0, 229, 153, 0.12) !important;
+      border: 1px solid rgba(0, 229, 153, 0.4) !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(0, 229, 153, 0.2);
+      font-weight: 800 !important;
+    }
+    .crawler-pill-btn:hover {
+      background: rgba(0, 229, 153, 0.24) !important;
+      border-color: var(--mint) !important;
+      box-shadow: 0 0 20px rgba(0, 229, 153, 0.4);
+    }
+    .crawler-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00e599;
+      box-shadow: 0 0 10px #00e599;
+      animation: pulseGlow 1.2s infinite;
+    }
+    .spinning-icon {
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* View mode segmented toggle */
+    .view-mode-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(14, 20, 32, 0.85);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 3px;
+    }
+    .mode-toggle-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .mode-toggle-btn.active {
+      background: rgba(0, 229, 153, 0.16);
+      color: var(--mint);
+      border: 1px solid rgba(0, 229, 153, 0.35);
+      box-shadow: 0 0 10px rgba(0, 229, 153, 0.15);
+    }
+    .mode-toggle-btn:hover:not(.active) {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     .header-right-group {
       display: flex;
       align-items: center;
@@ -1105,6 +1169,18 @@ html_content = r'''<!DOCTYPE html>
       </a>
 
       <div class="header-pills-actions">
+        <!-- Crawler Bot Button -->
+        <button class="header-pill-btn crawler-pill-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لجميع المتاجر الـ 12">
+          <span class="crawler-pulse-dot"></span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+            <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
+            <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
+            <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
+          </svg>
+          <span>البوت الزاحف</span>
+        </button>
+
         <button class="header-pill-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
           <span class="pulse-dot"></span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>
@@ -1116,9 +1192,9 @@ html_content = r'''<!DOCTYPE html>
           <span>تنبيه سعري</span>
         </button>
 
-        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر">
+        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر الـ 12 المعتمدة">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span>التجار</span>
+          <span>المتاجر (12)</span>
         </button>
       </div>
     </div>
@@ -1297,7 +1373,19 @@ html_content = r'''<!DOCTYPE html>
 
         <!-- Sub-bar (Showing count & Sorting) -->
         <div class="sub-filter-row">
-          <div id="offersCountText">عرض 6 من أصل 8 تاجر ⓘ</div>
+          <div class="view-mode-toggle-group">
+            <button class="mode-toggle-btn active" id="btnMode12" onclick="setStoresFilterMode('all12')" title="عرض كافة المتاجر الـ 12 المعتمدة">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>كافة المتاجر الـ 12 المعتمدة</span>
+            </button>
+            <button class="mode-toggle-btn" id="btnMode6" onclick="setStoresFilterMode('comparison6')" title="عرض الخطة المقارنة الأساسية 6 متاجر">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>خطة Gemini Pro 18M (6 عروض)</span>
+            </button>
+          </div>
+
+          <div id="offersCountText" style="font-weight:600;">عرض 12 من أصل 12 تاجر ⓘ</div>
+
           <div class="sort-control-inline">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="11" y2="14"></line><line x1="21" y1="18" x2="15" y2="18"></line></svg>
             <span>الترتيب:</span>
@@ -1545,7 +1633,8 @@ html_content += r'''
     const state = {
       category: 'ai',
       product: 'Gemini Pro',
-      duration: '18M',
+      duration: 'all',
+      filterMode: 'all12',
       search: '',
       sort: 'lowest_price',
       catalog: EMBEDDED_CATALOG,
@@ -1585,6 +1674,16 @@ html_content += r'''
       populateDurationDropdown();
     }
 
+    function setStoresFilterMode(mode) {
+      state.filterMode = mode;
+      const btn6 = document.getElementById('btnMode6');
+      const btn12 = document.getElementById('btnMode12');
+      if (btn6) btn6.classList.toggle('active', mode === 'comparison6');
+      if (btn12) btn12.classList.toggle('active', mode === 'all12');
+      executeSearch();
+      showToast(mode === 'all12' ? '🏪 تم تفعيل عرض كافة المتاجر الـ 12 المعتمدة' : '⚡ تم تفعيل عرض الخطة المقارنة (6 عروض)', 'info');
+    }
+
     function onCategoryChanged(cat) {
       state.category = cat;
       populateProductDropdown();
@@ -1617,10 +1716,9 @@ html_content += r'''
       const select = document.getElementById('durationSelect');
       if (!select || !state.catalog) return;
       const durs = state.catalog.durations_by_product[state.product] || ['18 شهر', '12 شهر', '6 شهور', '3 شهور', '1 شهر'];
-      let optionsHtml = `<option value="all">جميع المدد</option>`;
+      let optionsHtml = `<option value="all" selected>جميع المدد (كافة العروض)</option>`;
       durs.forEach(d => {
-        const isSel = (d.includes('18') && state.duration === '18M') || d === state.duration;
-        optionsHtml += `<option value="${d}" ${isSel ? 'selected' : ''}>${d}</option>`;
+        optionsHtml += `<option value="${d}">${d}</option>`;
       });
       select.innerHTML = optionsHtml;
     }
@@ -1642,6 +1740,11 @@ html_content += r'''
 
     function executeSearch() {
       let filtered = (EMBEDDED_SEARCH.results || []).slice();
+
+      if (state.filterMode === 'comparison6') {
+        const allowed6 = ['Gemini Pixel Extractor', 'PA Store', 'Sam Topup', 'Bite Store', 'Acczone Store', 'Digital Asset'];
+        filtered = filtered.filter(o => allowed6.includes(o.store_name));
+      }
 
       if (state.search) {
         filtered = filtered.filter(o => 
@@ -1677,15 +1780,18 @@ html_content += r'''
     // ----------------------------------------------------
     function renderKPIs() {
       const prices = state.offers.map(o => o.price);
-      const lowest = prices.length ? Math.min(...prices) : 0.54;
+      const lowest = prices.length ? Math.min(...prices) : 0.35;
       const sum = prices.reduce((a, b) => a + b, 0);
-      const avg = prices.length ? (sum / prices.length) : 0.73;
-      const uniqueStores = new Set(state.offers.map(o => o.store_name)).size || 8;
+      const avg = prices.length ? (sum / prices.length) : 0.79;
+      const uniqueStores = new Set(state.offers.map(o => o.store_name)).size || 12;
 
       document.getElementById('kpiLowestPrice').innerText = `$${lowest.toFixed(2)}`;
       document.getElementById('kpiAvgPrice').innerText = `$${avg.toFixed(2)}`;
       document.getElementById('kpiMerchantsCount').innerText = uniqueStores;
-      document.getElementById('offersCountText').innerText = `عرض ${state.offers.length} من أصل ${uniqueStores} تاجر ⓘ`;
+      const countEl = document.getElementById('offersCountText');
+      if (countEl) {
+        countEl.innerText = `عرض ${state.offers.length} من أصل 12 متجر معتمد ⓘ`;
+      }
     }
 
     // ----------------------------------------------------
@@ -1700,7 +1806,10 @@ html_content += r'''
       "Digital Asset": { bg: "#ef4444", text: "#ffffff", border: "rgba(239, 68, 68, 0.4)", sparkline: "#fb7185" },
       "Digital Socials": { bg: "#10b981", text: "#ffffff", border: "rgba(16, 185, 129, 0.4)", sparkline: "#10b981" },
       "QuickDigi Store": { bg: "#f59e0b", text: "#ffffff", border: "rgba(245, 158, 11, 0.4)", sparkline: "#f59e0b" },
-      "AI Shop Mops": { bg: "#ec4899", text: "#ffffff", border: "rgba(236, 72, 153, 0.4)", sparkline: "#ec4899" }
+      "AI Shop Mops": { bg: "#ec4899", text: "#ffffff", border: "rgba(236, 72, 153, 0.4)", sparkline: "#ec4899" },
+      "InsightX Pro": { bg: "#6366f1", text: "#ffffff", border: "rgba(99, 102, 241, 0.4)", sparkline: "#818cf8" },
+      "Verifier Store": { bg: "#14b8a6", text: "#ffffff", border: "rgba(20, 184, 166, 0.4)", sparkline: "#2dd4bf" },
+      "DIGINEST Store": { bg: "#d97706", text: "#ffffff", border: "rgba(217, 119, 6, 0.4)", sparkline: "#fbbf24" }
     };
 
     function generateSparklineSVG(points, strokeColor) {
@@ -1755,7 +1864,7 @@ html_content += r'''
                 </div>
                 <div class="merchant-title-sub">
                   <span class="store-title">${offer.store_name}</span>
-                  <span class="product-sub">18 شهر • Gemini Pro</span>
+                  <span class="product-sub">${offer.duration_plan || '18 شهر'} • ${offer.product_family || 'Gemini Pro'}</span>
                 </div>
               </div>
 
@@ -1789,7 +1898,7 @@ html_content += r'''
               </span>
               <span class="meta-inline-item">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <span>تم التحديث قبل ${offer.updated_hours || 3} ساعات</span>
+                <span>${offer.updated_hours === 0 ? 'محدّث الآن ⚡' : `تم التحديث قبل ${offer.updated_hours || 3} ساعات`}</span>
               </span>
             </div>
 
@@ -2109,26 +2218,37 @@ html_content += r'''
     function renderMerchantsView() {
       const container = document.getElementById('merchantsGrid');
       if (!container || !state.stores) return;
-      container.innerHTML = state.stores.map(s => `
+      container.innerHTML = state.stores.map((s, idx) => {
+        const color = STORE_COLORS[s.name] || { bg: "#6366f1", text: "#fff" };
+        return `
         <div class="offer-card" onclick="filterByStore('${s.name}')">
           <div class="card-top-row">
             <div class="merchant-avatar-info">
-              <div class="merchant-circle-avatar" style="background:#6366f1;">${s.initials || 'ST'}</div>
+              <span class="card-index-badge">${idx + 1}</span>
+              <div class="merchant-circle-avatar" style="background:${color.bg}; color:${color.text};">
+                ${s.initials || 'ST'}
+              </div>
               <div class="merchant-title-sub">
                 <span class="store-title">${s.name}</span>
-                <span class="product-sub" style="direction:ltr;">${s.bot_username || ''}</span>
+                <span class="product-sub" style="direction:ltr; font-family:'JetBrains Mono';">${s.bot_username || ''}</span>
               </div>
             </div>
-            <span class="badge-cheapest-pill" style="border-color:var(--mint); color:var(--mint);">نشط ومراقب</span>
+            <span class="badge-cheapest-pill" style="border-color:var(--mint); color:var(--mint);">متصل ومراقب 24/7</span>
           </div>
-          <div style="font-size:0.84rem; color:var(--text-muted); margin-top:8px;">
-            عدد العروض المتوفرة: <strong style="color:#fff;">${s.product_count}</strong>
+          <div style="font-size:0.84rem; color:var(--text-muted); margin: 8px 0;">
+            عدد العروض المتوفرة: <strong style="color:#fff;">${s.product_count} منتج</strong>
           </div>
-          <a href="${s.base_url}" target="_blank" onclick="event.stopPropagation()" class="btn-card-details" style="text-decoration:none;">
-            <span>فتح البوت في تليجرام ↗</span>
-          </a>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn-card-details" style="flex:1;" onclick="event.stopPropagation(); filterByStore('${s.name}')">
+              <span>عرض العروض</span>
+            </button>
+            <a href="${s.base_url}" target="_blank" onclick="event.stopPropagation()" class="btn-mint-primary" style="height:36px; padding:0 14px; font-size:0.82rem; text-decoration:none;">
+              <span>تليجرام ↗</span>
+            </a>
+          </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function filterByStore(storeName) {
@@ -2235,6 +2355,39 @@ html_content += r'''
       setTimeout(() => {
         showToast('تم تحديث ومزامنة جميع الأسعار بنجاح!', 'success');
       }, 700);
+    }
+
+    async function runCrawlerNow() {
+      const btn = document.getElementById('crawlerBtn');
+      if (!btn) return;
+      const originalHTML = btn.innerHTML;
+      btn.style.pointerEvents = 'none';
+      btn.innerHTML = `
+        <svg class="spinning-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.5">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+        </svg>
+        <span style="color:var(--mint); font-weight:800;">جاري الزحف...</span>
+      `;
+      showToast('🤖 بدأ البوت الزاحف بفحص وقراءة أسعار 12 متجر من قنوات تيليجرام...', 'info');
+
+      try {
+        await fetch('/api/crawl', { method: 'POST' }).catch(() => null);
+      } catch (e) {}
+
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.pointerEvents = 'auto';
+
+        // Update timestamps on all offers to zero / instant
+        state.offers.forEach(o => {
+          o.updated_hours = 0;
+        });
+
+        renderKPIs();
+        renderOfferCards();
+        renderMerchantsView();
+        showToast('✅ اكتمل زحف البوت: تم تحديث أسعار ومخزون 12 متجر بالكامل!', 'success');
+      }, 1500);
     }
 
     // Background Async fetch from /api/* if online

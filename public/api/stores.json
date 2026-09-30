@@ -1,47 +1,38 @@
 [
   {
-    "name": "Sam Topup",
-    "bot_username": "@Samsshop_bot",
-    "initials": "SA",
+    "name": "Gemini Pixel Extractor",
+    "bot_username": "@GeminiPixel1_bot",
+    "initials": "GP",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 12,
-    "base_url": "https://sams-u7kj.onrender.com/api/v1"
-  },
-  {
-    "name": "Digital Asset",
-    "bot_username": "@digital_assetbot",
-    "initials": "DI",
-    "status": "online",
-    "status_text": "نشط",
-    "product_count": 26,
-    "base_url": "https://digital-assets-api.pe-supplykh.com/api/v1"
-  },
-  {
-    "name": "InsightX Pro",
-    "bot_username": "@insightXpro_bot",
-    "initials": "IN",
-    "status": "online",
-    "status_text": "نشط",
-    "product_count": 39,
-    "base_url": "https://api.insightxpro.store/api/v1"
+    "status_text": "نشط ومراقب",
+    "product_count": 3,
+    "base_url": "https://t.me/GeminiPixel1_bot"
   },
   {
     "name": "PA Store",
     "bot_username": "@p_a_store_bot",
     "initials": "PA",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 18,
+    "status_text": "نشط ومراقب",
+    "product_count": 32,
     "base_url": "http://store.proaccesses.com/api/v1"
+  },
+  {
+    "name": "Sam Topup",
+    "bot_username": "@Samsshop_bot",
+    "initials": "SA",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 12,
+    "base_url": "https://sams-u7kj.onrender.com/api/v1"
   },
   {
     "name": "Bite Store",
     "bot_username": "@Bite_storee_bot",
     "initials": "BI",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 81,
+    "status_text": "نشط ومراقب",
+    "product_count": 100,
     "base_url": "https://bite-store-bot-production.up.railway.app"
   },
   {
@@ -49,25 +40,25 @@
     "bot_username": "@Acczone_Store_bot",
     "initials": "AC",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 5,
+    "status_text": "نشط ومراقب",
+    "product_count": 6,
     "base_url": "https://api.acczone.xyz"
   },
   {
-    "name": "Gemini Pixel Extractor",
-    "bot_username": "@GeminiPixel1_bot",
-    "initials": "GP",
+    "name": "Digital Asset",
+    "bot_username": "@digital_assetbot",
+    "initials": "DI",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 3,
-    "base_url": "https://t.me/GeminiPixel1_bot"
+    "status_text": "نشط ومراقب",
+    "product_count": 36,
+    "base_url": "https://digital-assets-api.pe-supplykh.com/api/v1"
   },
   {
     "name": "AI Shop Mops",
     "bot_username": "@aishopmopsbot",
     "initials": "AM",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 28,
     "base_url": "https://t.me/aishopmopsbot"
   },
@@ -76,26 +67,26 @@
     "bot_username": "@QuickDigiBot",
     "initials": "QU",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 8,
     "base_url": "https://t.me/QuickDigiBot"
   },
   {
-    "name": "DIGINEST Store",
-    "bot_username": "@DIGINEST1BOT",
-    "initials": "DI",
-    "status": "offline",
-    "status_text": "online",
-    "product_count": 0,
-    "base_url": "https://t.me/DIGINEST1BOT"
+    "name": "InsightX Pro",
+    "bot_username": "@insightXpro_bot",
+    "initials": "IN",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 38,
+    "base_url": "https://api.insightxpro.store/api/v1"
   },
   {
     "name": "Digital Socials",
     "bot_username": "@Digitalsocials_bot",
-    "initials": "DI",
+    "initials": "DS",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 30,
+    "status_text": "نشط ومراقب",
+    "product_count": 44,
     "base_url": "https://digital-socials-shop.pages.dev/api"
   },
   {
@@ -103,8 +94,17 @@
     "bot_username": "@Veriyferbot",
     "initials": "VE",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 58,
     "base_url": "https://duskyr.com/api/v1"
+  },
+  {
+    "name": "DIGINEST Store",
+    "bot_username": "@DIGINEST1BOT",
+    "initials": "DN",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 14,
+    "base_url": "https://t.me/DIGINEST1BOT"
   }
 ]

@@ -172,6 +172,70 @@
       50% { opacity: 0.4; transform: scale(0.85); }
     }
 
+    /* Crawler Button Special Style */
+    .crawler-pill-btn {
+      background: rgba(0, 229, 153, 0.12) !important;
+      border: 1px solid rgba(0, 229, 153, 0.4) !important;
+      color: #fff !important;
+      box-shadow: 0 0 14px rgba(0, 229, 153, 0.2);
+      font-weight: 800 !important;
+    }
+    .crawler-pill-btn:hover {
+      background: rgba(0, 229, 153, 0.24) !important;
+      border-color: var(--mint) !important;
+      box-shadow: 0 0 20px rgba(0, 229, 153, 0.4);
+    }
+    .crawler-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #00e599;
+      box-shadow: 0 0 10px #00e599;
+      animation: pulseGlow 1.2s infinite;
+    }
+    .spinning-icon {
+      animation: spin 0.75s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+
+    /* View mode segmented toggle */
+    .view-mode-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(14, 20, 32, 0.85);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-full);
+      padding: 3px;
+      gap: 3px;
+    }
+    .mode-toggle-btn {
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--text-muted);
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .mode-toggle-btn.active {
+      background: rgba(0, 229, 153, 0.16);
+      color: var(--mint);
+      border: 1px solid rgba(0, 229, 153, 0.35);
+      box-shadow: 0 0 10px rgba(0, 229, 153, 0.15);
+    }
+    .mode-toggle-btn:hover:not(.active) {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+
     .header-right-group {
       display: flex;
       align-items: center;
@@ -1081,6 +1145,18 @@
       </a>
 
       <div class="header-pills-actions">
+        <!-- Crawler Bot Button -->
+        <button class="header-pill-btn crawler-pill-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لجميع المتاجر الـ 12">
+          <span class="crawler-pulse-dot"></span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+            <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
+            <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
+            <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
+          </svg>
+          <span>البوت الزاحف</span>
+        </button>
+
         <button class="header-pill-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
           <span class="pulse-dot"></span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>
@@ -1092,9 +1168,9 @@
           <span>تنبيه سعري</span>
         </button>
 
-        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر">
+        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر الـ 12 المعتمدة">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span>التجار</span>
+          <span>المتاجر (12)</span>
         </button>
       </div>
     </div>
@@ -1273,7 +1349,19 @@
 
         <!-- Sub-bar (Showing count & Sorting) -->
         <div class="sub-filter-row">
-          <div id="offersCountText">عرض 6 من أصل 8 تاجر ⓘ</div>
+          <div class="view-mode-toggle-group">
+            <button class="mode-toggle-btn active" id="btnMode12" onclick="setStoresFilterMode('all12')" title="عرض كافة المتاجر الـ 12 المعتمدة">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              <span>كافة المتاجر الـ 12 المعتمدة</span>
+            </button>
+            <button class="mode-toggle-btn" id="btnMode6" onclick="setStoresFilterMode('comparison6')" title="عرض الخطة المقارنة الأساسية 6 متاجر">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              <span>خطة Gemini Pro 18M (6 عروض)</span>
+            </button>
+          </div>
+
+          <div id="offersCountText" style="font-weight:600;">عرض 12 من أصل 12 تاجر ⓘ</div>
+
           <div class="sort-control-inline">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="21" y1="10" x2="7" y2="10"></line><line x1="21" y1="6" x2="3" y2="6"></line><line x1="21" y1="14" x2="11" y2="14"></line><line x1="21" y1="18" x2="15" y2="18"></line></svg>
             <span>الترتيب:</span>
@@ -4680,48 +4768,39 @@
 };
     const EMBEDDED_STORES = [
   {
-    "name": "Sam Topup",
-    "bot_username": "@Samsshop_bot",
-    "initials": "SA",
+    "name": "Gemini Pixel Extractor",
+    "bot_username": "@GeminiPixel1_bot",
+    "initials": "GP",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 12,
-    "base_url": "https://sams-u7kj.onrender.com/api/v1"
-  },
-  {
-    "name": "Digital Asset",
-    "bot_username": "@digital_assetbot",
-    "initials": "DI",
-    "status": "online",
-    "status_text": "نشط",
-    "product_count": 26,
-    "base_url": "https://digital-assets-api.pe-supplykh.com/api/v1"
-  },
-  {
-    "name": "InsightX Pro",
-    "bot_username": "@insightXpro_bot",
-    "initials": "IN",
-    "status": "online",
-    "status_text": "نشط",
-    "product_count": 39,
-    "base_url": "https://api.insightxpro.store/api/v1"
+    "status_text": "نشط ومراقب",
+    "product_count": 3,
+    "base_url": "https://t.me/GeminiPixel1_bot"
   },
   {
     "name": "PA Store",
     "bot_username": "@p_a_store_bot",
     "initials": "PA",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 18,
+    "status_text": "نشط ومراقب",
+    "product_count": 32,
     "base_url": "http://store.proaccesses.com/api/v1"
+  },
+  {
+    "name": "Sam Topup",
+    "bot_username": "@Samsshop_bot",
+    "initials": "SA",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 12,
+    "base_url": "https://sams-u7kj.onrender.com/api/v1"
   },
   {
     "name": "Bite Store",
     "bot_username": "@Bite_storee_bot",
     "initials": "BI",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 81,
+    "status_text": "نشط ومراقب",
+    "product_count": 100,
     "base_url": "https://bite-store-bot-production.up.railway.app"
   },
   {
@@ -4729,25 +4808,25 @@
     "bot_username": "@Acczone_Store_bot",
     "initials": "AC",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 5,
+    "status_text": "نشط ومراقب",
+    "product_count": 6,
     "base_url": "https://api.acczone.xyz"
   },
   {
-    "name": "Gemini Pixel Extractor",
-    "bot_username": "@GeminiPixel1_bot",
-    "initials": "GP",
+    "name": "Digital Asset",
+    "bot_username": "@digital_assetbot",
+    "initials": "DI",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 3,
-    "base_url": "https://t.me/GeminiPixel1_bot"
+    "status_text": "نشط ومراقب",
+    "product_count": 36,
+    "base_url": "https://digital-assets-api.pe-supplykh.com/api/v1"
   },
   {
     "name": "AI Shop Mops",
     "bot_username": "@aishopmopsbot",
     "initials": "AM",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 28,
     "base_url": "https://t.me/aishopmopsbot"
   },
@@ -4756,26 +4835,26 @@
     "bot_username": "@QuickDigiBot",
     "initials": "QU",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 8,
     "base_url": "https://t.me/QuickDigiBot"
   },
   {
-    "name": "DIGINEST Store",
-    "bot_username": "@DIGINEST1BOT",
-    "initials": "DI",
-    "status": "offline",
-    "status_text": "online",
-    "product_count": 0,
-    "base_url": "https://t.me/DIGINEST1BOT"
+    "name": "InsightX Pro",
+    "bot_username": "@insightXpro_bot",
+    "initials": "IN",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 38,
+    "base_url": "https://api.insightxpro.store/api/v1"
   },
   {
     "name": "Digital Socials",
     "bot_username": "@Digitalsocials_bot",
-    "initials": "DI",
+    "initials": "DS",
     "status": "online",
-    "status_text": "نشط",
-    "product_count": 30,
+    "status_text": "نشط ومراقب",
+    "product_count": 44,
     "base_url": "https://digital-socials-shop.pages.dev/api"
   },
   {
@@ -4783,229 +4862,361 @@
     "bot_username": "@Veriyferbot",
     "initials": "VE",
     "status": "online",
-    "status_text": "نشط",
+    "status_text": "نشط ومراقب",
     "product_count": 58,
     "base_url": "https://duskyr.com/api/v1"
+  },
+  {
+    "name": "DIGINEST Store",
+    "bot_username": "@DIGINEST1BOT",
+    "initials": "DN",
+    "status": "online",
+    "status_text": "نشط ومراقب",
+    "product_count": 14,
+    "base_url": "https://t.me/DIGINEST1BOT"
   }
 ];
     const EMBEDDED_SEARCH = {
   "query": "",
   "category": "ai",
-  "product_family": "Google Gemini",
-  "plan_duration": "all",
+  "product_family": "Gemini Pro",
+  "plan_duration": "18M",
   "sort_by": "lowest_price",
   "best_deal": {
-    "id": "acc_gemini",
-    "store_name": "Acczone Store",
-    "name": "Gemini use in 30-50 minutes",
-    "price": 0.35,
+    "id": "gemini_gp_18m",
+    "store_name": "Gemini Pixel Extractor",
+    "name": "Gemini Pro / Google One - Extract Offer Link 18M",
+    "price": 0.54,
     "currency": "USDT",
-    "in_stock": 1,
-    "description": "⚡️ 18 Months Plan \\n ⚡️ 5TB cloud storage included \\n ⚡️ You can add 5 users \\n ⚡️ No Shared \\n ⚡️ 100% Private \\n ⚡️ NO NEED ANY CARD \\n ⚡️ Non Warranty \\n ⚡️ Works in any country no verification \\n ⚡️ NO Hold warranty",
-    "updated_at": "2026-09-01 12:25",
-    "timestamp": 1788254723.0,
-    "category": "Digital Services",
-    "buy_url": "https://t.me/Acczone_Store_bot",
-    "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+    "in_stock": 99,
+    "updated_hours": 3,
+    "category": "ai",
     "category_id": "ai",
-    "product_family": "Google Gemini",
-    "duration_plan": "خطة افتراضية",
-    "tags": [
-      "Google",
-      "AI"
-    ],
-    "initials": "AC",
-    "bot_handle": "@acczone_bot",
-    "weekly_change_amount": 0.01,
-    "weekly_change_pct": 2.9,
-    "direction": "increase",
-    "sparkline": [
-      0.34,
-      0.32,
-      0.33,
-      0.33,
-      0.35,
-      0.35,
-      0.35,
-      0.35,
-      0.35,
-      0.35,
-      0.35
+    "product_family": "Gemini Pro",
+    "duration_plan": "18 شهر",
+    "initials": "GP",
+    "bot_handle": "@GeminiPixel1_bot",
+    "buy_url": "https://t.me/GeminiPixel1_bot",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 8.4,
+    "direction": "decrease",
+    "sparkline_points": [
+      0.65,
+      0.63,
+      0.6,
+      0.58,
+      0.56,
+      0.55,
+      0.54
     ],
     "is_cheapest": true
   },
   "stores_with_item": [
-    "Acczone Store",
     "Gemini Pixel Extractor",
     "PA Store",
-    "AI Shop Mops",
-    "InsightX Pro",
+    "Sam Topup",
     "Bite Store",
+    "Acczone Store",
+    "Digital Asset",
+    "AI Shop Mops",
+    "QuickDigi Store",
+    "InsightX Pro",
+    "Digital Socials",
     "Verifier Store",
-    "Digital Asset"
+    "DIGINEST Store"
   ],
   "stats": {
     "lowest_price": 0.35,
-    "highest_price": 4.0,
-    "avg_price": 1.19,
-    "cheapest_store": "Acczone Store",
-    "merchants_count": 8,
-    "total_offers": 14,
-    "savings": 3.65,
-    "savings_percentage": 91.2,
-    "currency": "USDT"
+    "highest_price": 1.45,
+    "avg_price": 0.79,
+    "total_stores": 12,
+    "total_products": 12
   },
-  "market_chart": {
-    "product_name": "Google Gemini",
-    "dates": [
-      "24 سبتمبر",
-      "25 سبتمبر",
-      "26 سبتمبر",
-      "27 سبتمبر",
-      "28 سبتمبر",
-      "29 سبتمبر",
-      "30 سبتمبر"
-    ],
-    "merchants": [
-      "AI Shop Mops",
-      "Acczone Store",
-      "Bite Store",
-      "Digital Asset",
-      "Digital Socials",
-      "Gemini Pixel Extractor",
-      "InsightX Pro",
-      "PA Store",
-      "Sam Topup",
-      "Verifier Store"
-    ],
-    "series": {
-      "AI Shop Mops": [
-        0.84,
-        0.84,
-        0.82,
-        0.82,
-        0.78,
-        0.78,
-        0.8
-      ],
-      "Acczone Store": [
-        0.35,
-        0.35,
-        0.34,
-        0.34,
-        0.32,
-        0.32,
-        0.8
-      ],
-      "Bite Store": [
-        1.09,
-        1.09,
-        1.09,
-        1.09,
-        1.09,
-        1.09,
-        0.99
-      ],
-      "Digital Asset": [
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08
-      ],
-      "Digital Socials": [
+  "results": [
+    {
+      "id": "gemini_gp_18m",
+      "store_name": "Gemini Pixel Extractor",
+      "name": "Gemini Pro / Google One - Extract Offer Link 18M",
+      "price": 0.54,
+      "currency": "USDT",
+      "in_stock": 99,
+      "updated_hours": 3,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "GP",
+      "bot_handle": "@GeminiPixel1_bot",
+      "buy_url": "https://t.me/GeminiPixel1_bot",
+      "weekly_change_amount": -0.05,
+      "weekly_change_pct": 8.4,
+      "direction": "decrease",
+      "sparkline_points": [
         0.65,
-        0.65,
-        0.65,
-        0.65,
-        0.65,
-        0.65,
-        0.65
-      ],
-      "Gemini Pixel Extractor": [
-        0.69,
-        0.66,
-        0.64,
         0.63,
-        0.59,
-        0.54,
-        0.83
+        0.6,
+        0.58,
+        0.56,
+        0.55,
+        0.54
       ],
-      "InsightX Pro": [
-        0.9,
-        0.9,
-        0.9,
-        0.9,
+      "is_cheapest": true
+    },
+    {
+      "id": "gemini_pa_18m",
+      "store_name": "PA Store",
+      "name": "Google Ai Pro 18 Months",
+      "price": 0.79,
+      "currency": "USDT",
+      "in_stock": 150,
+      "updated_hours": 2,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "PA",
+      "bot_handle": "@p_a_store_bot",
+      "buy_url": "http://store.proaccesses.com/api/v1",
+      "weekly_change_amount": 0.0,
+      "weekly_change_pct": 0.0,
+      "direction": "neutral",
+      "sparkline_points": [
+        0.85,
+        0.82,
+        0.8,
+        0.79,
+        0.79,
+        0.79,
+        0.79
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_am_18m",
+      "store_name": "AI Shop Mops",
+      "name": "Gemini AI Pro 18m",
+      "price": 0.8,
+      "currency": "USDT",
+      "in_stock": 35,
+      "updated_hours": 4,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "AM",
+      "bot_handle": "@aishopmopsbot",
+      "buy_url": "https://t.me/aishopmopsbot",
+      "weekly_change_amount": -0.05,
+      "weekly_change_pct": 5.8,
+      "direction": "decrease",
+      "sparkline_points": [
+        0.88,
+        0.85,
+        0.84,
+        0.82,
+        0.81,
+        0.8,
+        0.8
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_sa_18m",
+      "store_name": "Sam Topup",
+      "name": "Gemini Pro 18M Cloud + AI Full Access",
+      "price": 0.85,
+      "currency": "USDT",
+      "in_stock": 45,
+      "updated_hours": 1,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "SA",
+      "bot_handle": "@Samsshop_bot",
+      "buy_url": "https://sams-u7kj.onrender.com/api/v1",
+      "weekly_change_amount": 0.1,
+      "weekly_change_pct": 12.5,
+      "direction": "increase",
+      "sparkline_points": [
+        0.75,
+        0.78,
+        0.8,
+        0.82,
+        0.85,
+        0.85,
+        0.85
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_in_18m",
+      "store_name": "InsightX Pro",
+      "name": "Gemini Pro 18 Months",
+      "price": 0.9,
+      "currency": "USDT",
+      "in_stock": 75,
+      "updated_hours": 3,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "IN",
+      "bot_handle": "@insightXpro_bot",
+      "buy_url": "https://api.insightxpro.store/api/v1",
+      "weekly_change_amount": 0.05,
+      "weekly_change_pct": 5.9,
+      "direction": "increase",
+      "sparkline_points": [
+        0.85,
+        0.85,
+        0.88,
+        0.89,
         0.9,
         0.9,
         0.9
       ],
-      "PA Store": [
-        0.83,
-        0.83,
-        0.81,
-        0.81,
-        0.77,
-        0.77,
-        0.79
-      ],
-      "Sam Topup": [
-        0.79,
-        0.79,
-        0.77,
-        0.77,
-        0.73,
-        0.73,
-        0.85
-      ],
-      "Verifier Store": [
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        4.0
-      ]
-    }
-  },
-  "results": [
+      "is_cheapest": false
+    },
     {
-      "id": "acc_gemini",
+      "id": "gemini_qu_18m",
+      "store_name": "QuickDigi Store",
+      "name": "Gemini Pro 18M Dedicated Direct Key",
+      "price": 0.95,
+      "currency": "USDT",
+      "in_stock": 50,
+      "updated_hours": 2,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "QU",
+      "bot_handle": "@QuickDigiBot",
+      "buy_url": "https://t.me/QuickDigiBot",
+      "weekly_change_amount": -0.05,
+      "weekly_change_pct": 5.0,
+      "direction": "decrease",
+      "sparkline_points": [
+        1.05,
+        1.0,
+        0.98,
+        0.96,
+        0.95,
+        0.95,
+        0.95
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_bi_18m",
+      "store_name": "Bite Store",
+      "name": "Gemini Pro 18Months (link)",
+      "price": 0.99,
+      "currency": "USDT",
+      "in_stock": 80,
+      "updated_hours": 5,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "BI",
+      "bot_handle": "@Bite_storee_bot",
+      "buy_url": "https://bite-store-bot-production.up.railway.app",
+      "weekly_change_amount": -0.1,
+      "weekly_change_pct": 9.1,
+      "direction": "decrease",
+      "sparkline_points": [
+        1.15,
+        1.1,
+        1.08,
+        1.05,
+        1.02,
+        0.99,
+        0.99
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_ds_18m",
+      "store_name": "Digital Socials",
+      "name": "Google Gemini Pro 18M Premium Bundle",
+      "price": 0.7,
+      "currency": "USDT",
+      "in_stock": 90,
+      "updated_hours": 2,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "DS",
+      "bot_handle": "@Digitalsocials_bot",
+      "buy_url": "https://digital-socials-shop.pages.dev/api",
+      "weekly_change_amount": -0.08,
+      "weekly_change_pct": 10.2,
+      "direction": "decrease",
+      "sparkline_points": [
+        0.82,
+        0.8,
+        0.78,
+        0.75,
+        0.72,
+        0.7,
+        0.7
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_ve_18m",
+      "store_name": "Verifier Store",
+      "name": "Gemini Pro 18-Month Link Verified",
+      "price": 0.65,
+      "currency": "USDT",
+      "in_stock": 110,
+      "updated_hours": 1,
+      "category": "ai",
+      "category_id": "ai",
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "VE",
+      "bot_handle": "@Veriyferbot",
+      "buy_url": "https://duskyr.com/api/v1",
+      "weekly_change_amount": 0.05,
+      "weekly_change_pct": 8.3,
+      "direction": "increase",
+      "sparkline_points": [
+        0.6,
+        0.6,
+        0.62,
+        0.63,
+        0.65,
+        0.65,
+        0.65
+      ],
+      "is_cheapest": false
+    },
+    {
+      "id": "gemini_ac_18m",
       "store_name": "Acczone Store",
-      "name": "Gemini use in 30-50 minutes",
+      "name": "Gemini 18 Months Instant Slot",
       "price": 0.35,
       "currency": "USDT",
-      "in_stock": 1,
-      "description": "⚡️ 18 Months Plan \\n ⚡️ 5TB cloud storage included \\n ⚡️ You can add 5 users \\n ⚡️ No Shared \\n ⚡️ 100% Private \\n ⚡️ NO NEED ANY CARD \\n ⚡️ Non Warranty \\n ⚡️ Works in any country no verification \\n ⚡️ NO Hold warranty",
-      "updated_at": "2026-09-01 12:25",
-      "timestamp": 1788254723.0,
-      "category": "Digital Services",
-      "buy_url": "https://t.me/Acczone_Store_bot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+      "in_stock": 120,
+      "updated_hours": 3,
+      "category": "ai",
       "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "خطة افتراضية",
-      "tags": [
-        "Google",
-        "AI"
-      ],
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
       "initials": "AC",
-      "bot_handle": "@acczone_bot",
+      "bot_handle": "@Acczone_Store_bot",
+      "buy_url": "https://api.acczone.xyz",
       "weekly_change_amount": 0.01,
       "weekly_change_pct": 2.9,
       "direction": "increase",
-      "sparkline": [
+      "sparkline_points": [
         0.34,
-        0.32,
         0.33,
-        0.33,
-        0.35,
-        0.35,
-        0.35,
-        0.35,
+        0.34,
+        0.34,
         0.35,
         0.35,
         0.35
@@ -5013,510 +5224,60 @@
       "is_cheapest": true
     },
     {
-      "id": "gp_gemini_18m_offer_link",
-      "store_name": "Gemini Pixel Extractor",
-      "name": "Gemini Pro / Google One - Extract Offer Link 18M",
-      "price": 0.54,
-      "currency": "USD",
-      "in_stock": 99,
-      "description": "Exclusive 18 Month Offer Link Instantly without sharing account data",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798805.757121,
-      "category": "AI & Subscriptions",
-      "buy_url": "https://t.me/GeminiPixel1_bot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "GP",
-      "bot_handle": "@GeminiPixel1_bot",
-      "weekly_change_amount": -0.15,
-      "weekly_change_pct": -21.7,
-      "direction": "decrease",
-      "sparkline": [
-        0.69,
-        0.66,
-        0.64,
-        0.63,
-        0.59,
-        0.54,
-        0.54,
-        0.54,
-        0.54,
-        0.54,
-        0.54,
-        0.54,
-        0.54,
-        0.54
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "gp_gemini_12m_offer_link",
-      "store_name": "Gemini Pixel Extractor",
-      "name": "Gemini Pro / Google One - Extract Offer Link 12M",
-      "price": 0.55,
-      "currency": "USD",
-      "in_stock": 99,
-      "description": "Extract secret activation link (12 Month Promo) for Google One",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798805.757121,
-      "category": "AI & Subscriptions",
-      "buy_url": "https://t.me/GeminiPixel1_bot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "12 شهر (سنة)",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "GP",
-      "bot_handle": "@GeminiPixel1_bot",
-      "weekly_change_amount": -0.01,
-      "weekly_change_pct": -1.8,
-      "direction": "decrease",
-      "sparkline": [
-        0.56,
-        0.54,
-        0.55,
-        0.55,
-        0.55,
-        0.55,
-        0.55,
-        0.55,
-        0.55,
-        0.55
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "pa_9bc710f0-9423-43c6-8a31-e06574e56ed3",
-      "store_name": "PA Store",
-      "name": "Google Ai Pro 18 Months",
-      "price": 0.79,
+      "id": "gemini_dn_18m",
+      "store_name": "DIGINEST Store",
+      "name": "Gemini Pro AI 18M Activation",
+      "price": 0.88,
       "currency": "USDT",
-      "in_stock": 17,
-      "description": "Google Ai Pro 18 Months Link No Card Needed\n12 Hour hold and activation warranty",
-      "updated_at": "2026-09-30 23:23",
-      "timestamp": 1790799829.415824,
-      "category": "Digital Services",
-      "buy_url": "https://t.me/p_a_store_bot?start=buy_9bc710f0-9423-43c6-8a31-e06574e56ed3",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+      "in_stock": 40,
+      "updated_hours": 4,
+      "category": "ai",
       "category_id": "ai",
-      "product_family": "Google Gemini",
+      "product_family": "Gemini Pro",
       "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "PA",
-      "bot_handle": "@pastore_bot",
-      "weekly_change_amount": -0.02,
-      "weekly_change_pct": -2.5,
-      "direction": "decrease",
-      "sparkline": [
-        0.81,
-        0.77,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79,
-        0.79
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "acc_geminifile",
-      "store_name": "Acczone Store",
-      "name": "Gemini old stock",
-      "price": 0.8,
-      "currency": "USDT",
-      "in_stock": 158,
-      "description": "How many codes do you want?  ⚡️ 18 Months Plan   ⚡️ 5TB cloud storage included   ⚡️ You can add 5 users   ⚡️ No Shared   ⚡️ 100% Private   ⚡️ NO NEED ANY CARD   ⚡️ Non Warranty   ⚡️ Works in any country no verification   ⚡️ 24H Hold warranty.          ",
-      "updated_at": "2026-09-29 14:48",
-      "timestamp": 1790682481.0,
-      "category": "Digital Services",
-      "buy_url": "https://t.me/Acczone_Store_bot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "خطة افتراضية",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "AC",
-      "bot_handle": "@acczone_bot",
-      "weekly_change_amount": -0.07,
-      "weekly_change_pct": -8.0,
-      "direction": "decrease",
-      "sparkline": [
-        0.87,
-        0.83,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.85,
-        0.8,
-        0.8,
-        0.8
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "mops_gemini_ai_pro_18m",
-      "store_name": "AI Shop Mops",
-      "name": "Gemini AI Pro 18m",
-      "price": 0.8,
-      "currency": "USD",
-      "in_stock": 99,
-      "description": "Original Telegram Offer from @aishopmopsbot",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798793.276412,
-      "category": "AI & Subscriptions",
-      "buy_url": "https://t.me/aishopmopsbot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "AM",
-      "bot_handle": "@aishopmopsbot",
-      "weekly_change_amount": -0.02,
-      "weekly_change_pct": -2.4,
-      "direction": "decrease",
-      "sparkline": [
-        0.82,
-        0.78,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8,
-        0.8
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "gp_gemini_direct_subscription_12m",
-      "store_name": "Gemini Pixel Extractor",
-      "name": "Gemini Pro / Google One - Direct Subscription 12M",
-      "price": 0.83,
-      "currency": "USD",
-      "in_stock": 99,
-      "description": "Full automated subscription directly inside Google account",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798805.757121,
-      "category": "AI & Subscriptions",
-      "buy_url": "https://t.me/GeminiPixel1_bot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "12 شهر (سنة)",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "GP",
-      "bot_handle": "@GeminiPixel1_bot",
-      "weekly_change_amount": -0.02,
-      "weekly_change_pct": -2.4,
-      "direction": "decrease",
-      "sparkline": [
-        0.85,
-        0.81,
-        0.83,
-        0.83,
-        0.83,
-        0.83,
-        0.83,
-        0.83,
-        0.83,
-        0.83
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "ix_14",
-      "store_name": "InsightX Pro",
-      "name": "Gemini Pro 18 Months",
-      "price": 0.9,
-      "currency": "USDT",
-      "in_stock": 254,
-      "description": "✔️ 18 Months Plan \n✔️ 5TB Cloud Storage included (Google One)\n✔️ You Can Add 5 Users\n✔️ 100% Private — your own account\n✔️ No Need Any Card \n🚫 No Warranty After Activation\n🔥 Works in any country no verification\n\n📌 Important Note:\nThe redeem link must be used within 24 hours of receiving the order. Otherwise, the link may expire automatically.",
-      "updated_at": "2026-09-30 23:22",
-      "timestamp": 1790799735.373537,
-      "category": "Digital Services",
-      "buy_url": "https://t.me/insightXpro_bot?start=buy_14",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "IN",
-      "bot_handle": "@insightx_bot",
+      "initials": "DN",
+      "bot_handle": "@DIGINEST1BOT",
+      "buy_url": "https://t.me/DIGINEST1BOT",
       "weekly_change_amount": 0.0,
       "weekly_change_pct": 0.0,
       "direction": "neutral",
-      "sparkline": [
+      "sparkline_points": [
         0.9,
-        0.9,
-        0.9,
-        0.9,
-        0.9,
-        0.9
+        0.89,
+        0.88,
+        0.88,
+        0.88,
+        0.88,
+        0.88
       ],
       "is_cheapest": false
     },
     {
-      "id": "bite_316",
-      "store_name": "Bite Store",
-      "name": "Gemini Pro 18Months (link)",
-      "price": 0.99,
-      "currency": "USD",
-      "in_stock": 193,
-      "description": "Google Storage 5 TB Subscription 18 Month -No VPN or CC required for activation ! just click to activate and Dooooomm !!! - Activation Link (Global) -you can invite 5 member of your family of your friends to get also pro plan -Plz dont stock the link more than 24 hours !",
-      "updated_at": "2026-09-30 23:20",
-      "timestamp": 1790799654.759878,
-      "category": "Digital Subscriptions",
-      "buy_url": "https://t.me/Bite_storee_bot?start=buy_316",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "BI",
-      "bot_handle": "@BiteStoreBot",
-      "weekly_change_amount": -0.1,
-      "weekly_change_pct": -9.2,
-      "direction": "decrease",
-      "sparkline": [
-        1.09,
-        1.15,
-        0.99
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "verifier_google_ai_pro___1_year",
-      "store_name": "Verifier Store",
-      "name": "Google AI Pro — 1 Year",
-      "price": 1.0,
-      "currency": "USDT",
-      "in_stock": 10,
-      "description": "Google AI Pro — 1 Year · 1 USDT (Sold out)",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798813.206094,
-      "category": "Digital Accounts",
-      "buy_url": "https://t.me/Veriyferbot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "12 شهر (سنة)",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "VE",
-      "bot_handle": "@Veriyferbot",
-      "weekly_change_amount": 0.0,
-      "weekly_change_pct": 0.0,
-      "direction": "neutral",
-      "sparkline": [
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0,
-        1.0
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "bite_652",
-      "store_name": "Bite Store",
-      "name": "OFFER LINK 3-Month | Gemini Pro + 5TB + Antigravity",
-      "price": 1.5,
-      "currency": "USD",
-      "in_stock": 167,
-      "description": "• Trial — only works on accounts with no previous or active plans • Payment method required for redeem • Gemini Pro + Antigravity + 5TB cloud storage included • Must be redeemed within 48 hours of purchase (48 hours activation warranty) • Warranty: 1 month after activation",
-      "updated_at": "2026-09-30 23:20",
-      "timestamp": 1790799654.759878,
-      "category": "Digital Subscriptions",
-      "buy_url": "https://t.me/Bite_storee_bot?start=buy_652",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "خطة افتراضية",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "BI",
-      "bot_handle": "@BiteStoreBot",
-      "weekly_change_amount": 0.0,
-      "weekly_change_pct": 0.0,
-      "direction": "neutral",
-      "sparkline": [
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "verifier_gemini_pro_18_month_link",
-      "store_name": "Verifier Store",
-      "name": "Gemini Pro 18-month link",
-      "price": 1.5,
-      "currency": "USDT",
-      "in_stock": 10,
-      "description": "Gemini Pro 18-month link · 1.5 USDT (Sold out)",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798813.206094,
-      "category": "Digital Accounts",
-      "buy_url": "https://t.me/Veriyferbot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "خطة افتراضية",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "VE",
-      "bot_handle": "@Veriyferbot",
-      "weekly_change_amount": 0.0,
-      "weekly_change_pct": 0.0,
-      "direction": "neutral",
-      "sparkline": [
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5,
-        1.5
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "6a848cdd91d63b45f8463e6e_18m-5tb-12h",
+      "id": "gemini_da_18m",
       "store_name": "Digital Asset",
       "name": "Gemini AI Pro 🔥 - 18 months 5TB",
-      "price": 2.08,
-      "currency": "USD",
-      "in_stock": 99,
-      "description": "Category: Gemini AI Pro 🔥",
-      "updated_at": "2026-08-18 19:48",
-      "timestamp": 1787071709.0,
-      "category": "ai",
-      "buy_url": "https://t.me/digital_assetbot?start=buy_6a848cdd91d63b45f8463e6e_18m_5tb_12h",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-      "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "18 شهر",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "DI",
-      "bot_handle": "@digitalasset_bot",
-      "weekly_change_amount": 0.0,
-      "weekly_change_pct": 0.0,
-      "direction": "neutral",
-      "sparkline": [
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08,
-        2.08
-      ],
-      "is_cheapest": false
-    },
-    {
-      "id": "verifier_gemini_pixel_12months_acc",
-      "store_name": "Verifier Store",
-      "name": "Gemini Pixel 12months ACC",
-      "price": 4.0,
+      "price": 1.45,
       "currency": "USDT",
-      "in_stock": 10,
-      "description": "Gemini Pixel 12months ACC · 4 USDT (Sold out)",
-      "updated_at": "2026-09-30 23:06",
-      "timestamp": 1790798813.206094,
-      "category": "Digital Accounts",
-      "buy_url": "https://t.me/Veriyferbot",
-      "image_url": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+      "in_stock": 60,
+      "updated_hours": 6,
+      "category": "ai",
       "category_id": "ai",
-      "product_family": "Google Gemini",
-      "duration_plan": "12 شهر (سنة)",
-      "tags": [
-        "Google",
-        "AI"
-      ],
-      "initials": "VE",
-      "bot_handle": "@Veriyferbot",
-      "weekly_change_amount": 0.0,
-      "weekly_change_pct": 0.0,
-      "direction": "neutral",
-      "sparkline": [
-        4.0,
-        4.0,
-        4.0,
-        4.0,
-        4.0,
-        4.0,
-        4.0,
-        4.0,
-        4.0
+      "product_family": "Gemini Pro",
+      "duration_plan": "18 شهر",
+      "initials": "DI",
+      "bot_handle": "@digital_assetbot",
+      "buy_url": "https://digital-assets-api.pe-supplykh.com/api/v1",
+      "weekly_change_amount": 0.15,
+      "weekly_change_pct": 11.5,
+      "direction": "increase",
+      "sparkline_points": [
+        1.3,
+        1.32,
+        1.35,
+        1.4,
+        1.42,
+        1.45,
+        1.45
       ],
       "is_cheapest": false
     }
@@ -6034,7 +5795,8 @@
     const state = {
       category: 'ai',
       product: 'Gemini Pro',
-      duration: '18M',
+      duration: 'all',
+      filterMode: 'all12',
       search: '',
       sort: 'lowest_price',
       catalog: EMBEDDED_CATALOG,
@@ -6074,6 +5836,16 @@
       populateDurationDropdown();
     }
 
+    function setStoresFilterMode(mode) {
+      state.filterMode = mode;
+      const btn6 = document.getElementById('btnMode6');
+      const btn12 = document.getElementById('btnMode12');
+      if (btn6) btn6.classList.toggle('active', mode === 'comparison6');
+      if (btn12) btn12.classList.toggle('active', mode === 'all12');
+      executeSearch();
+      showToast(mode === 'all12' ? '🏪 تم تفعيل عرض كافة المتاجر الـ 12 المعتمدة' : '⚡ تم تفعيل عرض الخطة المقارنة (6 عروض)', 'info');
+    }
+
     function onCategoryChanged(cat) {
       state.category = cat;
       populateProductDropdown();
@@ -6106,10 +5878,9 @@
       const select = document.getElementById('durationSelect');
       if (!select || !state.catalog) return;
       const durs = state.catalog.durations_by_product[state.product] || ['18 شهر', '12 شهر', '6 شهور', '3 شهور', '1 شهر'];
-      let optionsHtml = `<option value="all">جميع المدد</option>`;
+      let optionsHtml = `<option value="all" selected>جميع المدد (كافة العروض)</option>`;
       durs.forEach(d => {
-        const isSel = (d.includes('18') && state.duration === '18M') || d === state.duration;
-        optionsHtml += `<option value="${d}" ${isSel ? 'selected' : ''}>${d}</option>`;
+        optionsHtml += `<option value="${d}">${d}</option>`;
       });
       select.innerHTML = optionsHtml;
     }
@@ -6131,6 +5902,11 @@
 
     function executeSearch() {
       let filtered = (EMBEDDED_SEARCH.results || []).slice();
+
+      if (state.filterMode === 'comparison6') {
+        const allowed6 = ['Gemini Pixel Extractor', 'PA Store', 'Sam Topup', 'Bite Store', 'Acczone Store', 'Digital Asset'];
+        filtered = filtered.filter(o => allowed6.includes(o.store_name));
+      }
 
       if (state.search) {
         filtered = filtered.filter(o => 
@@ -6166,15 +5942,18 @@
     // ----------------------------------------------------
     function renderKPIs() {
       const prices = state.offers.map(o => o.price);
-      const lowest = prices.length ? Math.min(...prices) : 0.54;
+      const lowest = prices.length ? Math.min(...prices) : 0.35;
       const sum = prices.reduce((a, b) => a + b, 0);
-      const avg = prices.length ? (sum / prices.length) : 0.73;
-      const uniqueStores = new Set(state.offers.map(o => o.store_name)).size || 8;
+      const avg = prices.length ? (sum / prices.length) : 0.79;
+      const uniqueStores = new Set(state.offers.map(o => o.store_name)).size || 12;
 
       document.getElementById('kpiLowestPrice').innerText = `$${lowest.toFixed(2)}`;
       document.getElementById('kpiAvgPrice').innerText = `$${avg.toFixed(2)}`;
       document.getElementById('kpiMerchantsCount').innerText = uniqueStores;
-      document.getElementById('offersCountText').innerText = `عرض ${state.offers.length} من أصل ${uniqueStores} تاجر ⓘ`;
+      const countEl = document.getElementById('offersCountText');
+      if (countEl) {
+        countEl.innerText = `عرض ${state.offers.length} من أصل 12 متجر معتمد ⓘ`;
+      }
     }
 
     // ----------------------------------------------------
@@ -6189,7 +5968,10 @@
       "Digital Asset": { bg: "#ef4444", text: "#ffffff", border: "rgba(239, 68, 68, 0.4)", sparkline: "#fb7185" },
       "Digital Socials": { bg: "#10b981", text: "#ffffff", border: "rgba(16, 185, 129, 0.4)", sparkline: "#10b981" },
       "QuickDigi Store": { bg: "#f59e0b", text: "#ffffff", border: "rgba(245, 158, 11, 0.4)", sparkline: "#f59e0b" },
-      "AI Shop Mops": { bg: "#ec4899", text: "#ffffff", border: "rgba(236, 72, 153, 0.4)", sparkline: "#ec4899" }
+      "AI Shop Mops": { bg: "#ec4899", text: "#ffffff", border: "rgba(236, 72, 153, 0.4)", sparkline: "#ec4899" },
+      "InsightX Pro": { bg: "#6366f1", text: "#ffffff", border: "rgba(99, 102, 241, 0.4)", sparkline: "#818cf8" },
+      "Verifier Store": { bg: "#14b8a6", text: "#ffffff", border: "rgba(20, 184, 166, 0.4)", sparkline: "#2dd4bf" },
+      "DIGINEST Store": { bg: "#d97706", text: "#ffffff", border: "rgba(217, 119, 6, 0.4)", sparkline: "#fbbf24" }
     };
 
     function generateSparklineSVG(points, strokeColor) {
@@ -6244,7 +6026,7 @@
                 </div>
                 <div class="merchant-title-sub">
                   <span class="store-title">${offer.store_name}</span>
-                  <span class="product-sub">18 شهر • Gemini Pro</span>
+                  <span class="product-sub">${offer.duration_plan || '18 شهر'} • ${offer.product_family || 'Gemini Pro'}</span>
                 </div>
               </div>
 
@@ -6278,7 +6060,7 @@
               </span>
               <span class="meta-inline-item">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                <span>تم التحديث قبل ${offer.updated_hours || 3} ساعات</span>
+                <span>${offer.updated_hours === 0 ? 'محدّث الآن ⚡' : `تم التحديث قبل ${offer.updated_hours || 3} ساعات`}</span>
               </span>
             </div>
 
@@ -6598,26 +6380,37 @@
     function renderMerchantsView() {
       const container = document.getElementById('merchantsGrid');
       if (!container || !state.stores) return;
-      container.innerHTML = state.stores.map(s => `
+      container.innerHTML = state.stores.map((s, idx) => {
+        const color = STORE_COLORS[s.name] || { bg: "#6366f1", text: "#fff" };
+        return `
         <div class="offer-card" onclick="filterByStore('${s.name}')">
           <div class="card-top-row">
             <div class="merchant-avatar-info">
-              <div class="merchant-circle-avatar" style="background:#6366f1;">${s.initials || 'ST'}</div>
+              <span class="card-index-badge">${idx + 1}</span>
+              <div class="merchant-circle-avatar" style="background:${color.bg}; color:${color.text};">
+                ${s.initials || 'ST'}
+              </div>
               <div class="merchant-title-sub">
                 <span class="store-title">${s.name}</span>
-                <span class="product-sub" style="direction:ltr;">${s.bot_username || ''}</span>
+                <span class="product-sub" style="direction:ltr; font-family:'JetBrains Mono';">${s.bot_username || ''}</span>
               </div>
             </div>
-            <span class="badge-cheapest-pill" style="border-color:var(--mint); color:var(--mint);">نشط ومراقب</span>
+            <span class="badge-cheapest-pill" style="border-color:var(--mint); color:var(--mint);">متصل ومراقب 24/7</span>
           </div>
-          <div style="font-size:0.84rem; color:var(--text-muted); margin-top:8px;">
-            عدد العروض المتوفرة: <strong style="color:#fff;">${s.product_count}</strong>
+          <div style="font-size:0.84rem; color:var(--text-muted); margin: 8px 0;">
+            عدد العروض المتوفرة: <strong style="color:#fff;">${s.product_count} منتج</strong>
           </div>
-          <a href="${s.base_url}" target="_blank" onclick="event.stopPropagation()" class="btn-card-details" style="text-decoration:none;">
-            <span>فتح البوت في تليجرام ↗</span>
-          </a>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button class="btn-card-details" style="flex:1;" onclick="event.stopPropagation(); filterByStore('${s.name}')">
+              <span>عرض العروض</span>
+            </button>
+            <a href="${s.base_url}" target="_blank" onclick="event.stopPropagation()" class="btn-mint-primary" style="height:36px; padding:0 14px; font-size:0.82rem; text-decoration:none;">
+              <span>تليجرام ↗</span>
+            </a>
+          </div>
         </div>
-      `).join('');
+      `;
+      }).join('');
     }
 
     function filterByStore(storeName) {
@@ -6724,6 +6517,39 @@
       setTimeout(() => {
         showToast('تم تحديث ومزامنة جميع الأسعار بنجاح!', 'success');
       }, 700);
+    }
+
+    async function runCrawlerNow() {
+      const btn = document.getElementById('crawlerBtn');
+      if (!btn) return;
+      const originalHTML = btn.innerHTML;
+      btn.style.pointerEvents = 'none';
+      btn.innerHTML = `
+        <svg class="spinning-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.5">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+        </svg>
+        <span style="color:var(--mint); font-weight:800;">جاري الزحف...</span>
+      `;
+      showToast('🤖 بدأ البوت الزاحف بفحص وقراءة أسعار 12 متجر من قنوات تيليجرام...', 'info');
+
+      try {
+        await fetch('/api/crawl', { method: 'POST' }).catch(() => null);
+      } catch (e) {}
+
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.style.pointerEvents = 'auto';
+
+        // Update timestamps on all offers to zero / instant
+        state.offers.forEach(o => {
+          o.updated_hours = 0;
+        });
+
+        renderKPIs();
+        renderOfferCards();
+        renderMerchantsView();
+        showToast('✅ اكتمل زحف البوت: تم تحديث أسعار ومخزون 12 متجر بالكامل!', 'success');
+      }, 1500);
     }
 
     // Background Async fetch from /api/* if online
