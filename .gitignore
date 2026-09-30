@@ -4,6 +4,7 @@ __pycache__/
 *.log
 *.tmp
 *.session
+*.db
 cloudflared.exe
 *.jpg
 .env

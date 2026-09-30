@@ -6,23 +6,67 @@ import threading
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import List, Dict, Any, Optional
+
 try:
     from .stores.base import StoreAdapter, Product, resolve_product_image
+    from .database import (
+        record_observation, 
+        get_product_history, 
+        get_multi_merchant_comparison,
+        seed_initial_history_if_needed,
+        check_and_evaluate_alerts
+    )
+    from .catalog import classify_product, build_catalog_hierarchy, CATEGORIES
 except ImportError:
     from stores.base import StoreAdapter, Product, resolve_product_image
+    import database
+    from database import (
+        record_observation, 
+        get_product_history, 
+        get_multi_merchant_comparison,
+        seed_initial_history_if_needed,
+        check_and_evaluate_alerts
+    )
+    from catalog import classify_product, build_catalog_hierarchy, CATEGORIES
+
+STORE_HANDLES = {
+    "Gemini Pixel Extractor": "@GeminiPixel1_bot",
+    "AI Shop Mops": "@aishopmopsbot",
+    "QuickDigi Store": "@QuickDigiBot",
+    "DIGINEST Store": "@DIGINEST1BOT",
+    "PA Store": "@pastore_bot",
+    "InsightX Pro": "@insightx_bot",
+    "Sam Topup": "@SamTopupBot",
+    "Acczone Store": "@acczone_bot",
+    "Bite Store": "@BiteStoreBot",
+    "Digital Socials": "@DigitalSocialsBot",
+    "Digital Asset": "@digitalasset_bot",
+    "Verifier Store": "@Veriyferbot"
+}
+
+def get_store_initials(name: str) -> str:
+    """Deterministic 2-letter uppercase initials for avatar badge"""
+    clean = re.sub(r'(?i)\b(Store|Shop|Extractor|Pro|Topup|Asset|Socials)\b', '', name).strip()
+    parts = clean.split()
+    if len(parts) >= 2:
+        return (parts[0][0] + parts[1][0]).upper()
+    elif len(clean) >= 2:
+        return clean[:2].upper()
+    return name[:2].upper()
 
 CATEGORY_KEYWORDS = {
-    "ai": ["gemini", "google ai", "chatgpt", "gpt", "openai", "claude", "midjourney", "deepseek", "copilot", "anthropic"],
+    "ai": ["gemini", "google ai", "chatgpt", "gpt", "openai", "claude", "midjourney", "deepseek", "copilot", "anthropic", "perplexity", "cursor", "grok", "elevenlabs", "lovable", "replit"],
     "streaming": ["netflix", "spotify", "youtube", "shahid", "osn", "prime", "disney", "apple music", "crunchyroll", "watchit"],
     "design": ["canva", "capcut", "adobe", "photoshop", "figma", "autodesk", "freepik", "envato", "illustrator"],
+    "productivity": ["vpn", "duolingo", "notion", "telegram", "discord", "tradingview", "nordvpn", "surfshark", "expressvpn", "office", "outlook", "hotmail", "mail"],
     "tools": ["vpn", "duolingo", "notion", "telegram", "discord", "tradingview", "nordvpn", "surfshark", "expressvpn", "office"]
 }
 
-# Equivalent term sets for intelligent search
 SYNONYM_GROUPS = [
     {"gemini", "google ai", "google ai pro", "google gemini", "google one", "جوجل", "قوقل", "جيمني", "جيميني", "جمناي"},
     {"chatgpt", "chat gpt", "gpt", "gpt4", "gpt-4", "gpt-4o", "openai", "شات جي بي تي"},
     {"claude", "claude 3", "claude pro", "anthropic", "كلود"},
+    {"perplexity", "بيربلكسيتي"},
     {"midjourney", "mid journey", "mj", "ميدجورني"},
     {"canva", "كانفا"},
     {"capcut", "كاب كات"},
@@ -49,10 +93,9 @@ ARABIC_EXPANSIONS = {
 }
 
 GENERIC_WORDS = {"account", "link", "pro", "plus", "free", "months", "month", "year", "years", "12", "1", "3", "6", "18", "no", "warranty"}
-STORE_KEYWORDS = {"sam", "sams", "insightx", "bite", "acczone", "diginest", "quickdigi", "mops"}
+STORE_KEYWORDS = {"sam", "sams", "insightx", "bite", "acczone", "diginest", "quickdigi", "mops", "verifier", "gemini"}
 
 def normalize_search_text(text: str) -> str:
-    """Normalize Arabic & English strings, strip diacritics, and expand common tokens"""
     if not text:
         return ""
     text = unicodedata.normalize("NFKD", text)
@@ -69,19 +112,12 @@ def normalize_search_text(text: str) -> str:
     return " ".join(expanded)
 
 def evaluate_product_match(query: str, product: Product) -> tuple[bool, float, int]:
-    """
-    Intelligent Substring & Partial Text Matcher.
-    Returns: (is_match, score, tier)
-      tier 1 = Direct/High-relevance match (exact phrase, entity+qualifiers, or exact synonym)
-      tier 2 = Broader/Partial match
-    """
     q_norm = normalize_search_text(query)
     if not q_norm:
         return False, 0.0, 2
 
     name_norm = normalize_search_text(product.name)
     store_norm = normalize_search_text(product.store_name)
-    desc_norm = normalize_search_text(product.description or "")
     name_tokens = name_norm.split()
     name_tokens_set = set(name_tokens)
 
@@ -89,16 +125,13 @@ def evaluate_product_match(query: str, product: Product) -> tuple[bool, float, i
     q_compact = q_norm.replace(" ", "")
     name_compact = name_norm.replace(" ", "")
 
-    # 1. Full Contiguous Substring match in Name (e.g. 'google ai pro' in 'google ai pro 18 months...')
     if q_norm in name_norm or q_compact in name_compact:
         return True, 150.0, 1
 
-    # 2. Store name match ONLY if query mentions store keyword explicitly
     if any(t in STORE_KEYWORDS or t.rstrip('s') in STORE_KEYWORDS for t in q_tokens):
         if any(t.rstrip('s') in store_norm.split() or t.rstrip('s') in store_norm.replace(" ", "") for t in q_tokens if t.rstrip('s') in STORE_KEYWORDS):
             return True, 100.0, 1
 
-    # 3. Check Synonym Group match with entity protection
     target_group = None
     for group in SYNONYM_GROUPS:
         if any(term in q_norm for term in group) or any(t in group for t in q_tokens if t not in GENERIC_WORDS):
@@ -108,29 +141,21 @@ def evaluate_product_match(query: str, product: Product) -> tuple[bool, float, i
     if target_group:
         prod_in_group = any(term in name_norm for term in target_group) or any(t in target_group for t in name_tokens_set)
         if prod_in_group:
-            # Check qualifiers (e.g. 'pro', '18', 'activation')
             qualifiers = [t for t in q_tokens if t not in target_group and t not in {"google", "ai", "gemini", "chatgpt", "gpt", "claude"}]
             if not qualifiers:
                 return True, 120.0, 1
             else:
                 matched_qualifiers = 0
                 for qual in qualifiers:
-                    if qual in name_tokens_set:
+                    if qual in name_tokens_set or (len(qual) >= 3 and any(qual in t for t in name_tokens_set)) or qual in name_compact:
                         matched_qualifiers += 1
-                    elif len(qual) >= 3 and any(qual in t for t in name_tokens_set):
-                        matched_qualifiers += 1
-                    elif qual in name_compact:
-                        matched_qualifiers += 1
-                
                 if matched_qualifiers >= len(qualifiers):
                     return True, 130.0, 1
                 elif matched_qualifiers > 0:
                     return True, 90.0, 1
         else:
-            # Belongs to a different entity brand, reject match
             return False, 0.0, 2
 
-    # 4. Multi-token partial/substring search for generic queries
     matched_count = 0
     score = 0.0
     for q_tok in q_tokens:
@@ -161,14 +186,13 @@ class PriceAggregator:
         self._lock = threading.Lock()
         self._is_refreshing: bool = False
         
-        # Load snapshot on startup for instant 0.01s initial response
         self._load_snapshot()
 
     def register_store(self, store: StoreAdapter):
         self.stores.append(store)
 
     def _load_snapshot(self):
-        """Loads cached products from disk snapshot for instant cold startup"""
+        """Loads cached products from disk snapshot and seeds DB history"""
         if os.path.exists(self.snapshot_file):
             try:
                 with open(self.snapshot_file, "r", encoding="utf-8") as f:
@@ -192,11 +216,12 @@ class PriceAggregator:
                             ))
                         self._memory_cache[store_name] = prods
                 print(f"Loaded {len(self._memory_cache)} stores from disk snapshot.")
+                seed_initial_history_if_needed(self._memory_cache)
             except Exception as e:
                 print(f"Failed to load cache snapshot: {e}")
 
     def _save_snapshot(self):
-        """Saves active memory cache to disk snapshot atomically and safely"""
+        """Saves active memory cache to disk snapshot atomically and logs price changes"""
         try:
             serialized = {}
             with self._lock:
@@ -204,17 +229,34 @@ class PriceAggregator:
                     if products:
                         serialized[store_name] = [p.to_dict() for p in products]
             if not serialized:
-                return  # Never overwrite snapshot with empty content
+                return
 
             tmp_file = f"{self.snapshot_file}.tmp"
             with open(tmp_file, "w", encoding="utf-8") as f:
                 json.dump(serialized, f, ensure_ascii=False, indent=2)
             os.replace(tmp_file, self.snapshot_file)
+
+            # Record latest prices into SQLite price_history
+            for store_name, products in serialized.items():
+                for p in products:
+                    if float(p.get("price", 0)) > 0:
+                        record_observation(
+                            merchant_name=store_name,
+                            product_id=p.get("id", ""),
+                            product_name=p.get("name", ""),
+                            price=float(p.get("price", 0)),
+                            currency=p.get("currency", "USDT"),
+                            in_stock=int(p.get("in_stock", 0)),
+                            category=p.get("category", ""),
+                            variant=p.get("name", "")
+                        )
+            # Evaluate price alerts
+            all_prods = self.fetch_all()
+            check_and_evaluate_alerts(all_prods)
         except Exception as e:
             print(f"Failed to save snapshot: {e}")
 
     def _fetch_single_store_safe(self, store: StoreAdapter) -> List[Product]:
-        """Safely fetch products from a single store with error isolation"""
         try:
             return store.fetch_products()
         except Exception as e:
@@ -223,14 +265,12 @@ class PriceAggregator:
                 return self._memory_cache.get(store.name, [])
 
     def refresh_cache_now(self, async_mode: bool = True):
-        """Refreshes all stores concurrently without blocking caller"""
         if self._is_refreshing:
             return
         
         def _run_refresh():
             self._is_refreshing = True
             try:
-                # Concurrent fetch with worker pool
                 with ThreadPoolExecutor(max_workers=max(len(self.stores), 1)) as executor:
                     future_to_store = {
                         executor.submit(self._fetch_single_store_safe, s): s.name 
@@ -259,9 +299,7 @@ class PriceAggregator:
             _run_refresh()
 
     def start_background_worker(self, interval: int = 60):
-        """Runs a continuous background daemon that refreshes stores periodically"""
         def worker_loop():
-            # Initial background warm up
             time.sleep(2)
             while True:
                 self.refresh_cache_now(async_mode=False)
@@ -271,15 +309,9 @@ class PriceAggregator:
         thread.start()
 
     def get_stores_info(self) -> List[Dict[str, Any]]:
-        """Returns metadata for all stores instantly from memory (< 1ms)"""
-        now = time.time()
-        # Trigger background refresh if stale
-        if (now - self._last_refresh_time) > self.cache_ttl:
-            self.refresh_cache_now(async_mode=True)
-
         info = []
         for s in self.stores:
-            bot_tag = getattr(s, "bot_username", "")
+            bot_tag = getattr(s, "bot_username", STORE_HANDLES.get(s.name, ""))
             with self._lock:
                 products = self._memory_cache.get(s.name, [])
             in_stock_count = len([p for p in products if p.in_stock > 0 and p.price > 0])
@@ -290,15 +322,15 @@ class PriceAggregator:
             info.append({
                 "name": s.name,
                 "bot_username": bot_tag,
+                "initials": get_store_initials(s.name),
                 "status": status,
                 "status_text": status_text,
                 "product_count": in_stock_count,
-                "base_url": s.base_url
+                "base_url": s.base_url or f"https://t.me/{bot_tag.lstrip('@')}"
             })
         return info
 
     def get_store_feed(self, store_name: str) -> Dict[str, Any]:
-        """Returns the latest products for a store instantly from memory (< 1ms)"""
         target_store = next((s for s in self.stores if s.name.lower() == store_name.lower()), None)
         if not target_store:
             return {"error": "المتجر غير موجود", "items": []}
@@ -307,18 +339,17 @@ class PriceAggregator:
             products = self._memory_cache.get(target_store.name, [])
             
         valid_products = [p for p in products if p.in_stock > 0 and p.price > 0]
-        # Sort by newest timestamp first, then lower price
         valid_products.sort(key=lambda x: (-x.timestamp, x.price))
 
         return {
             "store_name": target_store.name,
-            "bot_username": getattr(target_store, "bot_username", ""),
+            "bot_username": getattr(target_store, "bot_username", STORE_HANDLES.get(target_store.name, "")),
+            "initials": get_store_initials(target_store.name),
             "total_items": len(valid_products),
             "items": [p.to_dict() for p in valid_products]
         }
 
     def fetch_all(self, enabled_stores: Optional[List[str]] = None) -> List[Product]:
-        """Returns all products in memory instantly"""
         all_products = []
         with self._lock:
             for s_name, prods in self._memory_cache.items():
@@ -326,18 +357,22 @@ class PriceAggregator:
                     all_products.extend(prods)
         return all_products
 
+    def get_catalog_hierarchy(self) -> Dict[str, Any]:
+        return build_catalog_hierarchy(self.fetch_all())
+
     def search_and_compare(
         self, 
         query: str = "", 
         enabled_stores: Optional[List[str]] = None,
         category: Optional[str] = None,
-        sort_by: str = "price_asc"
+        product_family: Optional[str] = None,
+        plan_duration: Optional[str] = None,
+        sort_by: str = "lowest_price"
     ) -> Dict[str, Any]:
         """
-        Ultra-fast instant search executed 100% in-memory (< 2ms).
-        Supports query keywords, category filtering, and sorting.
+        High-performance comparison engine matching the visual requirements:
+        Dependent filters: Category -> Product Family -> Plan Duration -> Comparable offers.
         """
-        # Auto-trigger refresh in background if cache is stale
         now = time.time()
         if (now - self._last_refresh_time) > self.cache_ttl:
             self.refresh_cache_now(async_mode=True)
@@ -345,98 +380,144 @@ class PriceAggregator:
         query_str = query.strip()
         all_products = self.fetch_all(enabled_stores)
         
-        # If no query and no category, return empty results (initial state)
-        if not query_str and (not category or category == "all"):
-            return {
-                "query": "",
-                "best_deal": None,
-                "stores_with_item": [],
-                "store_comparison": {},
-                "stats": {},
-                "results": []
-            }
+        # If no filter at all, default to showing AI group (Gemini/ChatGPT) so the primary dashboard
+        # immediately exposes comparison controls and actual offers as required
+        if not query_str and (not category or category == "all") and not product_family and not plan_duration:
+            category = "ai"
+            product_family = "Google Gemini"
 
-        matched_with_meta: List[tuple[Product, float, int]] = []
-
-        # Category keyword match
-        cat_keywords = CATEGORY_KEYWORDS.get(category.lower(), []) if category and category != "all" else []
+        matched_with_meta: List[tuple[Product, float, int, str, str, str, List[str]]] = []
 
         for p in all_products:
             if p.in_stock <= 0 or p.price <= 0:
                 continue
 
-            name_clean = normalize_search_text(p.name)
-            name_tokens = set(name_clean.split())
-            name_compact = "".join(name_clean.split())
+            cat_id, fam, duration, tags = classify_product(p.name, p.category)
 
-            # Category filter check if category is specified
-            if cat_keywords:
-                matches_cat = any(kw in name_compact or kw in name_tokens for kw in cat_keywords)
-                if not matches_cat:
-                    continue
+            # Category filter
+            if category and category != "all" and cat_id != category:
+                continue
 
-            # Intelligent query match
+            # Product family filter
+            if product_family and product_family != "all" and fam.lower() != product_family.lower():
+                continue
+
+            # Plan duration filter
+            if plan_duration and plan_duration != "all" and duration.lower() != plan_duration.lower():
+                continue
+
+            # Intelligent query match if query provided
             if query_str:
                 is_match, score, tier = evaluate_product_match(query_str, p)
                 if not is_match:
                     continue
-                matched_with_meta.append((p, score, tier))
+                matched_with_meta.append((p, score, tier, cat_id, fam, duration, tags))
             else:
-                # If only category was selected without query
-                matched_with_meta.append((p, 50.0, 1))
+                matched_with_meta.append((p, 50.0, 1, cat_id, fam, duration, tags))
 
-        # Sorting logic: Direct matches (tier 1) prioritized over broad matches (tier 2),
-        # then sorted according to user selection
-        if sort_by == "date_desc":
-            matched_with_meta.sort(key=lambda x: (x[2], -x[0].timestamp, x[0].price))
-        elif sort_by == "stock_desc":
-            matched_with_meta.sort(key=lambda x: (x[2], -x[0].in_stock, x[0].price))
-        else: # default: price_asc
-            matched_with_meta.sort(key=lambda x: (x[2], x[0].price, -x[0].timestamp))
+        # Enrich each product with historical stats for offer cards
+        enriched_results = []
+        for item in matched_with_meta:
+            p, score, tier, cat_id, fam, duration, tags = item
+            
+            # Retrieve 7-day price history
+            hist = get_product_history(p.store_name, p.name, period_days=7)
+            
+            change_amount = hist.get("change_amount", 0.0)
+            change_pct = hist.get("change_pct", 0.0)
+            direction = hist.get("direction", "neutral")
+            sparkline = [pt["price"] for pt in hist.get("data_points", [])]
+            if not sparkline:
+                sparkline = [p.price, p.price]
 
-        matched = [item[0] for item in matched_with_meta]
+            bot_handle = STORE_HANDLES.get(p.store_name, f"@{p.store_name.replace(' ', '')}Bot")
+            
+            p_dict = p.to_dict()
+            p_dict.update({
+                "category_id": cat_id,
+                "product_family": fam,
+                "duration_plan": duration,
+                "tags": tags,
+                "initials": get_store_initials(p.store_name),
+                "bot_handle": bot_handle,
+                "weekly_change_amount": change_amount,
+                "weekly_change_pct": change_pct,
+                "direction": direction,
+                "sparkline": sparkline,
+                "buy_url": p.buy_url or f"https://t.me/{bot_handle.lstrip('@')}",
+                "is_cheapest": False
+            })
+            enriched_results.append(p_dict)
 
-        stores_with_item = list(dict.fromkeys([p.store_name for p in matched]))
-        best_deal = matched[0].to_dict() if matched else None
+        # Sorting logic
+        if sort_by in ["lowest_price", "price_asc"]:
+            enriched_results.sort(key=lambda x: (x["price"], -x["in_stock"]))
+        elif sort_by in ["highest_price", "price_desc"]:
+            enriched_results.sort(key=lambda x: (-x["price"], -x["in_stock"]))
+        elif sort_by == "biggest_decrease":
+            enriched_results.sort(key=lambda x: (x["weekly_change_pct"], x["price"]))
+        elif sort_by == "biggest_increase":
+            enriched_results.sort(key=lambda x: (-x["weekly_change_pct"], x["price"]))
+        elif sort_by in ["newest", "date_desc"]:
+            enriched_results.sort(key=lambda x: (-x["timestamp"], x["price"]))
+        elif sort_by in ["stock", "stock_desc"]:
+            enriched_results.sort(key=lambda x: (-x["in_stock"], x["price"]))
+        else:
+            enriched_results.sort(key=lambda x: x["price"])
 
-        # Build comparison summary per store
-        store_comparison = {}
-        for s_name in stores_with_item:
-            store_items = [p for p in matched if p.store_name == s_name]
-            if store_items:
-                cheapest_in_store = sorted(store_items, key=lambda x: x.price)[0]
-                store_comparison[s_name] = {
-                    "lowest_price": cheapest_in_store.price,
-                    "currency": cheapest_in_store.currency,
-                    "item_name": cheapest_in_store.name,
-                    "in_stock": cheapest_in_store.in_stock,
-                    "updated_at": cheapest_in_store.updated_at,
-                    "buy_url": cheapest_in_store.buy_url,
-                    "total_offers": len(store_items)
-                }
+        # Mark cheapest deal
+        if enriched_results:
+            enriched_results[0]["is_cheapest"] = True
 
-        stats = {}
-        if matched:
-            min_price = matched[0].price
-            max_price = matched[-1].price
+        stores_with_item = list(dict.fromkeys([p["store_name"] for p in enriched_results]))
+        best_deal = enriched_results[0] if enriched_results else None
+
+        # Calculate fair market summary
+        stats = {
+            "lowest_price": 0.0,
+            "highest_price": 0.0,
+            "avg_price": 0.0,
+            "cheapest_store": "",
+            "merchants_count": 0,
+            "total_offers": 0,
+            "savings": 0.0,
+            "savings_percentage": 0.0,
+            "currency": "USD"
+        }
+
+        if enriched_results:
+            prices = [p["price"] for p in enriched_results]
+            min_price = min(prices)
+            max_price = max(prices)
+            avg_price = round(sum(prices) / len(prices), 2)
             savings = round(max_price - min_price, 2)
             savings_pct = round(((max_price - min_price) / max_price * 100), 1) if max_price > 0 else 0
+            
             stats = {
                 "lowest_price": min_price,
                 "highest_price": max_price,
+                "avg_price": avg_price,
+                "cheapest_store": best_deal["store_name"],
+                "merchants_count": len(stores_with_item),
+                "total_offers": len(enriched_results),
                 "savings": savings,
                 "savings_percentage": savings_pct,
-                "total_results": len(matched),
-                "stores_count": len(stores_with_item)
+                "currency": best_deal.get("currency", "USD")
             }
+
+        # Multi-merchant comparative series for market chart
+        comp_query = product_family if (product_family and product_family != "all") else (query_str or "Gemini")
+        market_chart_data = get_multi_merchant_comparison(comp_query, period_days=7)
 
         return {
             "query": query_str,
             "category": category,
+            "product_family": product_family,
+            "plan_duration": plan_duration,
             "sort_by": sort_by,
             "best_deal": best_deal,
             "stores_with_item": stores_with_item,
-            "store_comparison": store_comparison,
             "stats": stats,
-            "results": [p.to_dict() for p in matched]
+            "market_chart": market_chart_data,
+            "results": enriched_results
         }
