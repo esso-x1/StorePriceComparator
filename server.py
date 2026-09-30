@@ -32,17 +32,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-os.makedirs("static", exist_ok=True)
-os.makedirs("static/icons", exist_ok=True)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_DIR = os.path.join(BASE_DIR, "static")
+INDEX_FILE = os.path.join(STATIC_DIR, "index.html")
+
+os.makedirs(STATIC_DIR, exist_ok=True)
+os.makedirs(os.path.join(STATIC_DIR, "icons"), exist_ok=True)
+app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/manifest.json")
 def get_manifest():
-    return FileResponse("static/manifest.json", media_type="application/manifest+json")
+    return FileResponse(os.path.join(STATIC_DIR, "manifest.json"), media_type="application/manifest+json")
 
 @app.get("/sw.js")
 def get_sw():
-    return FileResponse("static/sw.js", media_type="application/javascript")
+    return FileResponse(os.path.join(STATIC_DIR, "sw.js"), media_type="application/javascript")
+
 
 # Initialize Aggregator with ALL 12 Stores
 aggregator = PriceAggregator()
@@ -303,7 +308,8 @@ def refresh_all():
 # Main Application Entry Point
 @app.get("/", response_class=FileResponse)
 def index():
-    return FileResponse("static/index.html")
+    return FileResponse(INDEX_FILE)
+
 
 if __name__ == "__main__":
     import uvicorn

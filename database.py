@@ -3,7 +3,8 @@ import os
 import time
 from typing import List, Dict, Any, Optional
 
-DB_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "price_history.db")
+DB_DIR = "/tmp" if os.environ.get("VERCEL") else os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(DB_DIR, "price_history.db")
 
 def get_connection():
     conn = sqlite3.connect(DB_FILE, check_same_thread=False, timeout=15)
