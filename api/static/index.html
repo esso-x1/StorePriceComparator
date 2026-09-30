@@ -2142,8 +2142,13 @@
       }
     }
 
+    function normalizePinDigits(str) {
+      if (!str) return '';
+      return String(str).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();
+    }
+
     async function submitPin() {
-      const pin = document.getElementById('pinInput').value.trim();
+      const pin = normalizePinDigits(document.getElementById('pinInput').value);
       const rememberMe = document.getElementById('rememberMeCheckbox').checked;
 
       if (!pin) {
