@@ -72,11 +72,26 @@ from stores.digital_socials import DigitalSocialsAdapter
 DS_INIT_DATA = "query_id=AAFM8p9WAgAAAEzyn1YdXi53&user=%7B%22id%22%3A5748290124%2C%22first_name%22%3A%22Media%22%2C%22last_name%22%3A%22Tech%22%2C%22username%22%3A%22MediaTech_Building%22%2C%22language_code%22%3A%22ar%22%2C%22allows_write_to_pm%22%3Atrue%2C%22photo_url%22%3A%22https%3A%5C%2F%5C%2Ft.me%5C%2Fi%5C%2Fuserpic%5C%2F320%5C%2F_aeV3vQ_7VvfNJv_Tq8IBywUw1JsyzYwQCHtLILyf-eBoRZmmw5QOb47U3pGaaJH.svg%22%7D&auth_date=1790677164&signature=gLAVh-dtXB5nl_9VEQnvtQLzeQFm_cdjSNkGDD7NRKFE8RnUYKVzgzUhRES2TJAx0JqBeuQ-7JR9M2SpBocuCA&hash=8a81e7acf05fc179357af2d1eb07329b88c5b92c441afc492ffac04293308c6d"
 aggregator.register_store(DigitalSocialsAdapter(init_data=DS_INIT_DATA))
 
+from stores.verifier_store import VerifierStoreAdapter
+aggregator.register_store(VerifierStoreAdapter())
+
 # Start background warm up & continuous sync worker (every 60s)
 aggregator.start_background_worker(interval=60)
 
 import subprocess
 import threading
+from pydantic import BaseModel
+
+APP_PIN = os.environ.get("APP_PIN", "1234")
+
+class PinVerifyRequest(BaseModel):
+    pin: str
+
+@app.post("/api/auth/verify")
+def verify_pin(req: PinVerifyRequest):
+    if req.pin.strip() == APP_PIN.strip():
+        return {"success": True, "token": "session_authenticated"}
+    return {"success": False, "message": "الرمز السري غير صحيح"}
 
 is_crawling = False
 
@@ -1020,9 +1035,123 @@ def index():
         justify-content: flex-end;
       }
     }
+
+    /* Apple Liquid Glass Passcode Lock Screen */
+    .passcode-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 9, 17, 0.94);
+      backdrop-filter: blur(40px) saturate(200%);
+      -webkit-backdrop-filter: blur(40px) saturate(200%);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.4s;
+    }
+    .passcode-overlay.unlocked {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .passcode-card {
+      background: rgba(18, 24, 40, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 28px;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 113, 227, 0.25);
+      padding: 2.2rem 1.8rem;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+      animation: cardPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes cardPop {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .passcode-icon-ring {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 1.2rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(0, 113, 227, 0.3), rgba(56, 189, 248, 0.15));
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 25px rgba(0, 113, 227, 0.3);
+    }
+    .passcode-input-wrap {
+      margin: 1.2rem 0 0.8rem;
+    }
+    .passcode-input-wrap input {
+      width: 100%;
+      padding: 0.9rem 1.2rem;
+      border-radius: 16px;
+      background: rgba(10, 14, 26, 0.85);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 1.25rem;
+      text-align: center;
+      letter-spacing: 4px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    .passcode-input-wrap input:focus {
+      border-color: var(--apple-blue);
+      box-shadow: 0 0 20px var(--apple-blue-glow);
+    }
+    .passcode-error {
+      color: #ef4444;
+      font-size: 0.8rem;
+      min-height: 20px;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .shake-anim {
+      animation: shakeCard 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+    @keyframes shakeCard {
+      10%, 90% { transform: translate3d(-3px, 0, 0); }
+      20%, 80% { transform: translate3d(5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
   </style>
 </head>
 <body>
+  <!-- Apple Liquid Glass Passcode Lock Screen -->
+  <div id="passcodeOverlay" class="passcode-overlay">
+    <div class="passcode-card">
+      <div class="passcode-icon-ring">
+        <span style="font-size:2.2rem;">🔒</span>
+      </div>
+      <h2 style="font-size:1.45rem; font-weight:800; margin-bottom:0.4rem; color:#fff;">مقارن الأسعار الذكي</h2>
+      <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.5rem;">يرجى إدخال الرقم السري للوصول إلى النظام</p>
+      
+      <div class="passcode-input-wrap">
+        <input type="password" id="passcodeInput" maxlength="16" placeholder="أدخل الرقم السري..." autocomplete="off" autofocus onkeydown="if(event.key==='Enter') submitPasscode()" />
+      </div>
+
+      <div id="passcodeError" class="passcode-error"></div>
+
+      <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin: 1.2rem 0;">
+        <input type="checkbox" id="rememberMeCheck" checked style="accent-color:var(--apple-blue); cursor:pointer;" />
+        <label for="rememberMeCheck" style="font-size:0.8rem; color:var(--text-muted); cursor:pointer;">تذكر الدخول على هذا الجهاز</label>
+      </div>
+
+      <button onclick="submitPasscode()" class="apple-btn" style="width:100%; padding:0.85rem; font-size:1rem; border-radius:14px; font-weight:700;">
+        دخول إلى التطبيق ✨
+      </button>
+
+      <div style="margin-top:1.2rem; font-size:0.75rem; color:var(--text-muted);">
+        الرمز الافتراضي: <code style="color:#38bdf8; background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:6px;">1234</code>
+      </div>
+    </div>
+  </div>
+
   <!-- Click-outside backdrop overlay for sidebar -->
   <div id="sidebarBackdrop" class="sidebar-backdrop" onclick="closeSidebar()"></div>
 
@@ -1041,11 +1170,7 @@ def index():
       <div id="storeList" class="store-list"></div>
 
       <div style="margin-top: 0.6rem; padding: 0.6rem 0; border-top: 1px solid var(--glass-border); text-align: center;">
-        <button id="crawlBtn" onclick="runCrawlerNow()" class="apple-btn" style="width: 100%; border-radius: 12px; font-size: 0.8rem; padding: 0.55rem 0.8rem;">
-          <span>🤖</span>
-          <span id="crawlBtnText">تحديث عروض البوتات (الزاحف)</span>
-        </button>
-        <div id="crawlStatus" style="font-size:0.72rem; color:var(--text-muted); margin-top:5px; min-height:16px;"></div>
+        <div id="crawlStatus" style="font-size:0.75rem; color:var(--text-muted); min-height:16px;">⚡ زر الزاحف متاح بالأعلى في الهيدر</div>
       </div>
     </aside>
 
@@ -1058,7 +1183,7 @@ def index():
           <div>
             <h1>مقارن الأسعار الذكي</h1>
             <div style="display:flex; align-items:center; gap:8px; margin-top:2px;">
-              <span id="storesCounterBadge" class="status-counter-tag">⚡ 11 متجر نشط</span>
+              <span id="storesCounterBadge" class="status-counter-tag">⚡ 12 متجر نشط</span>
               <span style="font-size:0.75rem; color:var(--text-muted);">تحديث فوري <b style="color:#38bdf8;">0.01s</b></span>
             </div>
           </div>
@@ -1066,9 +1191,18 @@ def index():
         
         <!-- Action Buttons -->
         <div class="top-actions">
+          <!-- Crawler Button Positioned At The Top -->
+          <button id="crawlBtn" onclick="runCrawlerNow()" class="apple-glass-pill" style="background: linear-gradient(135deg, rgba(0,113,227,0.35), rgba(56,189,248,0.2)); border: 1px solid rgba(56,189,248,0.5); font-weight:700;" title="تشغيل الزاحف لتحديث عروض بوتات تيليجرام">
+            <span>🤖</span>
+            <span id="crawlBtnText">تحديث عروض البوتات</span>
+          </button>
           <button id="refreshDataBtn" onclick="manualRefreshCache()" class="apple-glass-pill" title="تحديث البيانات من السيرفر">
             <span id="refreshIcon">🔄</span>
             <span>تحديث الأسعار</span>
+          </button>
+          <button id="lockAppBtn" onclick="lockApp()" class="apple-glass-pill" title="قفل التطبيق برقم سري">
+            <span>🔒</span>
+            <span>قفل</span>
           </button>
           <button id="pushNotifBtn" onclick="togglePushNotifications()" class="apple-glass-pill" title="تفعيل الإشعارات الفورية">
             <span id="pushIcon">🔔</span>
@@ -1831,6 +1965,67 @@ def index():
       return div.innerHTML;
     }
 
+    // Passcode Authentication Logic
+    function checkAuth() {
+      const isAuth = localStorage.getItem('app_authenticated') === 'true' || sessionStorage.getItem('app_authenticated') === 'true';
+      const overlay = document.getElementById('passcodeOverlay');
+      if (isAuth) {
+        overlay.classList.add('unlocked');
+      } else {
+        overlay.classList.remove('unlocked');
+        document.getElementById('passcodeInput').value = '';
+        document.getElementById('passcodeError').innerText = '';
+        setTimeout(() => {
+          const inp = document.getElementById('passcodeInput');
+          if (inp) inp.focus();
+        }, 150);
+      }
+    }
+
+    async function submitPasscode() {
+      const pin = document.getElementById('passcodeInput').value.trim();
+      const errEl = document.getElementById('passcodeError');
+      const card = document.querySelector('.passcode-card');
+      if (!pin) {
+        errEl.innerText = 'يرجى إدخال الرقم السري';
+        return;
+      }
+      try {
+        const res = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({pin: pin})
+        });
+        const data = await res.json();
+        if (data.success) {
+          const remember = document.getElementById('rememberMeCheck').checked;
+          if (remember) {
+            localStorage.setItem('app_authenticated', 'true');
+          } else {
+            sessionStorage.setItem('app_authenticated', 'true');
+          }
+          document.getElementById('passcodeOverlay').classList.add('unlocked');
+          errEl.innerText = '';
+        } else {
+          errEl.innerText = data.message || 'الرمز السري غير صحيح، حاول مرة أخرى';
+          card.classList.remove('shake-anim');
+          void card.offsetWidth;
+          card.classList.add('shake-anim');
+          document.getElementById('passcodeInput').value = '';
+          document.getElementById('passcodeInput').focus();
+        }
+      } catch (e) {
+        errEl.innerText = 'تعذر التحقق، تأكد من تشغيل السيرفر';
+      }
+    }
+
+    function lockApp() {
+      localStorage.removeItem('app_authenticated');
+      sessionStorage.removeItem('app_authenticated');
+      checkAuth();
+    }
+
+    checkAuth();
     loadStores();
     showInitialState();
   </script>

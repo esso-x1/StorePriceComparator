@@ -284,6 +284,70 @@ async def scrape_diginest(client):
         print(f"Error scraping @DIGINEST1BOT: {e}")
     return products
 
+async def scrape_verifier(client):
+    print("Scraping @Veriyferbot (Duskyr)...")
+    products = []
+    try:
+        await client.send_message("@Veriyferbot", "/start")
+        await asyncio.sleep(2)
+        msgs = await client.get_messages("@Veriyferbot", limit=2)
+        for m in msgs:
+            if m.buttons:
+                for row in m.buttons:
+                    for b in row:
+                        if "Shop in the bot" in b.text:
+                            await b.click()
+                            await asyncio.sleep(2)
+                            break
+        
+        now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+        now_ts = datetime.now().timestamp()
+        
+        for page in range(1, 10):
+            latest = await client.get_messages("@Veriyferbot", limit=1)
+            if not latest or not latest[0].buttons:
+                break
+            for row in latest[0].buttons:
+                for b in row:
+                    text = b.text.strip()
+                    m_price = re.search(r'^(.*?)\s*·\s*([\d\.]+)\s*(USDT|\$|USD)?', text)
+                    if m_price and "Next" not in text and "Back" not in text:
+                        name = m_price.group(1).strip()
+                        price = float(m_price.group(2))
+                        name_clean = re.sub(r'[\U00010000-\U0010ffff]|[\u2600-\u27bf]|·', '', name).strip()
+                        clean_id = re.sub(r'[^a-zA-Z0-9]', '_', name_clean).lower()
+                        products.append({
+                            "id": f"verifier_{clean_id}",
+                            "store_name": "Verifier Store",
+                            "name": name_clean,
+                            "price": price,
+                            "currency": "USDT",
+                            "in_stock": 10,
+                            "description": text,
+                            "updated_at": now_str,
+                            "timestamp": now_ts,
+                            "category": "Digital Accounts",
+                            "buy_url": "https://t.me/Veriyferbot"
+                        })
+            
+            clicked_next = False
+            for row in latest[0].buttons:
+                for b in row:
+                    if "Next" in b.text or "›" in b.text:
+                        await b.click()
+                        clicked_next = True
+                        await asyncio.sleep(2)
+                        break
+                if clicked_next:
+                    break
+            if not clicked_next:
+                break
+                
+        print(f"Scraped {len(products)} products from @Veriyferbot!")
+    except Exception as e:
+        print(f"Error scraping @Veriyferbot: {e}")
+    return products
+
 async def run_crawler():
     client = TelegramClient(SESSION_NAME, API_ID, API_HASH)
     await client.connect()
@@ -308,6 +372,10 @@ async def run_crawler():
     # 4. DIGINEST Store
     digi_items = await scrape_diginest(client)
     all_scraped["DIGINEST Store"] = digi_items
+
+    # 5. Verifier Store (@Veriyferbot)
+    verifier_items = await scrape_verifier(client)
+    all_scraped["Verifier Store"] = verifier_items
 
     await client.disconnect()
 
