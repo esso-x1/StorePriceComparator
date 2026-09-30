@@ -2074,9 +2074,9 @@
       </div>
       <div>
         <h2 style="font-size:1.3rem; color:#fff; font-weight:800; margin-bottom:4px;">تطبيق رادار السوق محمي</h2>
-        <p style="font-size:0.85rem; color:var(--text-muted);" id="pinModalHint">أدخل الرمز السري للمتابعة (الافتراضي: 1234)</p>
+        <p style="font-size:0.85rem; color:var(--text-muted);" id="pinModalHint">أدخل كلمة المرور أو الرمز السري للمتابعة</p>
       </div>
-      <input type="password" id="pinInput" class="pin-input-field" maxlength="8" placeholder="••••" autofocus onkeyup="if(event.key==='Enter') submitPin()" />
+      <input type="password" id="pinInput" class="pin-input-field" maxlength="64" placeholder="••••••••" autofocus onkeyup="if(event.key==='Enter') submitPin()" />
       
       <!-- Remember Me Checkbox -->
       <label style="display:flex; align-items:center; gap:8px; font-size:0.84rem; color:var(--text-muted); cursor:pointer; user-select:none;">
