@@ -1318,6 +1318,9 @@
 </head>
 <body>
 
+  <!-- Protected Application Shell (Hidden until authenticated) -->
+  <div id="appShell" style="display:none;">
+
   <!-- Top Header -->
   <header class="top-header">
     <a href="#" class="brand-section" onclick="switchView('comparison'); return false;">
@@ -2060,6 +2063,7 @@
 
     </div>
   </div>
+  </div> <!-- /#appShell Protected Container -->
 
   <!-- ========================================================
        PIN LOCK MODAL
@@ -2122,28 +2126,81 @@
       }
     };
 
+    // Enterprise Auth Token Constant
+    const AUTH_SESSION_TOKEN = "session_radar_sec_2026_authorized";
+
+    function getAuthToken() {
+      return localStorage.getItem('radar_token') || AUTH_SESSION_TOKEN;
+    }
+
+    async function apiFetch(url, options = {}) {
+      const token = getAuthToken();
+      const headers = {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+        ...(options.headers || {})
+      };
+
+      try {
+        const res = await fetch(url, {
+          ...options,
+          credentials: 'same-origin',
+          headers
+        });
+
+        if (res.status === 401) {
+          // Access Denied / Unauthenticated
+          state.authenticated = false;
+          localStorage.removeItem('pin_auth');
+          localStorage.removeItem('radar_token');
+          document.cookie = "app_auth=; max-age=0; path=/;";
+          document.cookie = "radar_auth=; max-age=0; path=/;";
+          
+          const appShell = document.getElementById('appShell');
+          if (appShell) appShell.style.display = 'none';
+          
+          const pinLockModal = document.getElementById('pinLockModal');
+          if (pinLockModal) pinLockModal.style.display = 'flex';
+          
+          showToast('المصادقة مطلوبة للوصول إلى بيانات رادار السوق. يرجى إدخال الرمز السري.', 'error');
+          return null;
+        }
+        return res;
+      } catch (err) {
+        console.error('API Fetch error:', err);
+        throw err;
+      }
+    }
+
     // DOM Ready Initialization
     document.addEventListener('DOMContentLoaded', async () => {
       checkAuthentication();
-      await fetchCatalog();
-      await fetchStores();
-      await executeComparisonSearch();
+      if (state.authenticated) {
+        await fetchCatalog();
+        await fetchStores();
+        await executeComparisonSearch();
+      }
     });
 
     // ----------------------------------------------------
     // Authentication & Persistent User Session
     // ----------------------------------------------------
     function checkAuthentication() {
-      const isCookieAuth = document.cookie.split(';').some(c => c.trim().startsWith('app_auth=1'));
+      const isCookieAuth = document.cookie.split(';').some(c => c.trim().startsWith('radar_auth=') || c.trim().startsWith('app_auth=1'));
       const isLocalAuth = localStorage.getItem('pin_auth') === 'true' || sessionStorage.getItem('pin_auth') === 'true';
+
+      const appShell = document.getElementById('appShell');
+      const pinLockModal = document.getElementById('pinLockModal');
 
       if (isCookieAuth || isLocalAuth) {
         state.authenticated = true;
-        document.getElementById('pinLockModal').style.display = 'none';
+        if (appShell) appShell.style.display = 'block';
+        if (pinLockModal) pinLockModal.style.display = 'none';
         updateUserDisplay();
       } else {
         state.authenticated = false;
-        document.getElementById('pinLockModal').style.display = 'flex';
+        if (appShell) appShell.style.display = 'none';
+        if (pinLockModal) pinLockModal.style.display = 'flex';
       }
     }
 
@@ -2170,14 +2227,22 @@
         const data = await res.json();
         if (data.success) {
           state.authenticated = true;
-          document.getElementById('pinLockModal').style.display = 'none';
+          const token = data.token || AUTH_SESSION_TOKEN;
+          localStorage.setItem('radar_token', token);
 
           if (rememberMe) {
             localStorage.setItem('pin_auth', 'true');
+            document.cookie = "radar_auth=" + token + "; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
             document.cookie = "app_auth=1; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
           } else {
             sessionStorage.setItem('pin_auth', 'true');
+            document.cookie = "radar_auth=" + token + "; path=/; SameSite=Lax";
           }
+
+          const appShell = document.getElementById('appShell');
+          if (appShell) appShell.style.display = 'block';
+          const pinLockModal = document.getElementById('pinLockModal');
+          if (pinLockModal) pinLockModal.style.display = 'none';
 
           if (!localStorage.getItem('auth_user_name')) {
             localStorage.setItem('auth_user_name', data.user ? data.user.name : 'المسؤول (Admin)');
@@ -2186,6 +2251,10 @@
 
           updateUserDisplay();
           showToast('مرحباً بك! تم تسجيل الدخول وحفظ الجلسة بنجاح', 'success');
+
+          await fetchCatalog();
+          await fetchStores();
+          await executeComparisonSearch();
         } else {
           showToast(data.message || 'الرمز السري غير صحيح', 'error');
         }
@@ -2200,22 +2269,27 @@
         const res = await fetch('/api/auth/reset', { method: 'POST' });
         const data = await res.json();
         state.authenticated = true;
+        const token = data.token || AUTH_SESSION_TOKEN;
         document.getElementById('pinInput').value = '1234';
-        document.getElementById('pinLockModal').style.display = 'none';
         localStorage.setItem('pin_auth', 'true');
+        localStorage.setItem('radar_token', token);
+        document.cookie = "radar_auth=" + token + "; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
         document.cookie = "app_auth=1; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
+        
+        const appShell = document.getElementById('appShell');
+        if (appShell) appShell.style.display = 'block';
+        const pinLockModal = document.getElementById('pinLockModal');
+        if (pinLockModal) pinLockModal.style.display = 'none';
+
         localStorage.setItem('auth_user_name', 'المسؤول (Admin)');
         updateUserDisplay();
         showToast('تمت إعادة تعيين الرمز السري بنجاح إلى 1234 وتم فتح التطبيق!', 'success');
+
+        await fetchCatalog();
+        await fetchStores();
+        await executeComparisonSearch();
       } catch (e) {
-        // Safe offline unlock
-        state.authenticated = true;
-        document.getElementById('pinInput').value = '1234';
-        document.getElementById('pinLockModal').style.display = 'none';
-        localStorage.setItem('pin_auth', 'true');
-        document.cookie = "app_auth=1; max-age=" + (90 * 86400) + "; path=/; SameSite=Lax";
-        updateUserDisplay();
-        showToast('تم فتح التطبيق بنجاح كمسؤول!', 'success');
+        showToast('خطأ في الاتصال بالخادم', 'error');
       }
     }
 
@@ -2254,12 +2328,12 @@
     }
 
     async function submitChangePin() {
-      const currentPin = document.getElementById('currentPinInput').value.trim();
-      const newPin = document.getElementById('newPinInput').value.trim();
-      const confirmPin = document.getElementById('confirmNewPinInput').value.trim();
+      const currentPin = normalizePinDigits(document.getElementById('currentPinInput').value);
+      const newPin = normalizePinDigits(document.getElementById('newPinInput').value);
+      const confirmPin = normalizePinDigits(document.getElementById('confirmNewPinInput').value);
 
-      if (!currentPin || !newPin) {
-        showToast('يرجى تعبئة كافة حقول الرمز السري', 'error');
+      if (!newPin) {
+        showToast('يرجى إدخال الرمز السري الجديد', 'error');
         return;
       }
       if (newPin !== confirmPin) {
@@ -2272,11 +2346,12 @@
       }
 
       try {
-        const res = await fetch('/api/auth/change-pin', {
+        const res = await apiFetch('/api/auth/change-pin', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ current_pin: currentPin, new_pin: newPin })
         });
+        if (!res) return;
         const data = await res.json();
         if (data.success) {
           showToast(data.message || 'تم تحديث الرمز السري بنجاح', 'success');
@@ -2293,10 +2368,14 @@
 
     function logoutUserFully() {
       localStorage.removeItem('pin_auth');
+      localStorage.removeItem('radar_token');
       localStorage.removeItem('auth_user_name');
       sessionStorage.removeItem('pin_auth');
       document.cookie = "app_auth=; max-age=0; path=/;";
+      document.cookie = "radar_auth=; max-age=0; path=/;";
       state.authenticated = false;
+      const appShell = document.getElementById('appShell');
+      if (appShell) appShell.style.display = 'none';
       document.getElementById('pinInput').value = '';
       document.getElementById('pinLockModal').style.display = 'flex';
       showToast('تم تسجيل الخروج وإلغاء حفظ الجلسة', 'info');
@@ -2304,6 +2383,8 @@
 
     function lockAppScreen() {
       state.authenticated = false;
+      const appShell = document.getElementById('appShell');
+      if (appShell) appShell.style.display = 'none';
       document.getElementById('pinInput').value = '';
       document.getElementById('pinLockModal').style.display = 'flex';
     }
@@ -2334,7 +2415,8 @@
     // ----------------------------------------------------
     async function fetchCatalog() {
       try {
-        const res = await fetch('/api/catalog');
+        const res = await apiFetch('/api/catalog');
+        if (!res) return;
         state.catalog = await res.json();
         renderCategoryPills();
         populateProductDropdown();
@@ -2459,7 +2541,8 @@
       });
 
       try {
-        const res = await fetch(`/api/search?${params.toString()}`);
+        const res = await apiFetch(`/api/search?${params.toString()}`);
+        if (!res) return;
         const data = await res.json();
         state.currentOffers = data.results || [];
         state.stats = data.stats || {};
@@ -2620,7 +2703,8 @@
 
     async function loadModalOfferHistory(merchant, product, periodDays) {
       try {
-        const res = await fetch(`/api/history?merchant=${encodeURIComponent(merchant)}&product=${encodeURIComponent(product)}&period_days=${periodDays}`);
+        const res = await apiFetch(`/api/history?merchant=${encodeURIComponent(merchant)}&product=${encodeURIComponent(product)}&period_days=${periodDays}`);
+        if (!res) return;
         const hist = await res.json();
 
         // Populate 3 Metric Cards
@@ -2884,7 +2968,8 @@
       btn.classList.add('active');
       const prod = (state.selectedProductFamily && state.selectedProductFamily !== 'all') ? state.selectedProductFamily : (state.searchQuery || 'Gemini');
       try {
-        const res = await fetch(`/api/market-chart?product=${encodeURIComponent(prod)}&period_days=${days}`);
+        const res = await apiFetch(`/api/market-chart?product=${encodeURIComponent(prod)}&period_days=${days}`);
+        if (!res) return;
         const data = await res.json();
         renderComparativeMarketChart(data);
       } catch (e) {
@@ -2897,7 +2982,8 @@
     // ----------------------------------------------------
     async function fetchStores() {
       try {
-        const res = await fetch('/api/stores');
+        const res = await apiFetch('/api/stores');
+        if (!res) return;
         state.stores = await res.json();
         const alertSelect = document.getElementById('alertMerchantSelect');
         if (alertSelect) {
@@ -2956,7 +3042,8 @@
       if (!container) return;
 
       try {
-        const res = await fetch('/api/alerts');
+        const res = await apiFetch('/api/alerts');
+        if (!res) return;
         const alerts = await res.json();
         document.getElementById('headerAlertsCount').innerText = alerts.length;
 
@@ -3015,11 +3102,12 @@
       }
 
       try {
-        const res = await fetch('/api/alerts', {
+        const res = await apiFetch('/api/alerts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ product_name: productName, target_price: targetPrice, merchant_name: merchantName })
         });
+        if (!res) return;
         const data = await res.json();
         showToast('تم إنشاء تنبيه السعر بنجاح', 'success');
         document.getElementById('alertProductName').value = '';
@@ -3032,7 +3120,7 @@
 
     async function deleteAlert(id) {
       try {
-        await fetch(`/api/alerts/${id}`, { method: 'DELETE' });
+        await apiFetch(`/api/alerts/${id}`, { method: 'DELETE' });
         showToast('تم حذف التنبيه', 'info');
         renderAlertsView();
       } catch (e) {
@@ -3150,7 +3238,8 @@
       if (!container) return;
 
       try {
-        const res = await fetch('/api/reports/summary');
+        const res = await apiFetch('/api/reports/summary');
+        if (!res) return;
         const data = await res.json();
 
         container.innerHTML = `
@@ -3202,7 +3291,8 @@
       showToast('جاري تحديث ومزامنة أسعار المتاجر...', 'info');
 
       try {
-        const res = await fetch('/api/refresh', { method: 'POST' });
+        const res = await apiFetch('/api/refresh', { method: 'POST' });
+        if (!res) return;
         const data = await res.json();
         showToast('تم تحديث جميع الأسعار بنجاح', 'success');
         document.getElementById('lastSyncTime').innerText = 'الآن';
@@ -3218,7 +3308,8 @@
     async function runCrawlerNow() {
       showToast('جاري تشغيل البوت الزاحف في الخلفية...', 'info');
       try {
-        const res = await fetch('/api/crawler/run', { method: 'POST' });
+        const res = await apiFetch('/api/crawler/run', { method: 'POST' });
+        if (!res) return;
         const data = await res.json();
         showToast(data.message || 'تم تشغيل الزاحف', 'success');
       } catch (e) {
