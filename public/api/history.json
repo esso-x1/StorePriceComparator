@@ -1,0 +1,138 @@
+{
+  "has_history": true,
+  "data_points": [
+    {
+      "price": 0.69,
+      "currency": "USD",
+      "timestamp": 1790252444.675583,
+      "recorded_at": "2026-09-30 12:20:44"
+    },
+    {
+      "price": 0.66,
+      "currency": "USD",
+      "timestamp": 1790338844.675583,
+      "recorded_at": "2026-09-30 12:20:44"
+    },
+    {
+      "price": 0.64,
+      "currency": "USD",
+      "timestamp": 1790425244.675583,
+      "recorded_at": "2026-09-30 12:20:44"
+    },
+    {
+      "price": 0.63,
+      "currency": "USD",
+      "timestamp": 1790511644.675583,
+      "recorded_at": "2026-09-30 12:20:45"
+    },
+    {
+      "price": 0.59,
+      "currency": "USD",
+      "timestamp": 1790598044.675583,
+      "recorded_at": "2026-09-30 12:20:45"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790684444.675583,
+      "recorded_at": "2026-09-30 12:20:45"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790770844.675583,
+      "recorded_at": "2026-09-30 12:20:45"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790774504.834544,
+      "recorded_at": "2026-09-30 13:21:44"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790778176.8905928,
+      "recorded_at": "2026-09-30 14:22:56"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790781849.9718676,
+      "recorded_at": "2026-09-30 15:24:09"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790785451.46779,
+      "recorded_at": "2026-09-30 16:24:11"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790789117.7500432,
+      "recorded_at": "2026-09-30 17:25:17"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790792765.9633293,
+      "recorded_at": "2026-09-30 18:26:05"
+    },
+    {
+      "price": 0.54,
+      "currency": "USD",
+      "timestamp": 1790796432.1013415,
+      "recorded_at": "2026-09-30 19:27:12"
+    }
+  ],
+  "current_price": 0.54,
+  "currency": "USD",
+  "lowest_price": 0.54,
+  "highest_price": 0.69,
+  "change_amount": -0.15,
+  "change_pct": -21.7,
+  "direction": "decrease",
+  "recent_changes": [
+    {
+      "recorded_at": "2026-09-30 19:27:12",
+      "timestamp": 1790796432.1013415,
+      "price": 0.54,
+      "diff": 0.0,
+      "diff_pct": 0.0,
+      "direction": "neutral"
+    },
+    {
+      "recorded_at": "2026-09-30 18:26:05",
+      "timestamp": 1790792765.9633293,
+      "price": 0.54,
+      "diff": 0.0,
+      "diff_pct": 0.0,
+      "direction": "neutral"
+    },
+    {
+      "recorded_at": "2026-09-30 17:25:17",
+      "timestamp": 1790789117.7500432,
+      "price": 0.54,
+      "diff": 0.0,
+      "diff_pct": 0.0,
+      "direction": "neutral"
+    },
+    {
+      "recorded_at": "2026-09-30 16:24:11",
+      "timestamp": 1790785451.46779,
+      "price": 0.54,
+      "diff": 0.0,
+      "diff_pct": 0.0,
+      "direction": "neutral"
+    },
+    {
+      "recorded_at": "2026-09-30 15:24:09",
+      "timestamp": 1790781849.9718676,
+      "price": 0.54,
+      "diff": 0.0,
+      "diff_pct": 0.0,
+      "direction": "neutral"
+    }
+  ]
+}

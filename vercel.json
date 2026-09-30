@@ -1,8 +1,12 @@
 {
+  "version": 2,
+  "cleanUrls": true,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.py"
-    }
+    { "source": "/api/catalog(.*)", "destination": "/api/catalog.json" },
+    { "source": "/api/stores(.*)", "destination": "/api/stores.json" },
+    { "source": "/api/search(.*)", "destination": "/api/search.json" },
+    { "source": "/api/history(.*)", "destination": "/api/history.json" },
+    { "source": "/api/market-chart(.*)", "destination": "/api/market-chart.json" },
+    { "source": "/api/reports/summary(.*)", "destination": "/api/reports-summary.json" }
   ]
 }

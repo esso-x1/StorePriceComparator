@@ -1,0 +1,3171 @@
+{
+  "categories": [
+    {
+      "id": "all",
+      "name_ar": "الكل",
+      "icon": "🌐"
+    },
+    {
+      "id": "ai",
+      "name_ar": "ذكاء اصطناعي",
+      "icon": "⚡"
+    },
+    {
+      "id": "productivity",
+      "name_ar": "الإنتاجية والأدوات",
+      "icon": "💼"
+    },
+    {
+      "id": "design",
+      "name_ar": "التصميم والمونتاج",
+      "icon": "🎨"
+    },
+    {
+      "id": "streaming",
+      "name_ar": "خدمات البث والترفيه",
+      "icon": "🎬"
+    }
+  ],
+  "products_by_category": {
+    "all": [
+      {
+        "name": "ChatGPT / OpenAI",
+        "count": 29,
+        "min_price": 0.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "2 سنة",
+          "4 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Google Gemini",
+        "count": 14,
+        "min_price": 0.35,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "18 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "CapCut Pro",
+        "count": 14,
+        "min_price": 0.19,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "6 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "VPN Services",
+        "count": 13,
+        "min_price": 0.9,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "2 شهر",
+          "3 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Accounts & Mail",
+        "count": 12,
+        "min_price": 0.03,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Notion",
+        "count": 11,
+        "min_price": 1.49,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "Super Duolingo",
+        "count": 9,
+        "min_price": 0.35,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Canva Pro",
+        "count": 9,
+        "min_price": 0.2,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "2 سنة",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Adobe CC / Express",
+        "count": 8,
+        "min_price": 0.3,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Claude AI",
+        "count": 8,
+        "min_price": 1.84,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "SuperGrok",
+        "count": 7,
+        "min_price": 3.98,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "3 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Cursor Pro",
+        "count": 7,
+        "min_price": 11.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "ElevenLabs",
+        "count": 6,
+        "min_price": 1.61,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Perplexity AI",
+        "count": 5,
+        "min_price": 6.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Figma",
+        "count": 5,
+        "min_price": 3.49,
+        "currency": "USD",
+        "durations": [
+          "2 سنة",
+          "4 أشهر"
+        ]
+      },
+      {
+        "name": "Lovable Pro",
+        "count": 5,
+        "min_price": 6.49,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Replit Core",
+        "count": 4,
+        "min_price": 30.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Apple Music",
+        "count": 3,
+        "min_price": 0.3,
+        "currency": "USDT",
+        "durations": [
+          "6 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Freepik",
+        "count": 3,
+        "min_price": 4.4,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Manus Pro 1 Year",
+        "count": 2,
+        "min_price": 30.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Higgsflied Pro 1 Year (F",
+        "count": 2,
+        "min_price": 120.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer Pro 12m",
+        "count": 2,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "N8N Starter 12m",
+        "count": 2,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory 12m",
+        "count": 2,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build 12m",
+        "count": 2,
+        "min_price": 7.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro 12m",
+        "count": 2,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Jam Team 10 Seats 1 Year",
+        "count": 2,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Autodesk",
+        "count": 2,
+        "min_price": 0.9,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Netflix",
+        "count": 2,
+        "min_price": 0.4,
+        "currency": "USDT",
+        "durations": [
+          "6 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Streaming Hub",
+        "count": 2,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "Supabase Pro 1 Year",
+        "count": 1,
+        "min_price": 28.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "n8n Starter 12m",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro 12m",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supercut Pro 10 Seat 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Bolt Pro 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Resend Pro 1 Year",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Runway Pro 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "N8N Starter 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer Pro 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Intercom Advance 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Pattern Starter 1 ",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Mobbin Team (10 seats) 1",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Buisness 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript Creator 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Pangram Professional 1 Y",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Customer.io Essential 1 ",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Airtable Team Plan 12 Mo",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 30.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Elevanlabs Creator 1 Yea",
+        "count": 1,
+        "min_price": 50.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Manus Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 50.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supabase Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Synthesia.io Starter 1 Y",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "VEO3 (Antigravity )x20 U",
+        "count": 1,
+        "min_price": 15.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Wapio WhatsApp API Start",
+        "count": 1,
+        "min_price": 3.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Wapio WhatsApp API Pro 3",
+        "count": 1,
+        "min_price": 7.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Api Test",
+        "count": 1,
+        "min_price": 0.1,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "⌨ Key GPM Login 1 Month ",
+        "count": 1,
+        "min_price": 5.7,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Kahoot Plus Gold 7 Days ",
+        "count": 1,
+        "min_price": 1.6,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "Iqiyi Premium 1 Month Fu",
+        "count": 1,
+        "min_price": 2.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Clone Facebook Spam",
+        "count": 1,
+        "min_price": 0.86,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Photoroom Max 7 Days ful",
+        "count": 1,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "Skillshare 30 Days full ",
+        "count": 1,
+        "min_price": 4.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "API CODEX ASTRA6 $50 TOK",
+        "count": 1,
+        "min_price": 6.3,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "100M Credit API Codex 1 ",
+        "count": 1,
+        "min_price": 3.91,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "50M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 2.81,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "API 200M Token Codex 7 D",
+        "count": 1,
+        "min_price": 9.76,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "[CDK] RENT OTP NUMBER CO",
+        "count": 1,
+        "min_price": 0.55,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "API 500M Token Codex 30 ",
+        "count": 1,
+        "min_price": 18.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "API 300M Token Codex 15 ",
+        "count": 1,
+        "min_price": 13.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "500M Credit API Codex 1 ",
+        "count": 1,
+        "min_price": 8.69,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "20M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 2.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "10M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 1.6,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Elevenlab Creator 3M(FW)",
+        "count": 1,
+        "min_price": 17.0,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "Microsoft Office 365 Plu",
+        "count": 1,
+        "min_price": 0.44,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Admin MS365 12M (FW)",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "KEY HMA AND/PC 20",
+        "count": 1,
+        "min_price": 1.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "[KEY] HMA Android PC 20 ",
+        "count": 1,
+        "min_price": 1.47,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Headspace Premium",
+        "count": 1,
+        "min_price": 2.5,
+        "currency": "USD",
+        "durations": [
+          "4 أشهر"
+        ]
+      },
+      {
+        "name": "iLovePdf Premium 1Yr",
+        "count": 1,
+        "min_price": 0.89,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Promo Linkedin Career 3M",
+        "count": 1,
+        "min_price": 1.5,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "LinkedIn Career Premium ",
+        "count": 1,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Resend Pro 12m",
+        "count": 1,
+        "min_price": 20.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "ChatPRD 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro 12m",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Intercom Advanced 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Business 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Patterns Starter 1",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale 12m",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby 12m",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supercut Pro 10 Seats 1 ",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Pangram Professional 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Apollo 90M+ Global Leads",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Brain fm 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Arize Pro 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Airtable Team 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript Creator 12m",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Bolt.new Pro 12m",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm",
+        "count": 1,
+        "min_price": 6.64,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Coursera",
+        "count": 1,
+        "min_price": 12.34,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript",
+        "count": 1,
+        "min_price": 23.74,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer AI",
+        "count": 1,
+        "min_price": 11.39,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma AI",
+        "count": 1,
+        "min_price": 8.07,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "JetBrain Edu",
+        "count": 1,
+        "min_price": 5.69,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "LinkedIn",
+        "count": 1,
+        "min_price": 1.89,
+        "currency": "USD",
+        "durations": [
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Kiro+ — 1 Year",
+        "count": 1,
+        "min_price": 13.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale — 1 Year (",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory Pro — 1 Year",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Business — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Customer.io Essentials —",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Fin AI Agent + Fin Advan",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Framer Pro — 1 Year",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business — 1 Yea",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Jam Team — 1 Year (10 Se",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Patterns Starter —",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Mercury Personal — 2 Yea",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "2 سنة"
+        ]
+      },
+      {
+        "name": "Pangram Professional — 1",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Stripe Atlas — 40% Off",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Supercut Pro — 1 Year (1",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Waking Up — 1 Year",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Codex $100 Credit Acc",
+        "count": 1,
+        "min_price": 11.5,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Mobbin Team — 1 Year (10",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Manus Pro — 1 Year (4,00",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm — 1 Year",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro — 1 Year (20",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Hostinger 3",
+        "count": 1,
+        "min_price": 48.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Readwise + Reader — 1 Ye",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "n8n Cloud Starter — 1 Ye",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Higgsfield Pro — 1 Year",
+        "count": 1,
+        "min_price": 70.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby — 1 Year",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Resend Transactional Pro",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Runway Pro — 1 Year",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supabase Pro — 1 Year Cr",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro — 1 Year",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      }
+    ],
+    "ai": [
+      {
+        "name": "ChatGPT / OpenAI",
+        "count": 29,
+        "min_price": 0.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "2 سنة",
+          "4 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Google Gemini",
+        "count": 14,
+        "min_price": 0.35,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "18 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Claude AI",
+        "count": 8,
+        "min_price": 1.84,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "SuperGrok",
+        "count": 7,
+        "min_price": 3.98,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "3 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Cursor Pro",
+        "count": 7,
+        "min_price": 11.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "ElevenLabs",
+        "count": 6,
+        "min_price": 1.61,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Perplexity AI",
+        "count": 5,
+        "min_price": 6.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Lovable Pro",
+        "count": 5,
+        "min_price": 6.49,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Replit Core",
+        "count": 4,
+        "min_price": 30.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      }
+    ],
+    "productivity": [
+      {
+        "name": "VPN Services",
+        "count": 13,
+        "min_price": 0.9,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "2 شهر",
+          "3 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Accounts & Mail",
+        "count": 12,
+        "min_price": 0.03,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Notion",
+        "count": 11,
+        "min_price": 1.49,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "Super Duolingo",
+        "count": 9,
+        "min_price": 0.35,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Freepik",
+        "count": 3,
+        "min_price": 4.4,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Manus Pro 1 Year",
+        "count": 2,
+        "min_price": 30.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Higgsflied Pro 1 Year (F",
+        "count": 2,
+        "min_price": 120.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer Pro 12m",
+        "count": 2,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "N8N Starter 12m",
+        "count": 2,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory 12m",
+        "count": 2,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build 12m",
+        "count": 2,
+        "min_price": 7.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro 12m",
+        "count": 2,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Jam Team 10 Seats 1 Year",
+        "count": 2,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supabase Pro 1 Year",
+        "count": 1,
+        "min_price": 28.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "n8n Starter 12m",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro 12m",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supercut Pro 10 Seat 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Bolt Pro 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Resend Pro 1 Year",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Runway Pro 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "N8N Starter 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer Pro 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro 1 Year",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Intercom Advance 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Pattern Starter 1 ",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro 1 Year",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Mobbin Team (10 seats) 1",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Buisness 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript Creator 1 Year",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm 1 Year",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Pangram Professional 1 Y",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Customer.io Essential 1 ",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Airtable Team Plan 12 Mo",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 30.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Elevanlabs Creator 1 Yea",
+        "count": 1,
+        "min_price": 50.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Manus Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 50.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supabase Pro 1 Year (FW)",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Synthesia.io Starter 1 Y",
+        "count": 1,
+        "min_price": 8.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "VEO3 (Antigravity )x20 U",
+        "count": 1,
+        "min_price": 15.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Wapio WhatsApp API Start",
+        "count": 1,
+        "min_price": 3.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Wapio WhatsApp API Pro 3",
+        "count": 1,
+        "min_price": 7.5,
+        "currency": "USDT",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Api Test",
+        "count": 1,
+        "min_price": 0.1,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "⌨ Key GPM Login 1 Month ",
+        "count": 1,
+        "min_price": 5.7,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Kahoot Plus Gold 7 Days ",
+        "count": 1,
+        "min_price": 1.6,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "Iqiyi Premium 1 Month Fu",
+        "count": 1,
+        "min_price": 2.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Clone Facebook Spam",
+        "count": 1,
+        "min_price": 0.86,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Photoroom Max 7 Days ful",
+        "count": 1,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "Skillshare 30 Days full ",
+        "count": 1,
+        "min_price": 4.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "API CODEX ASTRA6 $50 TOK",
+        "count": 1,
+        "min_price": 6.3,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "100M Credit API Codex 1 ",
+        "count": 1,
+        "min_price": 3.91,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "50M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 2.81,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "API 200M Token Codex 7 D",
+        "count": 1,
+        "min_price": 9.76,
+        "currency": "USD",
+        "durations": [
+          "7 أيام"
+        ]
+      },
+      {
+        "name": "[CDK] RENT OTP NUMBER CO",
+        "count": 1,
+        "min_price": 0.55,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "API 500M Token Codex 30 ",
+        "count": 1,
+        "min_price": 18.0,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "API 300M Token Codex 15 ",
+        "count": 1,
+        "min_price": 13.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "500M Credit API Codex 1 ",
+        "count": 1,
+        "min_price": 8.69,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "20M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 2.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "10M Credit API Codex 1 D",
+        "count": 1,
+        "min_price": 1.6,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Elevenlab Creator 3M(FW)",
+        "count": 1,
+        "min_price": 17.0,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "Microsoft Office 365 Plu",
+        "count": 1,
+        "min_price": 0.44,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Admin MS365 12M (FW)",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "KEY HMA AND/PC 20",
+        "count": 1,
+        "min_price": 1.2,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "[KEY] HMA Android PC 20 ",
+        "count": 1,
+        "min_price": 1.47,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "Headspace Premium",
+        "count": 1,
+        "min_price": 2.5,
+        "currency": "USD",
+        "durations": [
+          "4 أشهر"
+        ]
+      },
+      {
+        "name": "iLovePdf Premium 1Yr",
+        "count": 1,
+        "min_price": 0.89,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Promo Linkedin Career 3M",
+        "count": 1,
+        "min_price": 1.5,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      },
+      {
+        "name": "LinkedIn Career Premium ",
+        "count": 1,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Resend Pro 12m",
+        "count": 1,
+        "min_price": 20.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "ChatPRD 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro 12m",
+        "count": 1,
+        "min_price": 6.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Intercom Advanced 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Business 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Patterns Starter 1",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale 12m",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby 12m",
+        "count": 1,
+        "min_price": 10.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supercut Pro 10 Seats 1 ",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Pangram Professional 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Apollo 90M+ Global Leads",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Brain fm 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Arize Pro 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Airtable Team 12m",
+        "count": 1,
+        "min_price": 5.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript Creator 12m",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Bolt.new Pro 12m",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm",
+        "count": 1,
+        "min_price": 6.64,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Coursera",
+        "count": 1,
+        "min_price": 12.34,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Descript",
+        "count": 1,
+        "min_price": 23.74,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Framer AI",
+        "count": 1,
+        "min_price": 11.39,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma AI",
+        "count": 1,
+        "min_price": 8.07,
+        "currency": "USD",
+        "durations": [
+          "1 شهر"
+        ]
+      },
+      {
+        "name": "JetBrain Edu",
+        "count": 1,
+        "min_price": 5.69,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "LinkedIn",
+        "count": 1,
+        "min_price": 1.89,
+        "currency": "USD",
+        "durations": [
+          "2 شهر"
+        ]
+      },
+      {
+        "name": "Kiro+ — 1 Year",
+        "count": 1,
+        "min_price": 13.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "PostHog Scale — 1 Year (",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Factory Pro — 1 Year",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Linear Business — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Customer.io Essentials —",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Fin AI Agent + Fin Advan",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Framer Pro — 1 Year",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Granola Business — 1 Yea",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Jam Team — 1 Year (10 Se",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Magic Patterns Starter —",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Mercury Personal — 2 Yea",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "2 سنة"
+        ]
+      },
+      {
+        "name": "Pangram Professional — 1",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Stripe Atlas — 40% Off",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Supercut Pro — 1 Year (1",
+        "count": 1,
+        "min_price": 15.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Waking Up — 1 Year",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Warp Build — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Codex $100 Credit Acc",
+        "count": 1,
+        "min_price": 11.5,
+        "currency": "USDT",
+        "durations": [
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Mobbin Team — 1 Year (10",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Manus Pro — 1 Year (4,00",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Brain.fm — 1 Year",
+        "count": 1,
+        "min_price": 9.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gamma Pro — 1 Year",
+        "count": 1,
+        "min_price": 25.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Gumloop Pro — 1 Year (20",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Hostinger 3",
+        "count": 1,
+        "min_price": 48.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Readwise + Reader — 1 Ye",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "n8n Cloud Starter — 1 Ye",
+        "count": 1,
+        "min_price": 29.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Higgsfield Pro — 1 Year",
+        "count": 1,
+        "min_price": 70.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Railway Hobby — 1 Year",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Resend Transactional Pro",
+        "count": 1,
+        "min_price": 12.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Runway Pro — 1 Year",
+        "count": 1,
+        "min_price": 39.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Supabase Pro — 1 Year Cr",
+        "count": 1,
+        "min_price": 35.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      },
+      {
+        "name": "Wispr Flow Pro — 1 Year",
+        "count": 1,
+        "min_price": 19.0,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)"
+        ]
+      }
+    ],
+    "design": [
+      {
+        "name": "CapCut Pro",
+        "count": 14,
+        "min_price": 0.19,
+        "currency": "USD",
+        "durations": [
+          "1 شهر",
+          "6 أشهر",
+          "7 أيام",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Canva Pro",
+        "count": 9,
+        "min_price": 0.2,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "2 سنة",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Adobe CC / Express",
+        "count": 8,
+        "min_price": 0.3,
+        "currency": "USD",
+        "durations": [
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Figma",
+        "count": 5,
+        "min_price": 3.49,
+        "currency": "USD",
+        "durations": [
+          "2 سنة",
+          "4 أشهر"
+        ]
+      },
+      {
+        "name": "Autodesk",
+        "count": 2,
+        "min_price": 0.9,
+        "currency": "USDT",
+        "durations": [
+          "12 شهر (سنة)",
+          "خطة افتراضية"
+        ]
+      }
+    ],
+    "streaming": [
+      {
+        "name": "Apple Music",
+        "count": 3,
+        "min_price": 0.3,
+        "currency": "USDT",
+        "durations": [
+          "6 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Netflix",
+        "count": 2,
+        "min_price": 0.4,
+        "currency": "USDT",
+        "durations": [
+          "6 أشهر",
+          "خطة افتراضية"
+        ]
+      },
+      {
+        "name": "Streaming Hub",
+        "count": 2,
+        "min_price": 1.0,
+        "currency": "USD",
+        "durations": [
+          "3 أشهر"
+        ]
+      }
+    ]
+  },
+  "durations_by_product": {
+    "Google Gemini": [
+      "12 شهر (سنة)",
+      "18 شهر",
+      "خطة افتراضية"
+    ],
+    "Accounts & Mail": [
+      "3 أشهر",
+      "خطة افتراضية"
+    ],
+    "CapCut Pro": [
+      "1 شهر",
+      "6 أشهر",
+      "7 أيام",
+      "خطة افتراضية"
+    ],
+    "Perplexity AI": [
+      "1 شهر",
+      "12 شهر (سنة)",
+      "خطة افتراضية"
+    ],
+    "ChatGPT / OpenAI": [
+      "1 شهر",
+      "12 شهر (سنة)",
+      "2 سنة",
+      "4 أشهر",
+      "خطة افتراضية"
+    ],
+    "Figma": [
+      "2 سنة",
+      "4 أشهر"
+    ],
+    "SuperGrok": [
+      "1 شهر",
+      "3 أشهر",
+      "7 أيام",
+      "خطة افتراضية"
+    ],
+    "VPN Services": [
+      "1 شهر",
+      "2 شهر",
+      "3 أشهر",
+      "7 أيام",
+      "خطة افتراضية"
+    ],
+    "Replit Core": [
+      "12 شهر (سنة)"
+    ],
+    "ElevenLabs": [
+      "1 شهر",
+      "12 شهر (سنة)",
+      "خطة افتراضية"
+    ],
+    "Lovable Pro": [
+      "12 شهر (سنة)"
+    ],
+    "Manus Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Adobe CC / Express": [
+      "12 شهر (سنة)",
+      "خطة افتراضية"
+    ],
+    "Supabase Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Super Duolingo": [
+      "12 شهر (سنة)",
+      "2 شهر"
+    ],
+    "n8n Starter 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Cursor Pro": [
+      "1 شهر",
+      "12 شهر (سنة)",
+      "خطة افتراضية"
+    ],
+    "Higgsflied Pro 1 Year (F": [
+      "12 شهر (سنة)"
+    ],
+    "Notion": [
+      "12 شهر (سنة)",
+      "3 أشهر"
+    ],
+    "Canva Pro": [
+      "12 شهر (سنة)",
+      "2 سنة",
+      "خطة افتراضية"
+    ],
+    "Framer Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Gamma Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "N8N Starter 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Factory 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Apple Music": [
+      "6 أشهر",
+      "خطة افتراضية"
+    ],
+    "Supercut Pro 10 Seat 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Warp Build 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Wispr Flow Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Bolt Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Resend Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Railway Hobby 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Runway Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "N8N Starter 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Framer Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Warp Build 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Granola Business 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Gamma Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Gumloop Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Intercom Advance 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Magic Pattern Starter 1 ": [
+      "12 شهر (سنة)"
+    ],
+    "Wispr Flow Pro 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Mobbin Team (10 seats) 1": [
+      "12 شهر (سنة)"
+    ],
+    "PostHog Scale 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Linear Buisness 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Descript Creator 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Brain.fm 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Pangram Professional 1 Y": [
+      "12 شهر (سنة)"
+    ],
+    "Customer.io Essential 1 ": [
+      "12 شهر (سنة)"
+    ],
+    "Jam Team 10 Seats 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Airtable Team Plan 12 Mo": [
+      "12 شهر (سنة)"
+    ],
+    "Factory Pro 1 Year (FW)": [
+      "12 شهر (سنة)"
+    ],
+    "Elevanlabs Creator 1 Yea": [
+      "12 شهر (سنة)"
+    ],
+    "Manus Pro 1 Year (FW)": [
+      "12 شهر (سنة)"
+    ],
+    "Supabase Pro 1 Year (FW)": [
+      "12 شهر (سنة)"
+    ],
+    "Synthesia.io Starter 1 Y": [
+      "12 شهر (سنة)"
+    ],
+    "Autodesk": [
+      "12 شهر (سنة)",
+      "خطة افتراضية"
+    ],
+    "VEO3 (Antigravity )x20 U": [
+      "1 شهر"
+    ],
+    "Netflix": [
+      "6 أشهر",
+      "خطة افتراضية"
+    ],
+    "Wapio WhatsApp API Start": [
+      "1 شهر"
+    ],
+    "Wapio WhatsApp API Pro 3": [
+      "1 شهر"
+    ],
+    "Api Test": [
+      "خطة افتراضية"
+    ],
+    "⌨ Key GPM Login 1 Month ": [
+      "1 شهر"
+    ],
+    "Kahoot Plus Gold 7 Days ": [
+      "7 أيام"
+    ],
+    "Iqiyi Premium 1 Month Fu": [
+      "1 شهر"
+    ],
+    "Clone Facebook Spam": [
+      "خطة افتراضية"
+    ],
+    "Photoroom Max 7 Days ful": [
+      "7 أيام"
+    ],
+    "Skillshare 30 Days full ": [
+      "1 شهر"
+    ],
+    "API CODEX ASTRA6 $50 TOK": [
+      "1 شهر"
+    ],
+    "100M Credit API Codex 1 ": [
+      "خطة افتراضية"
+    ],
+    "50M Credit API Codex 1 D": [
+      "خطة افتراضية"
+    ],
+    "API 200M Token Codex 7 D": [
+      "7 أيام"
+    ],
+    "[CDK] RENT OTP NUMBER CO": [
+      "خطة افتراضية"
+    ],
+    "API 500M Token Codex 30 ": [
+      "1 شهر"
+    ],
+    "API 300M Token Codex 15 ": [
+      "خطة افتراضية"
+    ],
+    "500M Credit API Codex 1 ": [
+      "خطة افتراضية"
+    ],
+    "20M Credit API Codex 1 D": [
+      "خطة افتراضية"
+    ],
+    "10M Credit API Codex 1 D": [
+      "خطة افتراضية"
+    ],
+    "Freepik": [
+      "1 شهر",
+      "خطة افتراضية"
+    ],
+    "Elevenlab Creator 3M(FW)": [
+      "3 أشهر"
+    ],
+    "Claude AI": [
+      "1 شهر",
+      "خطة افتراضية"
+    ],
+    "Microsoft Office 365 Plu": [
+      "12 شهر (سنة)"
+    ],
+    "Admin MS365 12M (FW)": [
+      "12 شهر (سنة)"
+    ],
+    "Streaming Hub": [
+      "3 أشهر"
+    ],
+    "KEY HMA AND/PC 20": [
+      "1 شهر"
+    ],
+    "[KEY] HMA Android PC 20 ": [
+      "1 شهر"
+    ],
+    "Headspace Premium": [
+      "4 أشهر"
+    ],
+    "iLovePdf Premium 1Yr": [
+      "12 شهر (سنة)"
+    ],
+    "Promo Linkedin Career 3M": [
+      "3 أشهر"
+    ],
+    "LinkedIn Career Premium ": [
+      "2 شهر"
+    ],
+    "Resend Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "ChatPRD 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Granola Business 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Gumloop Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Intercom Advanced 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Linear Business 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Magic Patterns Starter 1": [
+      "12 شهر (سنة)"
+    ],
+    "PostHog Scale 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Railway Hobby 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Supercut Pro 10 Seats 1 ": [
+      "12 شهر (سنة)"
+    ],
+    "Pangram Professional 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Apollo 90M+ Global Leads": [
+      "خطة افتراضية"
+    ],
+    "Brain fm 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Arize Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Airtable Team 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Descript Creator 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Bolt.new Pro 12m": [
+      "12 شهر (سنة)"
+    ],
+    "Brain.fm": [
+      "12 شهر (سنة)"
+    ],
+    "Coursera": [
+      "12 شهر (سنة)"
+    ],
+    "Descript": [
+      "12 شهر (سنة)"
+    ],
+    "Framer AI": [
+      "12 شهر (سنة)"
+    ],
+    "Gamma AI": [
+      "1 شهر"
+    ],
+    "JetBrain Edu": [
+      "12 شهر (سنة)"
+    ],
+    "LinkedIn": [
+      "2 شهر"
+    ],
+    "Kiro+ — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "PostHog Scale — 1 Year (": [
+      "12 شهر (سنة)"
+    ],
+    "Factory Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Linear Business — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Customer.io Essentials —": [
+      "12 شهر (سنة)"
+    ],
+    "Fin AI Agent + Fin Advan": [
+      "خطة افتراضية"
+    ],
+    "Framer Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Granola Business — 1 Yea": [
+      "12 شهر (سنة)"
+    ],
+    "Jam Team — 1 Year (10 Se": [
+      "12 شهر (سنة)"
+    ],
+    "Magic Patterns Starter —": [
+      "12 شهر (سنة)"
+    ],
+    "Mercury Personal — 2 Yea": [
+      "2 سنة"
+    ],
+    "Pangram Professional — 1": [
+      "12 شهر (سنة)"
+    ],
+    "Stripe Atlas — 40% Off": [
+      "خطة افتراضية"
+    ],
+    "Supercut Pro — 1 Year (1": [
+      "12 شهر (سنة)"
+    ],
+    "Waking Up — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Warp Build — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Codex $100 Credit Acc": [
+      "خطة افتراضية"
+    ],
+    "Mobbin Team — 1 Year (10": [
+      "12 شهر (سنة)"
+    ],
+    "Manus Pro — 1 Year (4,00": [
+      "12 شهر (سنة)"
+    ],
+    "Brain.fm — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Gamma Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Gumloop Pro — 1 Year (20": [
+      "12 شهر (سنة)"
+    ],
+    "Hostinger 3": [
+      "12 شهر (سنة)"
+    ],
+    "Readwise + Reader — 1 Ye": [
+      "12 شهر (سنة)"
+    ],
+    "n8n Cloud Starter — 1 Ye": [
+      "12 شهر (سنة)"
+    ],
+    "Higgsfield Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Railway Hobby — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Resend Transactional Pro": [
+      "12 شهر (سنة)"
+    ],
+    "Runway Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ],
+    "Supabase Pro — 1 Year Cr": [
+      "12 شهر (سنة)"
+    ],
+    "Wispr Flow Pro — 1 Year": [
+      "12 شهر (سنة)"
+    ]
+  },
+  "total_products_count": 366,
+  "total_merchants_count": 11
+}
