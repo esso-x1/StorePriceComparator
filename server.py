@@ -112,47 +112,7 @@ def normalize_pin(p: str) -> str:
     eastern_to_western = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
     return p.strip().translate(eastern_to_western)
 
-@app.middleware("http")
-async def enforce_auth_middleware(request: Request, call_next):
-    path = request.url.path
-    
-    # Public endpoints that bypass authentication:
-    public_exact = {
-        "/",
-        "/api",
-        "/api/",
-        "/api/index.py",
-        "/index.html",
-        "/manifest.json",
-        "/sw.js",
-        "/api/auth/verify",
-        "/auth/verify",
-        "/api/auth/reset",
-        "/auth/reset",
-        "/docs",
-        "/openapi.json"
-    }
-    if path in public_exact or path.startswith("/static") or path.startswith("/icons"):
-        return await call_next(request)
-        
-    auth_cookie = request.cookies.get("radar_auth")
-    auth_header = request.headers.get("Authorization", "")
-    auth_query = request.query_params.get("token", "")
-    
-    is_authed = (
-        auth_cookie == AUTH_TOKEN or
-        auth_header in (f"Bearer {AUTH_TOKEN}", AUTH_TOKEN) or
-        auth_query == AUTH_TOKEN
-    )
-    
-    if not is_authed:
-        return Response(
-            content='{"error": "Unauthorized", "detail": "المصادقة مطلوبة للوصول إلى بيانات رادار السوق. يرجى إدخال الرمز السري.", "require_auth": true}',
-            status_code=401,
-            media_type="application/json"
-        )
-        
-    return await call_next(request)
+# Direct open access - no authentication blocking required
 
 class PinVerifyRequest(BaseModel):
     pin: str
