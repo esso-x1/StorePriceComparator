@@ -1,11 +1,11 @@
 {
-  "name": "Store Price Comparator | مقارن أسعار المتاجر",
-  "short_name": "StorePrices",
-  "description": "مقارن الأسعار الذكي للسلع والاشتراكات الرقمية عبر متاجر التليجرام",
+  "name": "Media Peack | Price Tracker",
+  "short_name": "Media Peack",
+  "description": "مقارن الأسعار الذكي للسلع والاشتراكات الرقمية عبر المتاجر",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#090d16",
-  "theme_color": "#0071e3",
+  "background_color": "#060910",
+  "theme_color": "#00e599",
   "orientation": "portrait-primary",
   "icons": [
     {

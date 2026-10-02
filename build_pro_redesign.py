@@ -31,19 +31,21 @@ html_content = r'''<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>رادار السوق | مقارنة أسعار الاشتراكات والمنتجات الرقمية</title>
+  <title>Media Peack | Price Tracker</title>
   
   <!-- PWA & Mobile Meta -->
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#060910" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="رادار السوق" />
+  <meta name="apple-mobile-web-app-title" content="Media Peack" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="apple-touch-icon" href="logo.png" />
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Montserrat:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Chart.js local script with CDN fallback -->
   <script src="/static/chart.umd.min.js" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/npm/chart.js';"></script>
@@ -145,36 +147,46 @@ html_content = r'''<!DOCTYPE html>
       color: var(--mint);
     }
     .brand-logo-icon {
-      width: 34px;
-      height: 34px;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
+      border-radius: 9px;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 0 14px rgba(0, 229, 153, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
     }
-    .brand-logo-icon svg {
-      width: 32px;
-      height: 32px;
-      filter: drop-shadow(0 0 12px rgba(0, 229, 153, 0.5));
+    .brand-logo-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .brand-text-block {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      text-align: right;
     }
     .brand-title {
-      font-size: 1.35rem;
+      font-family: 'Montserrat', 'Cairo', sans-serif;
+      font-size: 1.25rem;
       font-weight: 900;
       color: #fff;
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
       line-height: 1.1;
       transition: color 0.2s ease;
     }
     .brand-subtitle {
-      font-size: 0.72rem;
-      color: var(--text-dim);
-      font-weight: 600;
-      letter-spacing: 0.2px;
+      font-family: 'Montserrat', 'Cairo', sans-serif;
+      font-size: 0.70rem;
+      color: var(--mint);
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-top: 1px;
     }
 
     /* Sidebar Mobile / Drawer Toggle */
@@ -898,11 +910,15 @@ html_content = r'''<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 10px;
     }
     .merchant-avatar-info {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
+      min-width: 0;
+      flex: 1 1 auto;
+      overflow: hidden;
     }
     .card-index-badge {
       width: 22px;
@@ -916,10 +932,11 @@ html_content = r'''<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
     .merchant-circle-avatar {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       color: #fff;
       font-weight: 800;
@@ -929,36 +946,55 @@ html_content = r'''<!DOCTYPE html>
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 12px rgba(0,0,0,0.3);
+      flex-shrink: 0;
     }
     .merchant-title-sub {
       display: flex;
       flex-direction: column;
+      min-width: 0;
+      overflow: hidden;
     }
     .merchant-title-sub .store-title {
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       font-weight: 800;
       color: #fff;
       line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .merchant-title-sub .product-sub {
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .card-top-badges {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     .badge-cheapest-pill {
-      background: rgba(0, 229, 153, 0.15);
-      border: 1px solid var(--mint);
+      background: rgba(0, 229, 153, 0.14);
+      border: 1px solid rgba(0, 229, 153, 0.5);
       color: var(--mint);
       font-size: 0.72rem;
-      padding: 3px 8px;
+      padding: 3px 9px;
       border-radius: var(--radius-full);
       font-weight: 800;
+      white-space: nowrap !important;
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1.25;
+      letter-spacing: 0.2px;
+      box-shadow: 0 0 10px rgba(0, 229, 153, 0.15);
     }
     .card-bookmark-btn {
       background: transparent;
@@ -1476,10 +1512,9 @@ html_content = r'''<!DOCTYPE html>
     @media (max-width: 768px) {
       :root { --sidebar-width: 280px; }
       .top-header { height: 60px; padding: 0 0.85rem; }
-      .brand-title { font-size: 1.15rem; }
-      .brand-subtitle { display: none; }
-      .brand-logo-icon { width: 30px; height: 30px; }
-      .brand-logo-icon svg { width: 28px; height: 28px; }
+      .brand-title { font-size: 1.05rem; }
+      .brand-subtitle { font-size: 0.62rem; display: block; }
+      .brand-logo-icon { width: 32px; height: 32px; }
       .sidebar-mobile-toggle span { display: none; }
       .sidebar-mobile-toggle { padding: 0 10px; height: 36px; }
       .header-status-pill { display: none; }
@@ -1561,20 +1596,11 @@ html_content = r'''<!DOCTYPE html>
     <!-- Center Brand (Centered Perfectly) -->
     <div class="header-center-brand" onclick="switchView('comparison')">
       <div class="brand-logo-icon">
-        <svg viewBox="0 0 24 24" fill="none">
-          <path d="M12 3L22 21H2L12 3Z" fill="url(#mintGrad)" />
-          <path d="M12 3L2 21H12V3Z" fill="#00e599" opacity="0.85" />
-          <defs>
-            <linearGradient id="mintGrad" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-              <stop stop-color="#00e599" />
-              <stop offset="1" stop-color="#38bdf8" />
-            </linearGradient>
-          </defs>
-        </svg>
+        <img src="logo.png" alt="Media Peack" onerror="this.onerror=null; this.src='/static/logo.png';" />
       </div>
       <div class="brand-text-block">
-        <span class="brand-title">رادار السوق</span>
-        <span class="brand-subtitle">مقارنة أسعار الاشتراكات والمنتجات الرقمية</span>
+        <span class="brand-title">Media Peack</span>
+        <span class="brand-subtitle">Price Tracker</span>
       </div>
     </div>
 
@@ -2288,7 +2314,7 @@ html_content = r'''<!DOCTYPE html>
         </svg>
       </div>
       <div style="text-align:center; margin-bottom:16px;">
-        <h2 style="font-size:1.4rem; color:#fff; font-weight:800; margin-bottom:6px;">رادار السوق محمي بكلمة مرور</h2>
+        <h2 style="font-size:1.4rem; color:#fff; font-weight:800; margin-bottom:6px;">Media Peack محمي بكلمة مرور</h2>
         <p style="font-size:0.86rem; color:var(--text-muted);" id="pinModalHint">أدخل كلمة المرور أو رمز المرور للمتابعة <strong style="color:var(--mint);">(الافتراضي: 1234)</strong></p>
       </div>
       
@@ -2920,7 +2946,7 @@ html_content += r'''
               </div>
 
               <div class="card-top-badges">
-                ${isLowest ? `<span class="badge-cheapest-pill">الأقل سعراً</span>` : ''}
+                ${isLowest ? `<span class="badge-cheapest-pill"><svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>الأقل سعراً</span>` : ''}
                 <button class="card-bookmark-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${offer.id}')" title="حفظ في المفضلة">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
                 </button>
@@ -4018,9 +4044,9 @@ html_content += r'''
       if (!notif) return;
 
       const directUrl = notif.direct_buy_url || notif.buy_url || getStoreTelegramUrl(notif.store);
-      const shareTitle = `تنبيه رادار السوق | متجر ${notif.store}`;
+      const shareTitle = `تنبيه Media Peack | متجر ${notif.store}`;
       const quickCmdLine = notif.quick_command ? `🏷️ كود الشراء السريع: ${notif.quick_command}\n` : '';
-      const shareText = `⚡ تنبيه فوري من رادار الأسعار:\n🏬 المتجر: ${notif.store}\n📦 الصنف: ${notif.product_name || notif.text}\n💰 السعر: $${notif.price || '0.00'}\n${quickCmdLine}🔗 رابط الشراء المباشر بالبوت:\n${directUrl}\n⏱ الوقت: ${notif.time}\n\n🔍 قارن الأسعار وافحص السوق عبر رادار الأسعار:\nhttps://store-price-comparator.vercel.app/`;
+      const shareText = `⚡ تنبيه فوري من Media Peack - Price Tracker:\n🏬 المتجر: ${notif.store}\n📦 الصنف: ${notif.product_name || notif.text}\n💰 السعر: $${notif.price || '0.00'}\n${quickCmdLine}🔗 رابط الشراء المباشر بالبوت:\n${directUrl}\n⏱ الوقت: ${notif.time}\n\n🔍 قارن الأسعار وافحص السوق عبر Media Peack:\nhttps://store-price-comparator.vercel.app/`;
 
       if (navigator.share) {
         navigator.share({
@@ -4134,8 +4160,8 @@ html_content += r'''
 
       const options = {
         body: body,
-        icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-        badge: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+        icon: "/static/logo.png",
+        badge: "/static/logo.png",
         tag: tag || ('radar-alert-' + Date.now()),
         renotify: true,
         data: { url: url || 'https://store-price-comparator.vercel.app/' }
@@ -4171,7 +4197,7 @@ html_content += r'''
         if (permission === "granted") {
           showToast("✅ تم تفعيل إشعارات نظام التشغيل (Windows / Mobile) بنجاح!", "success");
           sendSystemNotification(
-            "رادار السوق 🔔",
+            "Media Peack 🔔",
             "تم تفعيل إشعارات النظام بنجاح! ستصلك تنبيهات الأسعار ومتاجر Microsoft فوراً على سطح المكتب.",
             "https://store-price-comparator.vercel.app/"
           );
@@ -4235,7 +4261,7 @@ html_content += r'''
       showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, directUrl, alertItem.id);
 
       sendSystemNotification(
-        `رادار السوق | ${storeName}`,
+        `Media Peack | ${storeName}`,
         `${alertItem.text}\n🏷️ كود الشراء: ${quickCmd}`,
         directUrl,
         'alert-' + alertItem.id
