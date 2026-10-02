@@ -1286,6 +1286,188 @@ html_content = r'''<!DOCTYPE html>
       from { transform: translateY(12px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
     }
+
+    /* ========================================================
+       RESPONSIVE MOBILE & TABLET UI/UX OVERHAUL (100% Fluid)
+       ======================================================== */
+    /* Mobile Bottom Floating App Bar */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(8, 12, 20, 0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid var(--panel-border);
+      z-index: 990;
+      padding: 0 6px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      align-items: center;
+      justify-content: space-around;
+      box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.75);
+    }
+    @media (max-width: 1024px) {
+      .mobile-bottom-bar { display: flex; }
+      body { padding-bottom: 66px; }
+      .app-sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1050;
+        width: 280px;
+        max-width: 85vw;
+        box-shadow: -10px 0 45px rgba(0, 0, 0, 0.9);
+        transform: translateX(100%);
+        overflow-y: auto;
+      }
+      .app-sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1040;
+      }
+      .notif-dropdown-panel {
+        top: 68px;
+        right: 12px;
+        left: 12px;
+        width: auto;
+        max-height: 80vh;
+      }
+    }
+    .mobile-bottom-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.68rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      padding: 6px 0;
+      transition: all 0.15s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mobile-bottom-item:active { transform: scale(0.92); }
+    .mobile-bottom-item.active { color: var(--mint); }
+    .mobile-bottom-item.active svg { stroke: var(--mint); filter: drop-shadow(0 0 6px var(--mint-glow)); }
+
+    /* Header elements on mobile */
+    .header-left-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .header-notif-btn {
+      position: relative;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--panel-border);
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .header-notif-btn:hover {
+      background: rgba(0, 229, 153, 0.12);
+      border-color: var(--mint);
+      color: var(--mint);
+    }
+    .header-notif-btn .notif-badge-pill {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      font-size: 0.64rem;
+      padding: 0 5px;
+    }
+
+    @media (max-width: 768px) {
+      :root { --sidebar-width: 280px; }
+      .top-header { height: 60px; padding: 0 0.85rem; }
+      .brand-title { font-size: 1.15rem; }
+      .brand-subtitle { display: none; }
+      .brand-logo-icon { width: 30px; height: 30px; }
+      .brand-logo-icon svg { width: 28px; height: 28px; }
+      .sidebar-mobile-toggle span { display: none; }
+      .sidebar-mobile-toggle { padding: 0 10px; height: 36px; }
+      .header-status-pill { display: none; }
+
+      .app-main { padding: 1rem 0.85rem 5.5rem 0.85rem; }
+      .filter-wrapper { padding: 0.85rem; }
+      .filter-inline-item { min-width: 100%; flex: 1 1 100%; }
+      .filter-inline-search { min-width: 100%; flex: 1 1 100%; }
+      .filter-inline-search input { font-size: 16px; }
+      .filter-inline-select { font-size: 16px; }
+
+      .quick-chips-row {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 6px;
+        scrollbar-width: none;
+      }
+      .quick-chips-row::-webkit-scrollbar { display: none; }
+      .quick-chip { flex-shrink: 0; white-space: nowrap; }
+
+      .summary-kpi-banner {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        padding: 0.85rem 0.4rem;
+        gap: 4px;
+      }
+      .kpi-divider { display: none; }
+      .kpi-col { flex-direction: column; text-align: center; gap: 4px; }
+      .kpi-icon-wrap { width: 32px; height: 32px; margin: 0 auto; }
+      .kpi-icon-wrap svg { width: 16px; height: 16px; }
+      .kpi-val { font-size: 1.15rem; }
+      .kpi-lbl { font-size: 0.68rem; }
+
+      .sub-filter-row { flex-direction: column; align-items: stretch; gap: 10px; }
+      .view-mode-toggle-group { width: 100%; justify-content: space-between; }
+      .mode-toggle-btn { flex: 1; justify-content: center; padding: 6px 8px; font-size: 0.74rem; }
+      .sort-control-inline { justify-content: space-between; width: 100%; }
+
+      .offers-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .offer-card { padding: 1.1rem 1rem; }
+      
+      .modal-glass-card { padding: 1.25rem 1rem; border-radius: var(--radius-lg); }
+      .modal-top-header { flex-direction: column-reverse; align-items: flex-start; gap: 8px; }
+      .modal-current-price-huge { font-size: 2rem; }
+      .modal-three-pills { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .metric-pill-card { padding: 0.6rem 0.4rem; text-align: center; }
+      .metric-pill-val { font-size: 0.92rem; }
+
+      .full-notif-card { padding: 1rem; gap: 10px; }
+      .full-notif-top { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .full-notif-actions { flex-direction: column; align-items: stretch; }
+      .full-notif-actions button { width: 100%; justify-content: center; }
+
+      .toast-container {
+        bottom: 72px;
+        right: 12px;
+        left: 12px;
+        align-items: stretch;
+      }
+      .toast { font-size: 0.82rem; padding: 10px 14px; }
+    }
   </style>
 </head>
 <body>
@@ -1322,10 +1504,19 @@ html_content = r'''<!DOCTYPE html>
       </div>
     </div>
 
-    <!-- Left Live Indicator -->
-    <div class="header-status-pill">
-      <span class="pulse-dot"></span>
-      <span>بيانات حية 24/7</span>
+    <!-- Left Live Indicator & Direct Notifications Bell -->
+    <div class="header-left-actions">
+      <button class="header-notif-btn" id="headerNotifBtn" onclick="toggleNotifPanel(event)" title="مركز الإشعارات">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notif-badge-pill" id="headerNotifBadge">6</span>
+      </button>
+      <div class="header-status-pill">
+        <span class="pulse-dot"></span>
+        <span>بيانات حية 24/7</span>
+      </div>
     </div>
   </header>
 
@@ -2043,6 +2234,93 @@ html_content = r'''<!DOCTYPE html>
         </button>
         <button type="button" onclick="resetPinToDefault()" style="background:transparent; border:none; color:var(--text-dim); font-size:0.8rem; cursor:pointer; padding:4px; text-decoration:underline;">
           نسيت الرمز؟ إعادة الضبط إلى الافتراضي (1234)
+        </button>
+      </div>
+    </div>
+  <!-- Mobile Bottom App Bar (Sticky Floating Dock for Phones & Tablets) -->
+  <nav class="mobile-bottom-bar" id="mobileBottomBar">
+    <button class="mobile-bottom-item active" data-view="comparison" onclick="switchView('comparison');">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="20" x2="18" y2="10"></line>
+        <line x1="12" y1="20" x2="12" y2="4"></line>
+        <line x1="6" y1="20" x2="6" y2="14"></line>
+      </svg>
+      <span>المقارنة</span>
+    </button>
+    <button class="mobile-bottom-item" data-view="merchants" onclick="switchView('merchants');">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>المتاجر</span>
+    </button>
+    <button class="mobile-bottom-item" data-view="notifications" onclick="switchView('notifications');">
+      <div style="position:relative; display:inline-block;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notif-badge-pill" id="mobileNotifBadge" style="position:absolute; top:-6px; right:-8px; padding:0 5px; font-size:0.65rem;">6</span>
+      </div>
+      <span>الإشعارات</span>
+    </button>
+    <button class="mobile-bottom-item" data-view="subscriptions" onclick="switchView('subscriptions');">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+      </svg>
+      <span>المنتجات</span>
+    </button>
+    <button class="mobile-bottom-item" onclick="toggleSidebarDrawer();">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>القائمة</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================
+       SHARE NOTIFICATION MODAL (Share to Team Members via Telegram, WhatsApp, Copy)
+       ======================================================== -->
+  <div class="modal-backdrop" id="shareModalBackdrop" onclick="if(event.target===this) closeShareModal()">
+    <div class="modal-glass-card" style="max-width:480px;" role="dialog" aria-modal="true">
+      <button class="modal-close-btn" onclick="closeShareModal()" title="إغلاق">&times;</button>
+      
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+        <div style="width:42px; height:42px; border-radius:50%; background:rgba(56,189,248,0.15); color:var(--blue); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </div>
+        <div>
+          <h3 style="font-size:1.2rem; font-weight:800; color:#fff;" id="shareModalTitle">مشاركة الإشعار مع الفريق</h3>
+          <span style="font-size:0.8rem; color:var(--text-muted);">إرسال تفاصيل العرض والتحديث مباشرة لأعضاء فريق العمل</span>
+        </div>
+      </div>
+
+      <div style="background:rgba(0,0,0,0.35); border:1px solid var(--panel-border); border-radius:var(--radius-md); padding:1rem; font-size:0.88rem; line-height:1.5; color:var(--text-main); max-height:160px; overflow-y:auto;" id="shareModalPreviewText">
+        <!-- Preview text populated by JS -->
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="btn-mint-primary" id="shareTelegramBtn" style="justify-content:center; height:44px; font-size:0.92rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path></svg>
+          <span>مشاركة فورية عبر تيليجرام (Telegram) ↗</span>
+        </button>
+
+        <button class="btn-glass-secondary" id="shareWhatsappBtn" style="justify-content:center; height:44px; font-size:0.92rem; color:#25D366; border-color:rgba(37,211,102,0.3);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+          <span>مشاركة عبر واتساب (WhatsApp) ↗</span>
+        </button>
+
+        <button class="btn-glass-secondary" id="shareCopyFullBtn" style="justify-content:center; height:42px; font-size:0.88rem;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+          <span>نسخ الرسالة بالكامل لفرق العمل 📋</span>
         </button>
       </div>
     </div>
@@ -3172,12 +3450,18 @@ html_content += r'''
     function switchView(viewName) {
       document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.mobile-bottom-item').forEach(el => el.classList.remove('active'));
 
       const target = document.getElementById(`view-${viewName}`);
       if (target) target.classList.add('active');
 
       const navBtn = document.querySelector(`.nav-item[data-view="${viewName}"]`);
       if (navBtn) navBtn.classList.add('active');
+
+      const mobBtn = document.querySelector(`.mobile-bottom-item[data-view="${viewName}"]`);
+      if (mobBtn) mobBtn.classList.add('active');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
 
       if (viewName === 'comparison') {
         setTimeout(() => renderMarketChart(), 60);
@@ -3196,7 +3480,7 @@ html_content += r'''
     }
 
     // ----------------------------------------------------
-    // Real-Time Notification Engine & Interactive Store Links
+    // Real-Time Notification Engine & Team Share Logic
     // ----------------------------------------------------
     const STORE_NOTIFICATIONS = [
       {
@@ -3307,8 +3591,9 @@ html_content += r'''
     document.addEventListener('click', (e) => {
       const panel = document.getElementById('notifDropdownPanel');
       const btn = document.getElementById('notifBellBtn');
+      const headerBtn = document.getElementById('headerNotifBtn');
       if (panel && panel.classList.contains('active')) {
-        if (!panel.contains(e.target) && !btn.contains(e.target)) {
+        if (!panel.contains(e.target) && (!btn || !btn.contains(e.target)) && (!headerBtn || !headerBtn.contains(e.target))) {
           panel.classList.remove('active');
         }
       }
@@ -3319,6 +3604,8 @@ html_content += r'''
       const badge1 = document.getElementById('notifCountBadge');
       const badge2 = document.getElementById('sidebarNotifBadge');
       const badge3 = document.getElementById('filterNotifBadgeAll');
+      const badge4 = document.getElementById('mobileNotifBadge');
+      const badge5 = document.getElementById('headerNotifBadge');
       if (badge1) {
         badge1.style.display = count ? 'inline-block' : 'none';
         badge1.innerText = count;
@@ -3329,6 +3616,14 @@ html_content += r'''
       }
       if (badge3) {
         badge3.innerText = count;
+      }
+      if (badge4) {
+        badge4.style.display = count ? 'inline-block' : 'none';
+        badge4.innerText = count;
+      }
+      if (badge5) {
+        badge5.style.display = count ? 'inline-block' : 'none';
+        badge5.innerText = count;
       }
     }
 
@@ -3352,12 +3647,16 @@ html_content += r'''
               <span style="margin-right:auto; font-size:0.7rem; color:var(--text-dim);">${n.time}</span>
             </div>
             <div class="notif-item-desc">${n.text}</div>
-            <div style="display:flex; gap:6px; margin-top:6px;" onclick="event.stopPropagation()">
+            <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;" onclick="event.stopPropagation()">
               <button class="btn-mint-primary" onclick="openStoreTelegram('${n.store}')" style="height:26px; padding:0 10px; font-size:0.74rem;">
                 فتح المتجر في تليجرام ↗
               </button>
+              <button class="btn-glass-secondary" onclick="shareNotification(${n.id})" style="height:26px; padding:0 8px; font-size:0.72rem; color:var(--blue);" title="مشاركة الإشعار مع عضو في الفريق">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                <span>مشاركة 🔗</span>
+              </button>
               <button class="btn-glass-secondary" onclick="filterByStore('${n.store}'); document.getElementById('notifDropdownPanel').classList.remove('active');" style="height:26px; padding:0 8px; font-size:0.72rem;">
-                عروض المتجر بالرادار 🔍
+                بالرادار 🔍
               </button>
             </div>
           </div>
@@ -3453,6 +3752,17 @@ html_content += r'''
                 <span>زيارة متجر ${n.store} في تليجرام ↗</span>
               </button>
 
+              <button class="btn-glass-secondary btn-share-notif" onclick="shareNotification(${n.id})" style="height:36px; padding:0 14px; font-size:0.84rem; color:var(--blue);" title="مشاركة الإشعار مع عضو في الفريق">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+                <span>مشاركة الإشعار 🔗</span>
+              </button>
+
               <button class="btn-glass-secondary" onclick="filterByStore('${n.store}')" style="height:36px; padding:0 14px; font-size:0.84rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                 <span>عروض ${n.store} بالرادار</span>
@@ -3466,6 +3776,81 @@ html_content += r'''
           </div>
         `;
       }).join('');
+    }
+
+    // ----------------------------------------------------
+    // Team Share Functionality (Web Share API + Modal Fallback)
+    // ----------------------------------------------------
+    function shareNotification(notifId) {
+      const notif = STORE_NOTIFICATIONS.find(n => n.id === notifId) || STORE_NOTIFICATIONS[0];
+      if (!notif) return;
+
+      const storeUrl = notif.buy_url || getStoreTelegramUrl(notif.store);
+      const shareTitle = `تنبيه رادار السوق | متجر ${notif.store}`;
+      const shareText = `⚡ تنبيه فوري من رادار الأسعار:\n🏬 المتجر: ${notif.store}\n📦 التحديث: ${notif.text}\n⏱ الوقت: ${notif.time}\n🔗 رابط المتجر المباشر: ${storeUrl}\n\n🔍 استعراض كامل العروض عبر رادار السوق:\nhttps://store-price-comparator.vercel.app/`;
+
+      if (navigator.share) {
+        navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: 'https://store-price-comparator.vercel.app/'
+        }).then(() => {
+          showToast('تمت مشاركة الإشعار بنجاح 🚀', 'success');
+          playChime();
+        }).catch(err => {
+          if (err.name !== 'AbortError') {
+            openShareModal(notif, shareText, storeUrl);
+          }
+        });
+      } else {
+        openShareModal(notif, shareText, storeUrl);
+      }
+    }
+
+    function openShareModal(notif, shareText, storeUrl) {
+      const modal = document.getElementById('shareModalBackdrop');
+      if (!modal) return;
+
+      document.getElementById('shareModalTitle').innerText = `مشاركة إشعار متجر ${notif.store}`;
+      document.getElementById('shareModalPreviewText').innerText = shareText;
+
+      const tgBtn = document.getElementById('shareTelegramBtn');
+      if (tgBtn) {
+        const tgLink = `https://t.me/share/url?url=${encodeURIComponent('https://store-price-comparator.vercel.app/')}&text=${encodeURIComponent(shareText)}`;
+        tgBtn.onclick = () => {
+          window.open(tgLink, '_blank');
+          showToast('جاري الفتح في تيليجرام ↗', 'info');
+        };
+      }
+
+      const waBtn = document.getElementById('shareWhatsappBtn');
+      if (waBtn) {
+        const waLink = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        waBtn.onclick = () => {
+          window.open(waLink, '_blank');
+          showToast('جاري الفتح في واتساب ↗', 'info');
+        };
+      }
+
+      const copyBtn = document.getElementById('shareCopyFullBtn');
+      if (copyBtn) {
+        copyBtn.onclick = () => {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareText);
+            showToast('تم نسخ نص وتفاصيل الإشعار بنجاح 📋', 'success');
+            playChime();
+          } else {
+            showToast('تم نسخ الإشعار', 'info');
+          }
+        };
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeShareModal() {
+      const modal = document.getElementById('shareModalBackdrop');
+      if (modal) modal.classList.remove('active');
     }
 
     function copyNotifText(text) {
@@ -3542,7 +3927,7 @@ html_content += r'''
       renderFullNotificationsView();
       updateNotifBadges();
 
-      showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, telegramUrl);
+      showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, telegramUrl, alertItem.id);
 
       if ("Notification" in window && Notification.permission === "granted") {
         try {
@@ -3571,7 +3956,7 @@ html_content += r'''
       simulateLiveStoreAlert();
     }, 24000);
 
-    function showClickableToast(msg, storeName, url) {
+    function showClickableToast(msg, storeName, url, notifId) {
       const container = document.getElementById('toastContainer');
       if (!container) return;
       const el = document.createElement('div');
@@ -3579,9 +3964,14 @@ html_content += r'''
       el.style.cursor = 'pointer';
       el.title = 'اضغط لفتح متجر ' + storeName + ' مباشرة ↗';
       el.innerHTML = `
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-          <span>${msg}</span>
-          <span style="background:var(--mint); color:#030508; font-weight:800; font-size:0.75rem; padding:2px 8px; border-radius:4px; white-space:nowrap;">فتح المتجر ↗</span>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+          <span style="flex:1;">${msg}</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button onclick="event.stopPropagation(); shareNotification(${notifId || 1});" style="background:rgba(255,255,255,0.1); border:1px solid var(--panel-border); color:var(--blue); font-size:0.75rem; font-weight:700; padding:3px 8px; border-radius:4px; cursor:pointer;" title="مشاركة الإشعار مع عضو في الفريق">
+              مشاركة 🔗
+            </button>
+            <span style="background:var(--mint); color:#030508; font-weight:800; font-size:0.75rem; padding:3px 8px; border-radius:4px; white-space:nowrap;">فتح ↗</span>
+          </div>
         </div>
       `;
       el.onclick = () => {
@@ -3589,7 +3979,7 @@ html_content += r'''
         el.remove();
       };
       container.appendChild(el);
-      setTimeout(() => el.remove(), 4500);
+      setTimeout(() => el.remove(), 4800);
     }
 
     function showToast(msg, type = 'info') {
