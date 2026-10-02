@@ -300,6 +300,52 @@ html_content = r'''<!DOCTYPE html>
     .notif-item-desc { font-size: 0.8rem; color: var(--text-muted); }
     .notif-item-time { font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
+    /* Full Notifications View Card Styles */
+    .full-notif-card {
+      background: var(--bg-card);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+    .full-notif-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(0, 229, 153, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 229, 153, 0.1);
+    }
+    .full-notif-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .full-notif-store-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .full-notif-body {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.55;
+    }
+    .full-notif-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
     /* ========================================================
        MAIN BODY & RIGHT SIDEBAR COMMAND CENTER (RTL)
        ======================================================== */
@@ -1303,11 +1349,17 @@ html_content = r'''<!DOCTYPE html>
       </div>
     </div>
     <div class="notif-list" id="notifListContainer"></div>
-    <div style="padding:10px 14px; background:rgba(0,0,0,0.25); border-top:1px solid var(--panel-border); display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:0.75rem; color:var(--text-dim);">رصد فوري لـ 12 متجر معتمد</span>
-      <button onclick="simulateLiveStoreAlert()" style="background:none; border:none; color:var(--mint); font-size:0.76rem; font-weight:700; cursor:pointer;">
-        + إشعار تجريبي
+    <div style="padding:10px 14px; background:rgba(0,0,0,0.3); border-top:1px solid var(--panel-border); display:flex; flex-direction:column; gap:8px;">
+      <button onclick="switchView('notifications'); document.getElementById('notifDropdownPanel').classList.remove('active');" class="btn-mint-primary" style="height:34px; font-size:0.8rem; width:100%; justify-content:center;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span>عرض كافة الإشعارات في صفحة مستقلة 📑</span>
       </button>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:0.75rem; color:var(--text-dim);">رصد تلقائي لـ 12 متجر معتمد</span>
+        <button onclick="simulateLiveStoreAlert()" style="background:none; border:none; color:var(--mint); font-size:0.76rem; font-weight:700; cursor:pointer;">
+          + إشعار تجريبي ⚡
+        </button>
+      </div>
     </div>
   </div>
 
@@ -1355,6 +1407,17 @@ html_content = r'''<!DOCTYPE html>
             </svg>
           </div>
           <span>تنبيهات الأسعار</span>
+        </div>
+
+        <div class="nav-item" data-view="notifications" onclick="switchView('notifications'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <span>مركز الإشعارات</span>
+          <span class="notif-badge-pill" id="sidebarNotifBadge" style="margin-right:auto; font-size:0.72rem; padding:1px 7px;">6</span>
         </div>
 
         <div class="nav-item" data-view="subscriptions" onclick="switchView('subscriptions'); closeSidebarOnMobile();">
@@ -1797,6 +1860,71 @@ html_content = r'''<!DOCTYPE html>
         </div>
       </section>
 
+      <!-- ========================================================
+           VIEW 7: INDEPENDENT NOTIFICATIONS CENTER (مركز الإشعارات المستقل)
+           ======================================================== -->
+      <section id="view-notifications" class="view-container">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; flex-wrap:wrap; gap:12px;">
+          <div>
+            <div style="display:flex; align-items:center; gap:10px;">
+              <h2 style="font-size:1.6rem; font-weight:800; color:#fff;">مركز الإشعارات والتنبيهات المباشرة</h2>
+              <span class="badge-cheapest-pill" style="border-color:var(--mint); color:var(--mint); padding:2px 10px; font-size:0.75rem;">
+                <span class="pulse-dot" style="margin-left:5px;"></span>بث حي ومباشر 24/7
+              </span>
+            </div>
+            <p style="font-size:0.9rem; color:var(--text-muted); margin-top:4px;">
+              رصد مستمر ولحظي لأحدث الأسعار وتوفر المخزون وعروض التخفيض من 12 متجر معتمد
+            </p>
+          </div>
+
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn-mint-primary" onclick="requestBrowserNotifications()" style="height:38px; font-size:0.84rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span>تفعيل إشعارات المتصفح 🔔</span>
+            </button>
+            <button class="btn-glass-secondary" onclick="simulateLiveStoreAlert()" style="height:38px; font-size:0.84rem;">
+              <span>+ إشعار فوري تجريبي ⚡</span>
+            </button>
+            <button class="btn-glass-secondary" onclick="clearAllNotifications()" style="height:38px; font-size:0.84rem; color:var(--red);" title="مسح كافة الإشعارات">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <span>مسح الكل</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Notification Filter Chips Row -->
+        <div class="filter-wrapper" style="margin-bottom:1.5rem;">
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+            <div class="quick-chips-row" style="border:none; padding:0;">
+              <span class="quick-chips-lbl">تصفية حسب:</span>
+              <button class="quick-chip active" onclick="filterNotifCategory('all', this)">
+                <span>كافة الإشعارات</span>
+                <span class="notif-badge-pill" id="filterNotifBadgeAll" style="padding:0 5px; font-size:0.68rem;">6</span>
+              </button>
+              <button class="quick-chip" onclick="filterNotifCategory('microsoft', this)">
+                <span>💻 Microsoft & Office</span>
+              </button>
+              <button class="quick-chip" onclick="filterNotifCategory('discount', this)">
+                <span>🔥 تخفيضات الأسعار</span>
+              </button>
+              <button class="quick-chip" onclick="filterNotifCategory('ai', this)">
+                <span>🤖 الذكاء الاصطناعي (AI)</span>
+              </button>
+              <button class="quick-chip" onclick="filterNotifCategory('stock', this)">
+                <span>📦 توفر المخزون</span>
+              </button>
+            </div>
+
+            <div style="font-size:0.82rem; color:var(--text-dim);" id="notifStatusText">
+              محدث تلقائياً كل 24 ثانية ⚡
+            </div>
+          </div>
+        </div>
+
+        <!-- Full Notifications Grid -->
+        <div id="fullNotifListGrid" style="display:flex; flex-direction:column; gap:12px;"></div>
+      </section>
+
     </main>
   </div>
 
@@ -1970,6 +2098,8 @@ html_content += r'''
       renderCatalogView();
       renderReportsView();
       renderNotifList();
+      renderFullNotificationsView();
+      updateNotifBadges();
     });
 
     // ----------------------------------------------------
@@ -2685,12 +2815,67 @@ html_content += r'''
       }).join('');
     }
 
+    function getStoreTelegramUrl(storeName) {
+      const store = (state.stores || []).find(s => s.name === storeName || (s.name||'').toLowerCase() === (storeName||'').toLowerCase());
+      if (store) {
+        if (store.bot_username) {
+          const handle = store.bot_username.replace('@', '').trim();
+          return `https://t.me/${handle}`;
+        }
+        if (store.base_url && store.base_url.includes('t.me/')) {
+          return store.base_url;
+        }
+      }
+      const storeTelegramMap = {
+        'Bite Store': 'https://t.me/Bite_storee_bot',
+        'PA Store': 'https://t.me/p_a_store_bot',
+        'Gemini Pixel Extractor': 'https://t.me/GeminiPixel1_bot',
+        'Sam Topup': 'https://t.me/Samsshop_bot',
+        'Acczone Store': 'https://t.me/Acczone_Store_bot',
+        'Digital Asset': 'https://t.me/digital_assetbot',
+        'AI Shop Mops': 'https://t.me/aishopmopsbot',
+        'InsightX': 'https://t.me/InsightX_bot',
+        'QuickDigi': 'https://t.me/QuickDigiBot',
+        'DigiNest': 'https://t.me/DigiNestStoreBot',
+        'BoomPay': 'https://t.me/BoomPay_bot',
+        'DigitalSocials': 'https://t.me/DigitalSocialsBot'
+      };
+      return storeTelegramMap[storeName] || 'https://t.me';
+    }
+
+    function openStoreTelegram(storeName) {
+      const url = getStoreTelegramUrl(storeName);
+      window.open(url, '_blank');
+      showToast(`تم فتح متجر ${storeName} في تليجرام ↗`, 'success');
+      playChime();
+    }
+
+    function openStoreFromNotification(storeName, buyUrl, notifId, event) {
+      if (event) event.stopPropagation();
+      const targetUrl = buyUrl || getStoreTelegramUrl(storeName);
+      window.open(targetUrl, '_blank');
+
+      state.search = storeName;
+      const input = document.getElementById('searchInput');
+      if (input) input.value = storeName;
+
+      const panel = document.getElementById('notifDropdownPanel');
+      if (panel) panel.classList.remove('active');
+
+      switchView('comparison');
+      executeSearch();
+
+      showToast(`⚡ تم فتح متجر ${storeName} في تليجرام واستعراض عروضه في الرادار`, 'success');
+      playChime();
+    }
+
     function filterByStore(storeName) {
       state.search = storeName;
       const input = document.getElementById('searchInput');
       if (input) input.value = storeName;
       switchView('comparison');
       executeSearch();
+      showToast(`عرض كافة عروض متجر: ${storeName}`, 'info');
     }
 
     // ----------------------------------------------------
@@ -2996,6 +3181,8 @@ html_content += r'''
 
       if (viewName === 'comparison') {
         setTimeout(() => renderMarketChart(), 60);
+      } else if (viewName === 'notifications') {
+        renderFullNotificationsView();
       }
     }
 
@@ -3009,16 +3196,79 @@ html_content += r'''
     }
 
     // ----------------------------------------------------
-    // Real-Time Notification Engine
+    // Real-Time Notification Engine & Interactive Store Links
     // ----------------------------------------------------
     const STORE_NOTIFICATIONS = [
-      { id: 1, store: 'Bite Store', text: 'توفر اشتراك Microsoft Office 365 Plus 1 Year بسعر $0.99', time: 'منذ دقيقة', badge: '💻 Microsoft' },
-      { id: 2, store: 'PA Store', text: 'تحديث مخزون باقة Microsoft 365 Family (5 حسابات / 5TB)', time: 'منذ 3 دقائق', badge: '🔥 خصم' },
-      { id: 3, store: 'Gemini Pixel Extractor', text: 'أقل سعر متوفر بالسوق لـ Gemini Pro 18M: $0.54', time: 'منذ 6 دقائق', badge: '⚡ سعر' },
-      { id: 4, store: 'Sam Topup', text: 'إضافة عروض جديدة لاشتراكات ChatGPT Plus بسعر $2.95', time: 'منذ 10 دقائق', badge: '🤖 AI' }
+      {
+        id: 1,
+        store: 'Bite Store',
+        text: 'توفر اشتراك Microsoft Office 365 Plus 1 Year بسعر $0.99',
+        time: 'منذ دقيقة',
+        badge: '💻 Microsoft',
+        category: 'microsoft',
+        buy_url: 'https://t.me/Bite_storee_bot',
+        product_name: 'Microsoft Office 365 Plus 1 Year',
+        price: '0.99'
+      },
+      {
+        id: 2,
+        store: 'PA Store',
+        text: 'تحديث مخزون باقة Microsoft 365 Family (5 حسابات / 5TB) بسعر $2.49',
+        time: 'منذ 3 دقائق',
+        badge: '🔥 خصم',
+        category: 'discount',
+        buy_url: 'https://t.me/p_a_store_bot',
+        product_name: 'Microsoft 365 Family',
+        price: '2.49'
+      },
+      {
+        id: 3,
+        store: 'Gemini Pixel Extractor',
+        text: 'أقل سعر متوفر بالسوق لـ Gemini Pro 18M: $0.54 فقط',
+        time: 'منذ 6 دقائق',
+        badge: '✦ AI',
+        category: 'ai',
+        buy_url: 'https://t.me/GeminiPixel1_bot',
+        product_name: 'Gemini Pro 18M',
+        price: '0.54'
+      },
+      {
+        id: 4,
+        store: 'Sam Topup',
+        text: 'إضافة عروض جديدة لاشتراكات ChatGPT Plus 1 Month بسعر $2.95',
+        time: 'منذ 10 دقائق',
+        badge: '🤖 AI',
+        category: 'ai',
+        buy_url: 'https://t.me/Samsshop_bot',
+        product_name: 'ChatGPT Plus 1 Month',
+        price: '2.95'
+      },
+      {
+        id: 5,
+        store: 'Acczone Store',
+        text: 'وصول دفعة جديدة من حسابات Canva Pro السنوية بسعر $0.35',
+        time: 'منذ 15 دقيقة',
+        badge: '📦 مخزون',
+        category: 'stock',
+        buy_url: 'https://t.me/Acczone_Store_bot',
+        product_name: 'Canva Pro 1 Year',
+        price: '0.35'
+      },
+      {
+        id: 6,
+        store: 'Digital Asset',
+        text: 'تخفيض سعر مفاتيح Windows 11 Pro الأصلية إلى $1.50',
+        time: 'منذ 22 دقيقة',
+        badge: '⚡ سعر',
+        category: 'microsoft',
+        buy_url: 'https://t.me/digital_assetbot',
+        product_name: 'Windows 11 Pro Key',
+        price: '1.50'
+      }
     ];
 
     let notifSoundEnabled = localStorage.getItem('radar_notif_sound') !== 'false';
+    let currentNotifFilter = 'all';
 
     function toggleNotifSound(enabled) {
       notifSoundEnabled = enabled;
@@ -3064,37 +3314,174 @@ html_content += r'''
       }
     });
 
+    function updateNotifBadges() {
+      const count = STORE_NOTIFICATIONS.length;
+      const badge1 = document.getElementById('notifCountBadge');
+      const badge2 = document.getElementById('sidebarNotifBadge');
+      const badge3 = document.getElementById('filterNotifBadgeAll');
+      if (badge1) {
+        badge1.style.display = count ? 'inline-block' : 'none';
+        badge1.innerText = count;
+      }
+      if (badge2) {
+        badge2.style.display = count ? 'inline-block' : 'none';
+        badge2.innerText = count;
+      }
+      if (badge3) {
+        badge3.innerText = count;
+      }
+    }
+
     function renderNotifList() {
       const container = document.getElementById('notifListContainer');
-      const badge = document.getElementById('notifCountBadge');
       if (!container) return;
+      updateNotifBadges();
 
       if (!STORE_NOTIFICATIONS.length) {
         container.innerHTML = `<div style="padding:2rem; text-align:center; color:var(--text-muted); font-size:0.84rem;">لا توجد إشعارات جديدة حالياً</div>`;
-        if (badge) badge.style.display = 'none';
         return;
       }
 
-      if (badge) {
-        badge.style.display = 'inline-block';
-        badge.innerText = STORE_NOTIFICATIONS.length;
+      container.innerHTML = STORE_NOTIFICATIONS.map(n => {
+        const storeUrl = n.buy_url || getStoreTelegramUrl(n.store);
+        return `
+          <div class="notif-item" onclick="openStoreFromNotification('${n.store}', '${storeUrl}', ${n.id}, event)">
+            <div class="notif-item-title">
+              <span style="color:var(--mint); font-weight:800;">${n.store}</span>
+              <span style="background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; font-size:0.7rem; color:var(--text-muted);">${n.badge}</span>
+              <span style="margin-right:auto; font-size:0.7rem; color:var(--text-dim);">${n.time}</span>
+            </div>
+            <div class="notif-item-desc">${n.text}</div>
+            <div style="display:flex; gap:6px; margin-top:6px;" onclick="event.stopPropagation()">
+              <button class="btn-mint-primary" onclick="openStoreTelegram('${n.store}')" style="height:26px; padding:0 10px; font-size:0.74rem;">
+                فتح المتجر في تليجرام ↗
+              </button>
+              <button class="btn-glass-secondary" onclick="filterByStore('${n.store}'); document.getElementById('notifDropdownPanel').classList.remove('active');" style="height:26px; padding:0 8px; font-size:0.72rem;">
+                عروض المتجر بالرادار 🔍
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterNotifCategory(cat, btnEl) {
+      currentNotifFilter = cat;
+      document.querySelectorAll('#view-notifications .quick-chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      renderFullNotificationsView();
+    }
+
+    function renderFullNotificationsView() {
+      const container = document.getElementById('fullNotifListGrid');
+      if (!container) return;
+      updateNotifBadges();
+
+      let items = STORE_NOTIFICATIONS.slice();
+      if (currentNotifFilter && currentNotifFilter !== 'all') {
+        items = items.filter(n => {
+          if (currentNotifFilter === 'microsoft') {
+            return (n.category === 'microsoft') || (n.text.toLowerCase().includes('microsoft') || n.text.toLowerCase().includes('office') || n.badge.includes('Microsoft'));
+          }
+          if (currentNotifFilter === 'discount') {
+            return (n.category === 'discount') || n.badge.includes('خصم') || n.badge.includes('سعر');
+          }
+          if (currentNotifFilter === 'ai') {
+            return (n.category === 'ai') || n.badge.includes('AI') || n.text.toLowerCase().includes('gemini') || n.text.toLowerCase().includes('chatgpt');
+          }
+          if (currentNotifFilter === 'stock') {
+            return (n.category === 'stock') || n.badge.includes('مخزون') || n.text.includes('مخزون') || n.text.includes('توفر');
+          }
+          return true;
+        });
       }
 
-      container.innerHTML = STORE_NOTIFICATIONS.map(n => `
-        <div class="notif-item" onclick="filterByStore('${n.store}'); document.getElementById('notifDropdownPanel').classList.remove('active');">
-          <div class="notif-item-title">
-            <span style="color:var(--mint); font-weight:800;">${n.store}</span>
-            <span style="background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; font-size:0.7rem; color:var(--text-muted);">${n.badge}</span>
+      const statusEl = document.getElementById('notifStatusText');
+      if (statusEl) {
+        statusEl.innerHTML = `معروض <strong style="color:var(--mint);">${items.length}</strong> إشعار من أصل ${STORE_NOTIFICATIONS.length} • محدث تلقائياً ⚡`;
+      }
+
+      if (!items.length) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:3.5rem 1rem; color:var(--text-muted); background:var(--bg-card); border:1px dashed var(--panel-border); border-radius:var(--radius-xl);">
+            <div style="font-size:2.4rem; margin-bottom:8px;">🔔</div>
+            <h3 style="color:#fff; font-size:1.15rem; font-weight:800; margin-bottom:6px;">لا توجد إشعارات مطابقة للتصفية حالياً</h3>
+            <p style="font-size:0.86rem; color:var(--text-dim); margin-bottom:14px;">يمكنك اختبار تلقي إشعار فوري جديد من المتاجر الآن</p>
+            <button class="btn-mint-primary" onclick="simulateLiveStoreAlert()">إرسال إشعار تجريبي الآن ⚡</button>
           </div>
-          <div class="notif-item-desc">${n.text}</div>
-          <div class="notif-item-time">${n.time}</div>
-        </div>
-      `).join('');
+        `;
+        return;
+      }
+
+      container.innerHTML = items.map((n, idx) => {
+        const color = STORE_COLORS[n.store] || { bg: "#38bdf8", text: "#fff" };
+        const storeUrl = n.buy_url || getStoreTelegramUrl(n.store);
+
+        return `
+          <div class="full-notif-card" onclick="openStoreFromNotification('${n.store}', '${storeUrl}', ${n.id}, event)">
+            <div class="full-notif-top">
+              <div class="full-notif-store-info">
+                <div class="merchant-circle-avatar" style="background:${color.bg}; color:${color.text}; width:40px; height:40px; font-size:0.95rem;">
+                  ${n.store.slice(0, 2).toUpperCase()}
+                </div>
+                <div style="display:flex; flex-direction:column; line-height:1.2;">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-weight:800; font-size:0.98rem; color:#fff;">${n.store}</span>
+                    <span style="color:var(--mint); font-size:0.75rem;" title="متجر معتمد ومراقب 24/7">✓</span>
+                  </div>
+                  <span style="font-size:0.75rem; color:var(--text-dim); direction:ltr; text-align:right;">${storeUrl.replace('https://', '')}</span>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="background:rgba(255,255,255,0.06); border:1px solid var(--panel-border); padding:3px 10px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:700; color:var(--text-main);">
+                  ${n.badge}
+                </span>
+                <span style="font-size:0.78rem; color:var(--text-dim); font-family:'JetBrains Mono'; background:rgba(0,0,0,0.3); padding:3px 8px; border-radius:6px;">
+                  ⏱ ${n.time}
+                </span>
+              </div>
+            </div>
+
+            <div class="full-notif-body">
+              ${n.text}
+            </div>
+
+            <div class="full-notif-actions" onclick="event.stopPropagation()">
+              <button class="btn-mint-primary" onclick="openStoreTelegram('${n.store}')" style="height:36px; padding:0 16px; font-size:0.84rem;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                <span>زيارة متجر ${n.store} في تليجرام ↗</span>
+              </button>
+
+              <button class="btn-glass-secondary" onclick="filterByStore('${n.store}')" style="height:36px; padding:0 14px; font-size:0.84rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>عروض ${n.store} بالرادار</span>
+              </button>
+
+              <button class="btn-glass-secondary" onclick="copyNotifText('${n.text.replace(/'/g, "\\'")}')" style="height:36px; padding:0 12px; font-size:0.82rem; margin-right:auto;" title="نسخ نص الإشعار">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                <span>نسخ</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function copyNotifText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text);
+        showToast('تم نسخ نص الإشعار بنجاح 📋', 'success');
+      } else {
+        showToast('تم نسخ الإشعار', 'info');
+      }
     }
 
     function clearAllNotifications() {
       STORE_NOTIFICATIONS.length = 0;
+      updateNotifBadges();
       renderNotifList();
+      renderFullNotificationsView();
       showToast('تم مسح جميع الإشعارات', 'info');
     }
 
@@ -3122,15 +3509,17 @@ html_content += r'''
     function simulateLiveStoreAlert() {
       const stores = (state.stores || []).map(s => s.name);
       const storeName = stores[Math.floor(Math.random() * stores.length)] || 'PA Store';
+      const telegramUrl = getStoreTelegramUrl(storeName);
+
       const itemsPool = [
-        { name: 'Microsoft Office 365 Plus 1 Year', price: '0.44', badge: '💻 Microsoft' },
-        { name: 'Microsoft 365 Family (5 حسابات / 5TB)', price: '2.49', badge: '🔥 خصم' },
-        { name: 'Google Gemini Pro 18M', price: '0.35', badge: '✦ AI' },
-        { name: 'ChatGPT Plus 1 Month Account', price: '2.62', badge: '🤖 AI' },
-        { name: 'Canva Pro 1 Year Subscription', price: '0.30', badge: '🎨 تصميم' },
-        { name: 'Windows 11 Pro Genuine Activation Key', price: '1.50', badge: '⚡ سعر' },
-        { name: 'Netflix 4K Ultra HD 1 Month', price: '0.40', badge: '🎬 ترفيه' },
-        { name: 'Admin MS365 12M Full Warranty', price: '9.00', badge: '⭐ موثوق' }
+        { name: 'Microsoft Office 365 Plus 1 Year', price: '0.44', badge: '💻 Microsoft', cat: 'microsoft' },
+        { name: 'Microsoft 365 Family (5 حسابات / 5TB)', price: '2.49', badge: '🔥 خصم', cat: 'discount' },
+        { name: 'Google Gemini Pro 18M Account', price: '0.35', badge: '✦ AI', cat: 'ai' },
+        { name: 'ChatGPT Plus 1 Month Private', price: '2.62', badge: '🤖 AI', cat: 'ai' },
+        { name: 'Canva Pro 1 Year Subscription', price: '0.30', badge: '🎨 تصميم', cat: 'discount' },
+        { name: 'Windows 11 Pro Genuine Activation Key', price: '1.50', badge: '⚡ سعر', cat: 'microsoft' },
+        { name: 'Netflix 4K Ultra HD 1 Month', price: '0.40', badge: '🎬 ترفيه', cat: 'discount' },
+        { name: 'Admin MS365 12M Full Warranty', price: '9.00', badge: '⭐ موثوق', cat: 'microsoft' }
       ];
       const selected = itemsPool[Math.floor(Math.random() * itemsPool.length)];
 
@@ -3139,23 +3528,36 @@ html_content += r'''
         store: storeName,
         text: `تحديث فوري: تم تخفيض سعر ${selected.name} لدى ${storeName} إلى $${selected.price}`,
         time: 'الآن',
-        badge: selected.badge
+        badge: selected.badge,
+        category: selected.cat,
+        buy_url: telegramUrl,
+        product_name: selected.name,
+        price: selected.price
       };
 
       STORE_NOTIFICATIONS.unshift(alertItem);
-      if (STORE_NOTIFICATIONS.length > 20) STORE_NOTIFICATIONS.pop();
-      renderNotifList();
+      if (STORE_NOTIFICATIONS.length > 30) STORE_NOTIFICATIONS.pop();
 
-      showToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, 'success');
+      renderNotifList();
+      renderFullNotificationsView();
+      updateNotifBadges();
+
+      showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, telegramUrl);
 
       if ("Notification" in window && Notification.permission === "granted") {
         try {
-          new Notification(`رادار السوق | ${storeName}`, {
+          const n = new Notification(`رادار السوق | ${storeName}`, {
             body: alertItem.text,
             icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
           });
+          n.onclick = function() {
+            window.focus();
+            window.open(telegramUrl, '_blank');
+          };
         } catch(e) {}
       }
+
+      playChime();
     }
 
     // Auto-poll live store updates automatically:
@@ -3168,6 +3570,27 @@ html_content += r'''
     setInterval(() => {
       simulateLiveStoreAlert();
     }, 24000);
+
+    function showClickableToast(msg, storeName, url) {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+      const el = document.createElement('div');
+      el.className = 'toast';
+      el.style.cursor = 'pointer';
+      el.title = 'اضغط لفتح متجر ' + storeName + ' مباشرة ↗';
+      el.innerHTML = `
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+          <span>${msg}</span>
+          <span style="background:var(--mint); color:#030508; font-weight:800; font-size:0.75rem; padding:2px 8px; border-radius:4px; white-space:nowrap;">فتح المتجر ↗</span>
+        </div>
+      `;
+      el.onclick = () => {
+        openStoreFromNotification(storeName, url);
+        el.remove();
+      };
+      container.appendChild(el);
+      setTimeout(() => el.remove(), 4500);
+    }
 
     function showToast(msg, type = 'info') {
       const container = document.getElementById('toastContainer');
