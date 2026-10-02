@@ -3121,8 +3121,37 @@ html_content += r'''
       return storeTelegramMap[storeName] || 'https://t.me';
     }
 
-    function openStoreTelegram(storeName) {
-      const url = getStoreTelegramUrl(storeName);
+    function getItemDirectLink(storeName, itemCode) {
+      const code = (itemCode || '').trim().replace(/[^a-zA-Z0-9_]/g, '_').toLowerCase();
+      const miniAppStores = {
+        'BoomPay': 'https://t.me/BoomPay_bot/app?startapp=',
+        'DigitalSocials': 'https://t.me/DigitalSocialsBot/app?startapp=',
+        'DigiNest': 'https://t.me/DigiNestStoreBot/app?startapp='
+      };
+      if (miniAppStores[storeName]) {
+        return `${miniAppStores[storeName]}${code}`;
+      }
+
+      const botDeepLinkMap = {
+        'Bite Store': 'https://t.me/Bite_storee_bot?start=',
+        'PA Store': 'https://t.me/p_a_store_bot?start=',
+        'Gemini Pixel Extractor': 'https://t.me/GeminiPixel1_bot?start=',
+        'Sam Topup': 'https://t.me/Samsshop_bot?start=',
+        'Acczone Store': 'https://t.me/Acczone_Store_bot?start=',
+        'Digital Asset': 'https://t.me/digital_assetbot?start=',
+        'AI Shop Mops': 'https://t.me/aishopmopsbot?start=',
+        'InsightX': 'https://t.me/InsightX_bot?start=',
+        'QuickDigi': 'https://t.me/QuickDigiBot?start='
+      };
+
+      if (botDeepLinkMap[storeName]) {
+        return `${botDeepLinkMap[storeName]}buy_${code}`;
+      }
+      return getStoreTelegramUrl(storeName);
+    }
+
+    function openStoreTelegram(storeName, customUrl) {
+      const url = customUrl || getStoreTelegramUrl(storeName);
       window.open(url, '_blank');
       showToast(`تم فتح متجر ${storeName} في تليجرام ↗`, 'success');
       playChime();
@@ -3130,20 +3159,40 @@ html_content += r'''
 
     function openStoreFromNotification(storeName, buyUrl, notifId, event) {
       if (event) event.stopPropagation();
-      const targetUrl = buyUrl || getStoreTelegramUrl(storeName);
+      const notif = (typeof STORE_NOTIFICATIONS !== 'undefined') ? STORE_NOTIFICATIONS.find(n => n.id === notifId) : null;
+      const targetUrl = buyUrl || (notif && notif.direct_buy_url) || getStoreTelegramUrl(storeName);
+
+      // 1. Open Telegram Bot directly on this exact item (Deep Link)
       window.open(targetUrl, '_blank');
 
-      state.search = storeName;
-      const input = document.getElementById('searchInput');
-      if (input) input.value = storeName;
-
+      // 2. Close dropdown if open
       const panel = document.getElementById('notifDropdownPanel');
       if (panel) panel.classList.remove('active');
 
-      switchView('comparison');
-      executeSearch();
+      // 3. Find matching product offer in app database to pop up its live radar modal
+      const prodName = notif ? notif.product_name : '';
+      let matchingOffer = null;
+      if (prodName && state.allProducts) {
+        const pNorm = normalizeText(prodName);
+        matchingOffer = state.allProducts.find(o => 
+          o.store_name === storeName && normalizeText(o.name).includes(pNorm)
+        ) || state.allProducts.find(o => 
+          normalizeText(o.name).includes(pNorm)
+        );
+      }
 
-      showToast(`⚡ تم فتح متجر ${storeName} في تليجرام واستعراض عروضه في الرادار`, 'success');
+      if (matchingOffer) {
+        openOfferModal(matchingOffer);
+        showToast(`⚡ فتح صنف [${matchingOffer.name}] في تيليجرام وعرض تفاصيله بالرادار`, 'success');
+      } else {
+        state.search = prodName || storeName;
+        const input = document.getElementById('searchInput');
+        if (input) input.value = state.search;
+        switchView('comparison');
+        executeSearch();
+        showToast(`⚡ جاري فتح متجر ${storeName} وتصفية عروضه في الرادار`, 'success');
+      }
+
       playChime();
     }
 
@@ -3491,6 +3540,9 @@ html_content += r'''
         badge: '💻 Microsoft',
         category: 'microsoft',
         buy_url: 'https://t.me/Bite_storee_bot',
+        direct_buy_url: 'https://t.me/Bite_storee_bot?start=buy_ms_office_365',
+        product_code: 'ms_office_365',
+        quick_command: '/buy ms_office_365',
         product_name: 'Microsoft Office 365 Plus 1 Year',
         price: '0.99'
       },
@@ -3502,6 +3554,9 @@ html_content += r'''
         badge: '🔥 خصم',
         category: 'discount',
         buy_url: 'https://t.me/p_a_store_bot',
+        direct_buy_url: 'https://t.me/p_a_store_bot?start=buy_ms_365_family',
+        product_code: 'ms_365_family',
+        quick_command: '/buy ms_365_family',
         product_name: 'Microsoft 365 Family',
         price: '2.49'
       },
@@ -3513,6 +3568,9 @@ html_content += r'''
         badge: '✦ AI',
         category: 'ai',
         buy_url: 'https://t.me/GeminiPixel1_bot',
+        direct_buy_url: 'https://t.me/GeminiPixel1_bot?start=buy_gemini_pro_18m',
+        product_code: 'gemini_pro_18m',
+        quick_command: '/buy gemini_pro_18m',
         product_name: 'Gemini Pro 18M',
         price: '0.54'
       },
@@ -3524,6 +3582,9 @@ html_content += r'''
         badge: '🤖 AI',
         category: 'ai',
         buy_url: 'https://t.me/Samsshop_bot',
+        direct_buy_url: 'https://t.me/Samsshop_bot?start=buy_chatgpt_plus',
+        product_code: 'chatgpt_plus',
+        quick_command: '/buy chatgpt_plus',
         product_name: 'ChatGPT Plus 1 Month',
         price: '2.95'
       },
@@ -3535,6 +3596,9 @@ html_content += r'''
         badge: '📦 مخزون',
         category: 'stock',
         buy_url: 'https://t.me/Acczone_Store_bot',
+        direct_buy_url: 'https://t.me/Acczone_Store_bot?start=buy_canva_pro_1y',
+        product_code: 'canva_pro_1y',
+        quick_command: '/buy canva_pro_1y',
         product_name: 'Canva Pro 1 Year',
         price: '0.35'
       },
@@ -3546,6 +3610,9 @@ html_content += r'''
         badge: '⚡ سعر',
         category: 'microsoft',
         buy_url: 'https://t.me/digital_assetbot',
+        direct_buy_url: 'https://t.me/digital_assetbot?start=buy_win11_pro',
+        product_code: 'win11_pro',
+        quick_command: '/buy win11_pro',
         product_name: 'Windows 11 Pro Key',
         price: '1.50'
       }
@@ -3638,25 +3705,33 @@ html_content += r'''
       }
 
       container.innerHTML = STORE_NOTIFICATIONS.map(n => {
-        const storeUrl = n.buy_url || getStoreTelegramUrl(n.store);
+        const directUrl = n.direct_buy_url || n.buy_url || getStoreTelegramUrl(n.store);
+        const quickCmd = n.quick_command || '';
         return `
-          <div class="notif-item" onclick="openStoreFromNotification('${n.store}', '${storeUrl}', ${n.id}, event)">
+          <div class="notif-item" onclick="openStoreFromNotification('${n.store}', '${directUrl}', ${n.id}, event)">
             <div class="notif-item-title">
               <span style="color:var(--mint); font-weight:800;">${n.store}</span>
               <span style="background:rgba(255,255,255,0.06); padding:1px 6px; border-radius:4px; font-size:0.7rem; color:var(--text-muted);">${n.badge}</span>
               <span style="margin-right:auto; font-size:0.7rem; color:var(--text-dim);">${n.time}</span>
             </div>
             <div class="notif-item-desc">${n.text}</div>
+            
+            ${quickCmd ? `
+            <div style="margin:5px 0 3px 0; display:flex; align-items:center; gap:6px; font-size:0.72rem;" onclick="event.stopPropagation()">
+              <span style="color:var(--text-dim);">كود الطلب:</span>
+              <code style="background:rgba(0,255,178,0.1); color:var(--mint); padding:1px 6px; border-radius:4px; cursor:pointer;" onclick="copyNotifText('${quickCmd}')" title="اضغط لنسخ الكود">${quickCmd} 📋</code>
+            </div>` : ''}
+
             <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;" onclick="event.stopPropagation()">
-              <button class="btn-mint-primary" onclick="openStoreTelegram('${n.store}')" style="height:26px; padding:0 10px; font-size:0.74rem;">
-                فتح المتجر في تليجرام ↗
+              <button class="btn-mint-primary" onclick="openStoreFromNotification('${n.store}', '${directUrl}', ${n.id}, event)" style="height:26px; padding:0 10px; font-size:0.74rem;">
+                شراء الصنف مباشرة ↗
               </button>
               <button class="btn-glass-secondary" onclick="shareNotification(${n.id})" style="height:26px; padding:0 8px; font-size:0.72rem; color:var(--blue);" title="مشاركة الإشعار مع عضو في الفريق">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
                 <span>مشاركة 🔗</span>
               </button>
-              <button class="btn-glass-secondary" onclick="filterByStore('${n.store}'); document.getElementById('notifDropdownPanel').classList.remove('active');" style="height:26px; padding:0 8px; font-size:0.72rem;">
-                بالرادار 🔍
+              <button class="btn-glass-secondary" onclick="openOfferModalByProdName('${(n.product_name || '').replace(/'/g, "\\'")}', '${n.store}'); document.getElementById('notifDropdownPanel').classList.remove('active');" style="height:26px; padding:0 8px; font-size:0.72rem;">
+                بالرادار 📊
               </button>
             </div>
           </div>
@@ -3714,10 +3789,12 @@ html_content += r'''
 
       container.innerHTML = items.map((n, idx) => {
         const color = STORE_COLORS[n.store] || { bg: "#38bdf8", text: "#fff" };
-        const storeUrl = n.buy_url || getStoreTelegramUrl(n.store);
+        const directUrl = n.direct_buy_url || n.buy_url || getStoreTelegramUrl(n.store);
+        const storeMainUrl = getStoreTelegramUrl(n.store);
+        const quickCmd = n.quick_command || '';
 
         return `
-          <div class="full-notif-card" onclick="openStoreFromNotification('${n.store}', '${storeUrl}', ${n.id}, event)">
+          <div class="full-notif-card" onclick="openStoreFromNotification('${n.store}', '${directUrl}', ${n.id}, event)">
             <div class="full-notif-top">
               <div class="full-notif-store-info">
                 <div class="merchant-circle-avatar" style="background:${color.bg}; color:${color.text}; width:40px; height:40px; font-size:0.95rem;">
@@ -3728,7 +3805,7 @@ html_content += r'''
                     <span style="font-weight:800; font-size:0.98rem; color:#fff;">${n.store}</span>
                     <span style="color:var(--mint); font-size:0.75rem;" title="متجر معتمد ومراقب 24/7">✓</span>
                   </div>
-                  <span style="font-size:0.75rem; color:var(--text-dim); direction:ltr; text-align:right;">${storeUrl.replace('https://', '')}</span>
+                  <span style="font-size:0.75rem; color:var(--text-dim); direction:ltr; text-align:right;">${storeMainUrl.replace('https://', '')}</span>
                 </div>
               </div>
 
@@ -3746,10 +3823,19 @@ html_content += r'''
               ${n.text}
             </div>
 
+            ${quickCmd ? `
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; background:rgba(0,255,178,0.04); border:1px dashed rgba(0,255,178,0.25); border-radius:8px; padding:6px 12px; font-size:0.82rem;" onclick="event.stopPropagation()">
+              <span style="color:var(--mint); font-weight:700;">🏷️ كود الطلب السريع:</span>
+              <code style="background:rgba(0,0,0,0.4); color:#fff; padding:2px 8px; border-radius:4px; font-family:'JetBrains Mono';">${quickCmd}</code>
+              <button class="btn-glass-secondary" onclick="copyNotifText('${quickCmd}')" style="height:24px; padding:0 8px; font-size:0.75rem; margin-right:auto;">
+                نسخ الكود 📋
+              </button>
+            </div>` : ''}
+
             <div class="full-notif-actions" onclick="event.stopPropagation()">
-              <button class="btn-mint-primary" onclick="openStoreTelegram('${n.store}')" style="height:36px; padding:0 16px; font-size:0.84rem;">
+              <button class="btn-mint-primary" onclick="openStoreFromNotification('${n.store}', '${directUrl}', ${n.id}, event)" style="height:36px; padding:0 16px; font-size:0.84rem;">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                <span>زيارة متجر ${n.store} في تليجرام ↗</span>
+                <span>شراء الصنف مباشرة من البوت ↗</span>
               </button>
 
               <button class="btn-glass-secondary btn-share-notif" onclick="shareNotification(${n.id})" style="height:36px; padding:0 14px; font-size:0.84rem; color:var(--blue);" title="مشاركة الإشعار مع عضو في الفريق">
@@ -3763,19 +3849,49 @@ html_content += r'''
                 <span>مشاركة الإشعار 🔗</span>
               </button>
 
-              <button class="btn-glass-secondary" onclick="filterByStore('${n.store}')" style="height:36px; padding:0 14px; font-size:0.84rem;">
+              <button class="btn-glass-secondary" onclick="openOfferModalByProdName('${(n.product_name || '').replace(/'/g, "\\'")}', '${n.store}')" style="height:36px; padding:0 14px; font-size:0.84rem;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <span>عروض ${n.store} بالرادار</span>
+                <span>تفاصيل الصنف بالرادار 📊</span>
               </button>
 
-              <button class="btn-glass-secondary" onclick="copyNotifText('${n.text.replace(/'/g, "\\'")}')" style="height:36px; padding:0 12px; font-size:0.82rem; margin-right:auto;" title="نسخ نص الإشعار">
+              <button class="btn-glass-secondary" onclick="copyNotifFullDetails(${n.id})" style="height:36px; padding:0 12px; font-size:0.82rem; margin-right:auto;" title="نسخ رابط وتفاصيل الصنف">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                <span>نسخ</span>
+                <span>نسخ الرابط</span>
               </button>
             </div>
           </div>
         `;
       }).join('');
+    }
+
+    function openOfferModalByProdName(prodName, storeName) {
+      let matchingOffer = null;
+      if (prodName && state.allProducts) {
+        const pNorm = normalizeText(prodName);
+        matchingOffer = state.allProducts.find(o => 
+          o.store_name === storeName && normalizeText(o.name).includes(pNorm)
+        ) || state.allProducts.find(o => 
+          normalizeText(o.name).includes(pNorm)
+        );
+      }
+      if (matchingOffer) {
+        openOfferModal(matchingOffer);
+      } else {
+        filterByStore(storeName);
+      }
+    }
+
+    function copyNotifFullDetails(notifId) {
+      const n = STORE_NOTIFICATIONS.find(x => x.id === notifId);
+      if (!n) return;
+      const targetUrl = n.direct_buy_url || n.buy_url || getStoreTelegramUrl(n.store);
+      const textToCopy = `🏬 متجر: ${n.store}\n📦 الصنف: ${n.product_name || n.text}\n💰 السعر: $${n.price || '0.00'}\n🏷️ كود الشراء: ${n.quick_command || ''}\n🔗 رابط الصنف المباشر: ${targetUrl}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(textToCopy);
+        showToast('تم نسخ تفاصيل ورابط الصنف المباشر بنجاح 📋', 'success');
+      } else {
+        showToast('تم نسخ التفاصيل', 'info');
+      }
     }
 
     // ----------------------------------------------------
@@ -3785,25 +3901,26 @@ html_content += r'''
       const notif = STORE_NOTIFICATIONS.find(n => n.id === notifId) || STORE_NOTIFICATIONS[0];
       if (!notif) return;
 
-      const storeUrl = notif.buy_url || getStoreTelegramUrl(notif.store);
+      const directUrl = notif.direct_buy_url || notif.buy_url || getStoreTelegramUrl(notif.store);
       const shareTitle = `تنبيه رادار السوق | متجر ${notif.store}`;
-      const shareText = `⚡ تنبيه فوري من رادار الأسعار:\n🏬 المتجر: ${notif.store}\n📦 التحديث: ${notif.text}\n⏱ الوقت: ${notif.time}\n🔗 رابط المتجر المباشر: ${storeUrl}\n\n🔍 استعراض كامل العروض عبر رادار السوق:\nhttps://store-price-comparator.vercel.app/`;
+      const quickCmdLine = notif.quick_command ? `🏷️ كود الشراء السريع: ${notif.quick_command}\n` : '';
+      const shareText = `⚡ تنبيه فوري من رادار الأسعار:\n🏬 المتجر: ${notif.store}\n📦 الصنف: ${notif.product_name || notif.text}\n💰 السعر: $${notif.price || '0.00'}\n${quickCmdLine}🔗 رابط الشراء المباشر بالبوت:\n${directUrl}\n⏱ الوقت: ${notif.time}\n\n🔍 قارن الأسعار وافحص السوق عبر رادار الأسعار:\nhttps://store-price-comparator.vercel.app/`;
 
       if (navigator.share) {
         navigator.share({
           title: shareTitle,
           text: shareText,
-          url: 'https://store-price-comparator.vercel.app/'
+          url: directUrl
         }).then(() => {
-          showToast('تمت مشاركة الإشعار بنجاح 🚀', 'success');
+          showToast('تمت مشاركة الإشعار ورابط الصنف بنجاح 🚀', 'success');
           playChime();
         }).catch(err => {
           if (err.name !== 'AbortError') {
-            openShareModal(notif, shareText, storeUrl);
+            openShareModal(notif, shareText, directUrl);
           }
         });
       } else {
-        openShareModal(notif, shareText, storeUrl);
+        openShareModal(notif, shareText, directUrl);
       }
     }
 
@@ -3811,12 +3928,12 @@ html_content += r'''
       const modal = document.getElementById('shareModalBackdrop');
       if (!modal) return;
 
-      document.getElementById('shareModalTitle').innerText = `مشاركة إشعار متجر ${notif.store}`;
+      document.getElementById('shareModalTitle').innerText = `مشاركة صنف متجر ${notif.store}`;
       document.getElementById('shareModalPreviewText').innerText = shareText;
 
       const tgBtn = document.getElementById('shareTelegramBtn');
       if (tgBtn) {
-        const tgLink = `https://t.me/share/url?url=${encodeURIComponent('https://store-price-comparator.vercel.app/')}&text=${encodeURIComponent(shareText)}`;
+        const tgLink = `https://t.me/share/url?url=${encodeURIComponent(storeUrl)}&text=${encodeURIComponent(shareText)}`;
         tgBtn.onclick = () => {
           window.open(tgLink, '_blank');
           showToast('جاري الفتح في تيليجرام ↗', 'info');
@@ -3837,7 +3954,7 @@ html_content += r'''
         copyBtn.onclick = () => {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(shareText);
-            showToast('تم نسخ نص وتفاصيل الإشعار بنجاح 📋', 'success');
+            showToast('تم نسخ نص وتفاصيل الإشعار ورابط الصنف 📋', 'success');
             playChime();
           } else {
             showToast('تم نسخ الإشعار', 'info');
@@ -3856,7 +3973,7 @@ html_content += r'''
     function copyNotifText(text) {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text);
-        showToast('تم نسخ نص الإشعار بنجاح 📋', 'success');
+        showToast('تم نسخ كود / نص الإشعار بنجاح 📋', 'success');
       } else {
         showToast('تم نسخ الإشعار', 'info');
       }
@@ -3894,19 +4011,21 @@ html_content += r'''
     function simulateLiveStoreAlert() {
       const stores = (state.stores || []).map(s => s.name);
       const storeName = stores[Math.floor(Math.random() * stores.length)] || 'PA Store';
-      const telegramUrl = getStoreTelegramUrl(storeName);
 
       const itemsPool = [
-        { name: 'Microsoft Office 365 Plus 1 Year', price: '0.44', badge: '💻 Microsoft', cat: 'microsoft' },
-        { name: 'Microsoft 365 Family (5 حسابات / 5TB)', price: '2.49', badge: '🔥 خصم', cat: 'discount' },
-        { name: 'Google Gemini Pro 18M Account', price: '0.35', badge: '✦ AI', cat: 'ai' },
-        { name: 'ChatGPT Plus 1 Month Private', price: '2.62', badge: '🤖 AI', cat: 'ai' },
-        { name: 'Canva Pro 1 Year Subscription', price: '0.30', badge: '🎨 تصميم', cat: 'discount' },
-        { name: 'Windows 11 Pro Genuine Activation Key', price: '1.50', badge: '⚡ سعر', cat: 'microsoft' },
-        { name: 'Netflix 4K Ultra HD 1 Month', price: '0.40', badge: '🎬 ترفيه', cat: 'discount' },
-        { name: 'Admin MS365 12M Full Warranty', price: '9.00', badge: '⭐ موثوق', cat: 'microsoft' }
+        { name: 'Microsoft Office 365 Plus 1 Year', price: '0.44', badge: '💻 Microsoft', cat: 'microsoft', code: 'ms_office_365' },
+        { name: 'Microsoft 365 Family (5 حسابات / 5TB)', price: '2.49', badge: '🔥 خصم', cat: 'discount', code: 'ms_365_family' },
+        { name: 'Google Gemini Pro 18M Account', price: '0.35', badge: '✦ AI', cat: 'ai', code: 'gemini_pro_18m' },
+        { name: 'ChatGPT Plus 1 Month Private', price: '2.62', badge: '🤖 AI', cat: 'ai', code: 'chatgpt_plus' },
+        { name: 'Canva Pro 1 Year Subscription', price: '0.30', badge: '🎨 تصميم', cat: 'discount', code: 'canva_pro_1y' },
+        { name: 'Windows 11 Pro Genuine Activation Key', price: '1.50', badge: '⚡ سعر', cat: 'microsoft', code: 'win11_pro' },
+        { name: 'Netflix 4K Ultra HD 1 Month', price: '0.40', badge: '🎬 ترفيه', cat: 'discount', code: 'netflix_4k' },
+        { name: 'Admin MS365 12M Full Warranty', price: '9.00', badge: '⭐ موثوق', cat: 'microsoft', code: 'admin_ms365' }
       ];
       const selected = itemsPool[Math.floor(Math.random() * itemsPool.length)];
+      const itemCode = selected.code || selected.name.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 16);
+      const directUrl = getItemDirectLink(storeName, itemCode);
+      const quickCmd = '/buy ' + itemCode;
 
       const alertItem = {
         id: Date.now(),
@@ -3915,7 +4034,10 @@ html_content += r'''
         time: 'الآن',
         badge: selected.badge,
         category: selected.cat,
-        buy_url: telegramUrl,
+        buy_url: getStoreTelegramUrl(storeName),
+        direct_buy_url: directUrl,
+        product_code: itemCode,
+        quick_command: quickCmd,
         product_name: selected.name,
         price: selected.price
       };
@@ -3927,17 +4049,17 @@ html_content += r'''
       renderFullNotificationsView();
       updateNotifBadges();
 
-      showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, telegramUrl, alertItem.id);
+      showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, directUrl, alertItem.id);
 
       if ("Notification" in window && Notification.permission === "granted") {
         try {
           const n = new Notification(`رادار السوق | ${storeName}`, {
-            body: alertItem.text,
+            body: `${alertItem.text}\nكود الشراء: ${quickCmd}`,
             icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
           });
           n.onclick = function() {
             window.focus();
-            window.open(telegramUrl, '_blank');
+            window.open(directUrl, '_blank');
           };
         } catch(e) {}
       }
@@ -3962,7 +4084,7 @@ html_content += r'''
       const el = document.createElement('div');
       el.className = 'toast';
       el.style.cursor = 'pointer';
-      el.title = 'اضغط لفتح متجر ' + storeName + ' مباشرة ↗';
+      el.title = 'اضغط لشراء الصنف من متجر ' + storeName + ' مباشرة ↗';
       el.innerHTML = `
         <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
           <span style="flex:1;">${msg}</span>
@@ -3970,12 +4092,12 @@ html_content += r'''
             <button onclick="event.stopPropagation(); shareNotification(${notifId || 1});" style="background:rgba(255,255,255,0.1); border:1px solid var(--panel-border); color:var(--blue); font-size:0.75rem; font-weight:700; padding:3px 8px; border-radius:4px; cursor:pointer;" title="مشاركة الإشعار مع عضو في الفريق">
               مشاركة 🔗
             </button>
-            <span style="background:var(--mint); color:#030508; font-weight:800; font-size:0.75rem; padding:3px 8px; border-radius:4px; white-space:nowrap;">فتح ↗</span>
+            <span style="background:var(--mint); color:#030508; font-weight:800; font-size:0.75rem; padding:3px 8px; border-radius:4px; white-space:nowrap;">شراء الصنف ↗</span>
           </div>
         </div>
       `;
       el.onclick = () => {
-        openStoreFromNotification(storeName, url);
+        openStoreFromNotification(storeName, url, notifId);
         el.remove();
       };
       container.appendChild(el);
