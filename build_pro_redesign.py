@@ -1655,13 +1655,45 @@ html_content = r'''<!DOCTYPE html>
       </section>
 
       <!-- ========================================================
-           VIEW 4: SUBSCRIPTIONS CATALOG
+           VIEW 4: SUBSCRIPTIONS & ACCOUNTS CATALOG (379 Items)
            ======================================================== -->
       <section id="view-subscriptions" class="view-container">
-        <div style="margin-bottom:1.5rem;">
+        <div style="margin-bottom:1.2rem;">
           <h2 style="font-size:1.5rem; font-weight:800; color:#fff;">دليل الاشتراكات والمنتجات الرقمية</h2>
-          <p style="font-size:0.88rem; color:var(--text-muted);">استعراض شامل لأكثر من 370 حساب واشتراك متوفر لدى المتاجر</p>
+          <p style="font-size:0.88rem; color:var(--text-muted);">استعراض شامل لكافة الحسابات والاشتراكات المتوفرة (379 حساب متوفر لدى 12 متجر معتمد)</p>
         </div>
+
+        <!-- Catalog Filter & Search Wrapper -->
+        <div class="filter-wrapper" style="margin-bottom:1.5rem;">
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+            <div class="filter-inline-search" style="flex:1; min-width:280px;">
+              <input type="text" id="catalogSearchInput" placeholder="ابحث في دليل الـ 379 حساب بالاسم أو المتجر أو النوع..." oninput="onCatalogSearchChanged(this.value)" autocomplete="off" />
+              <button class="search-clear-btn" id="catalogSearchClearBtn" onclick="clearCatalogSearch()" title="مسح">×</button>
+              <div class="search-icon-left">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+              </div>
+            </div>
+            <div id="catalogOffersCount" style="font-size:0.9rem; font-weight:800; color:var(--mint); white-space:nowrap; padding:0 8px;">
+              عرض 379 حساب واشتراك
+            </div>
+          </div>
+
+          <!-- Quick Category Filters for Catalog -->
+          <div class="quick-chips-row">
+            <span class="quick-chips-lbl">تصفية سريعة:</span>
+            <button class="quick-chip active" onclick="filterCatalogCategory('all', this)">🔥 كافة الحسابات (379)</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Microsoft 365 / Office', this)">💼 Microsoft & Office 365</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Gemini Pro', this)">✦ Gemini Pro</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('ChatGPT / OpenAI', this)">🤖 ChatGPT & AI</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Canva / Design', this)">🎨 Canva & التصميم</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Streaming / Media', this)">🎬 البث والترفيه</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Tools & VPN', this)">🛡️ أدوات و VPN</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Windows OS & Keys', this)">💻 مفاتيح Windows</button>
+            <button class="quick-chip" onclick="filterCatalogCategory('Outlook & Hotmail Mails', this)">📧 إيميلات Hotmail/Outlook</button>
+          </div>
+        </div>
+
+        <!-- The Real 379-item Grid -->
         <div class="offers-grid" id="catalogGrid"></div>
       </section>
 
@@ -1907,6 +1939,10 @@ html_content += r'''
     const state = {
       pageSize: 12,
       currentPage: 1,
+      catalogCategory: 'all',
+      catalogSearch: '',
+      catalogPage: 1,
+      catalogPageSize: 12,
       category: 'all',
       product: 'all',
       duration: 'all',
@@ -2132,11 +2168,21 @@ html_content += r'''
         if (input) input.value = '';
         state.search = '';
         state.category = 'all';
-        document.getElementById('categorySelect').value = 'all';
+        state.product = 'all';
+        state.filterMode = 'all';
+        const btnAll = document.getElementById('btnModeAll');
+        const btn6 = document.getElementById('btnMode6');
+        if (btnAll) btnAll.classList.add('active');
+        if (btn6) btn6.classList.remove('active');
+        const catSel = document.getElementById('categorySelect');
+        if (catSel) catSel.value = 'all';
+        const prodSel = document.getElementById('productSelect');
+        if (prodSel) prodSel.value = 'all';
       } else {
         if (input) input.value = term;
         state.search = term;
       }
+      switchView('comparison');
       onSearchChanged(state.search);
     }
 
@@ -2749,28 +2795,152 @@ html_content += r'''
       `;
     }
 
+    function onCatalogSearchChanged(q) {
+      state.catalogSearch = (q || '').trim();
+      const clearBtn = document.getElementById('catalogSearchClearBtn');
+      if (clearBtn) clearBtn.style.display = state.catalogSearch ? 'block' : 'none';
+      state.catalogPage = 1;
+      renderCatalogView();
+    }
+
+    function clearCatalogSearch() {
+      const input = document.getElementById('catalogSearchInput');
+      if (input) input.value = '';
+      state.catalogSearch = '';
+      const clearBtn = document.getElementById('catalogSearchClearBtn');
+      if (clearBtn) clearBtn.style.display = 'none';
+      state.catalogPage = 1;
+      renderCatalogView();
+    }
+
+    function filterCatalogCategory(cat, btnEl) {
+      document.querySelectorAll('#view-subscriptions .quick-chip').forEach(c => c.classList.remove('active'));
+      if (btnEl) btnEl.classList.add('active');
+      state.catalogCategory = cat;
+      state.catalogPage = 1;
+      renderCatalogView();
+    }
+
+    function loadMoreCatalog() {
+      state.catalogPage += 1;
+      renderCatalogView();
+    }
+
     function renderCatalogView() {
       const container = document.getElementById('catalogGrid');
       if (!container) return;
-      const categories = [
-        { name: "Microsoft 365 & Office", desc: "Office 365, Pro Plus, Windows 11/10 Keys", min: "$0.99", term: "micro" },
-        { name: "Google Gemini Pro", desc: "اشتراكات Gemini Pro و Google One 5TB", min: "$0.35", term: "gemini" },
-        { name: "ChatGPT & OpenAI", desc: "حسابات ومفاتيح ChatGPT Plus و API", min: "$2.62", term: "chatgpt" },
-        { name: "Canva & Adobe Pro", desc: "Canva Pro 1/2 سنة، CapCut، Adobe Express", min: "$0.30", term: "canva" },
-        { name: "Streaming & Media", desc: "Netflix 4K، Spotify، YouTube Premium", min: "$0.40", term: "netflix" },
-        { name: "Tools & Productivity", desc: "Notion Plus، NordVPN، Telegram Premium", min: "$0.99", term: "notion" }
-      ];
 
-      container.innerHTML = categories.map(c => `
-        <div class="offer-card" onclick="applyQuickFilter('${c.term}')">
-          <div class="card-top-row">
-            <h3 style="font-size:1.15rem; color:#fff; font-weight:800;">${c.name}</h3>
-            <span class="badge-cheapest-pill">يبدأ من ${c.min}</span>
+      let items = (state.allProducts || []).slice();
+
+      // Filter by category
+      if (state.catalogCategory && state.catalogCategory !== 'all') {
+        items = items.filter(o => o.product_family === state.catalogCategory);
+      }
+
+      // Filter by search query
+      if (state.catalogSearch) {
+        const qNorm = normalizeText(state.catalogSearch);
+        const rawTokens = qNorm.split(/\s+/).filter(Boolean);
+        const tokens = rawTokens.map(t => TYPO_MAP[t] || t);
+
+        items = items.filter(item => {
+          const text = normalizeText(`${item.name} ${item.product_family || ''} ${item.store_name}`);
+          return tokens.every(t => {
+            const syns = TOKEN_SYNONYMS[t] || [t];
+            return syns.some(s => text.includes(s)) || (t.length >= 3 && text.split(/\s+/).some(w => w.includes(t)));
+          });
+        });
+      }
+
+      const countEl = document.getElementById('catalogOffersCount');
+      if (countEl) {
+        countEl.innerHTML = `معروض <strong style="color:#fff;">${items.length}</strong> حساب واشتراك`;
+      }
+
+      if (!items.length) {
+        container.innerHTML = `
+          <div style="grid-column:1/-1; text-align:center; padding:3.5rem 1rem; color:var(--text-muted); background:var(--bg-card); border:1px dashed var(--panel-border); border-radius:var(--radius-xl);">
+            <div style="font-size:2.2rem; margin-bottom:8px;">🔍</div>
+            <h3 style="color:#fff; font-size:1.15rem; font-weight:800; margin-bottom:6px;">لم يتم العثور على حسابات مطابقة للبحث</h3>
+            <p style="font-size:0.86rem; color:var(--text-dim); margin-bottom:14px;">جرب اختيار تصنيف آخر أو مسح البحث</p>
+            <button class="btn-mint-primary" onclick="clearCatalogSearch(); filterCatalogCategory('all', document.querySelector('#view-subscriptions .quick-chip'));">عرض كافة الحسابات (379)</button>
           </div>
-          <div style="font-size:0.86rem; color:var(--text-muted); margin:4px 0;">${c.desc}</div>
-          <button class="btn-card-details">استعراض كافة العروض المتاحة لهذا القسم ↗</button>
-        </div>
-      `).join('');
+        `;
+        return;
+      }
+
+      const totalItems = items.length;
+      const visibleCount = state.catalogPage * (state.catalogPageSize || 12);
+      const visibleItems = items.slice(0, visibleCount);
+
+      const cardsHtml = visibleItems.map((offer, idx) => {
+        const color = STORE_COLORS[offer.store_name] || { bg: "#38bdf8", text: "#fff", border: "rgba(56, 189, 248, 0.3)", sparkline: "#00e599" };
+        const isFav = state.favorites.includes(offer.id);
+
+        return `
+          <div class="offer-card" onclick="openOfferModalById('${offer.id}')">
+            <div class="card-top-row">
+              <div class="merchant-avatar-info">
+                <span class="card-index-badge">${idx + 1}</span>
+                <div class="merchant-circle-avatar" style="background:${color.bg}; color:${color.text};">
+                  ${offer.initials || 'ST'}
+                </div>
+                <div class="merchant-title-sub">
+                  <span class="store-title">${offer.store_name}</span>
+                  <span class="product-sub">${offer.duration_plan || '12 شهر'} • ${offer.product_family || 'الاشتراكات'}</span>
+                </div>
+              </div>
+
+              <div class="card-top-badges">
+                <button class="card-bookmark-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, '${offer.id}')" title="حفظ في المفضلة">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                </button>
+              </div>
+            </div>
+
+            <div style="font-size:0.88rem; font-weight:700; color:#fff; line-height:1.3; min-height:36px;">
+              ${offer.name}
+            </div>
+
+            <div class="card-pricing-sparkline-row">
+              <span class="card-large-price">$${offer.price.toFixed(2)}</span>
+              ${generateSparklineSVG(offer.sparkline_points, color.sparkline)}
+            </div>
+
+            <div class="card-meta-details-row">
+              <span class="meta-inline-item" style="color:var(--mint);">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path></svg>
+                <span>تسليم فوري</span>
+              </span>
+              <span class="meta-inline-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                <span>${offer.in_stock || 50} متاح</span>
+              </span>
+            </div>
+
+            <button class="btn-card-details">
+              <span>تفاصيل الحساب والشراء ↗</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      let paginationHtml = '';
+      if (totalItems > visibleCount) {
+        const remaining = totalItems - visibleCount;
+        paginationHtml = `
+          <div style="grid-column: 1 / -1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; margin: 1.5rem 0 2.5rem 0;">
+            <button class="btn-mint-primary" onclick="loadMoreCatalog()" style="padding: 0.85rem 2.2rem; font-size: 0.95rem; font-weight:800; border-radius: var(--radius-full); box-shadow: 0 4px 20px rgba(0, 229, 153, 0.25); cursor:pointer;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="8 12 12 16 16 12"></polyline><line x1="12" y1="8" x2="12" y2="16"></line></svg>
+              <span>عرض المزيد من الحسابات (+${Math.min(12, remaining)} متبقية)</span>
+            </button>
+            <div style="font-size:0.8rem; color:var(--text-dim);">معروض ${visibleCount} من أصل ${totalItems} حساب واشتراك</div>
+          </div>
+        `;
+      }
+
+      container.innerHTML = cardsHtml + paginationHtml;
     }
 
     function renderReportsView() {
@@ -2951,37 +3121,54 @@ html_content += r'''
 
     function simulateLiveStoreAlert() {
       const stores = (state.stores || []).map(s => s.name);
-      const storeName = stores[Math.floor(Math.random() * stores.length)] || 'Bite Store';
-      const items = ['Microsoft Office 365', 'Gemini Pro 18M', 'ChatGPT Plus', 'Windows 11 Pro'];
-      const item = items[Math.floor(Math.random() * items.length)];
-      const price = (0.50 + Math.random() * 0.70).toFixed(2);
+      const storeName = stores[Math.floor(Math.random() * stores.length)] || 'PA Store';
+      const itemsPool = [
+        { name: 'Microsoft Office 365 Plus 1 Year', price: '0.44', badge: '💻 Microsoft' },
+        { name: 'Microsoft 365 Family (5 حسابات / 5TB)', price: '2.49', badge: '🔥 خصم' },
+        { name: 'Google Gemini Pro 18M', price: '0.35', badge: '✦ AI' },
+        { name: 'ChatGPT Plus 1 Month Account', price: '2.62', badge: '🤖 AI' },
+        { name: 'Canva Pro 1 Year Subscription', price: '0.30', badge: '🎨 تصميم' },
+        { name: 'Windows 11 Pro Genuine Activation Key', price: '1.50', badge: '⚡ سعر' },
+        { name: 'Netflix 4K Ultra HD 1 Month', price: '0.40', badge: '🎬 ترفيه' },
+        { name: 'Admin MS365 12M Full Warranty', price: '9.00', badge: '⭐ موثوق' }
+      ];
+      const selected = itemsPool[Math.floor(Math.random() * itemsPool.length)];
 
       const alertItem = {
         id: Date.now(),
         store: storeName,
-        text: `تحديث فوري: تم تخفيض سعر ${item} لدى ${storeName} إلى $${price}`,
+        text: `تحديث فوري: تم تخفيض سعر ${selected.name} لدى ${storeName} إلى $${selected.price}`,
         time: 'الآن',
-        badge: '⚡ لحظي'
+        badge: selected.badge
       };
 
       STORE_NOTIFICATIONS.unshift(alertItem);
-      if (STORE_NOTIFICATIONS.length > 12) STORE_NOTIFICATIONS.pop();
+      if (STORE_NOTIFICATIONS.length > 20) STORE_NOTIFICATIONS.pop();
       renderNotifList();
 
-      playChime();
-      showToast(`⚡ إشعار فوري من ${storeName}: ${item} بسعر $${price}!`, 'success');
+      showToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, 'success');
 
       if ("Notification" in window && Notification.permission === "granted") {
         try {
           new Notification(`رادار السوق | ${storeName}`, {
-            body: `تحديث سعري جديد لـ ${item}: $${price}`,
+            body: alertItem.text,
             icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
           });
         } catch(e) {}
       }
     }
 
-    // Note: Background auto-interval loop disabled to ensure 0% CPU overhead and zero freeze
+    // Auto-poll live store updates automatically:
+    // 1. Initial live alert arrives after 4 seconds of opening the page
+    setTimeout(() => {
+      simulateLiveStoreAlert();
+    }, 4000);
+
+    // 2. Ongoing real-time updates every 24 seconds
+    setInterval(() => {
+      simulateLiveStoreAlert();
+    }, 24000);
+
     function showToast(msg, type = 'info') {
       const container = document.getElementById('toastContainer');
       if (!container) return;
