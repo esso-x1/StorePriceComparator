@@ -77,7 +77,8 @@ SYNONYM_GROUPS = [
     {"duolingo", "دولينجو"},
     {"tradingview", "تريدنج فيو"},
     {"notion", "نوشن"},
-    {"vpn", "nordvpn", "surfshark", "expressvpn", "في بي ان"}
+    {"vpn", "nordvpn", "surfshark", "expressvpn", "في بي ان"},
+    {"microsoft", "micro", "office", "office 365", "m365", "ms365", "windows", "مايكروسوفت", "اوفيس", "أوفيس", "ويندوز", "اوتلوك", "outlook", "hotmail"}
 ]
 
 ARABIC_EXPANSIONS = {
