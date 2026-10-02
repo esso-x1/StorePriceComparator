@@ -108,37 +108,39 @@ html_content = r'''<!DOCTYPE html>
     ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 153, 0.3); }
 
     /* ========================================================
-       TOP HEADER: PROFESSIONAL & BALANCED
+       TOP HEADER: CENTERED BRANDING & MINIMALIST OLED
        ======================================================== */
     .top-header {
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 72px;
-      background: rgba(6, 9, 16, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      height: 68px;
+      background: rgba(6, 9, 16, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--panel-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 1.5rem;
-      gap: 1rem;
+      position: relative;
     }
 
-    .header-left-group {
+    /* Centered Brand in Top Header */
+    .header-center-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
       gap: 12px;
-    }
-
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       text-decoration: none;
-      color: var(--text-main);
-      margin-left: 8px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .header-center-brand:hover .brand-title {
+      color: var(--mint);
     }
     .brand-logo-icon {
       width: 34px;
@@ -148,68 +150,69 @@ html_content = r'''<!DOCTYPE html>
       justify-content: center;
     }
     .brand-logo-icon svg {
-      width: 30px;
-      height: 30px;
-      filter: drop-shadow(0 0 10px rgba(0, 229, 153, 0.45));
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 0 12px rgba(0, 229, 153, 0.5));
+    }
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
     .brand-title {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.5px;
+      line-height: 1.1;
+      transition: color 0.2s ease;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.2px;
     }
 
-    .header-pills-actions {
-      display: flex;
+    /* Sidebar Mobile / Drawer Toggle */
+    .sidebar-mobile-toggle {
+      display: none;
       align-items: center;
       gap: 8px;
-    }
-
-    .header-pill-btn {
       height: 38px;
       padding: 0 14px;
       border-radius: var(--radius-full);
-      background: rgba(14, 20, 34, 0.8);
+      background: rgba(14, 20, 34, 0.85);
       border: 1px solid var(--panel-border);
-      color: var(--text-muted);
+      color: var(--text-main);
       font-size: 0.84rem;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sidebar-mobile-toggle:hover {
+      background: rgba(22, 31, 52, 1);
+      border-color: var(--mint);
+    }
+    @media (max-width: 1024px) {
+      .sidebar-mobile-toggle { display: inline-flex; }
+    }
+
+    /* Header Live Status Badge */
+    .header-status-pill {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      transition: all 0.2s ease;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .header-pill-btn:hover {
-      background: rgba(22, 31, 52, 0.95);
-      color: #fff;
-      border-color: var(--panel-border-bright);
-      transform: translateY(-1px);
-    }
-    
-    .crawler-pill-btn {
-      background: rgba(0, 229, 153, 0.12) !important;
-      border: 1px solid rgba(0, 229, 153, 0.45) !important;
-      color: #fff !important;
-      box-shadow: 0 0 12px rgba(0, 229, 153, 0.2);
-    }
-    .crawler-pill-btn:hover {
-      background: rgba(0, 229, 153, 0.22) !important;
-      border-color: var(--mint) !important;
-      box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
-    }
-
-    .notif-badge-pill {
-      background: var(--red);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 1px 7px;
+      background: rgba(0, 229, 153, 0.08);
+      border: 1px solid rgba(0, 229, 153, 0.25);
+      color: var(--mint);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 12px;
       border-radius: var(--radius-full);
-      box-shadow: 0 0 10px rgba(255, 77, 79, 0.7);
+      user-select: none;
     }
 
     .pulse-dot {
@@ -231,32 +234,21 @@ html_content = r'''<!DOCTYPE html>
       100% { transform: rotate(360deg); }
     }
 
-    .header-right-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .badge-demo {
-      background: rgba(0, 229, 153, 0.1);
-      border: 1px solid rgba(0, 229, 153, 0.3);
-      color: var(--mint);
-      font-size: 0.78rem;
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-    }
-    .page-main-heading {
-      font-size: 1.35rem;
-      font-weight: 800;
+    .notif-badge-pill {
+      background: var(--red);
       color: #fff;
-      letter-spacing: -0.5px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 10px rgba(255, 77, 79, 0.7);
     }
 
     /* Notification Dropdown Panel */
     .notif-dropdown-panel {
       position: fixed;
-      top: 76px;
-      left: 1.5rem;
+      top: 74px;
+      right: calc(var(--sidebar-width) + 16px);
       width: 380px;
       max-width: calc(100vw - 32px);
       background: #0d1424;
@@ -268,6 +260,9 @@ html_content = r'''<!DOCTYPE html>
       flex-direction: column;
       overflow: hidden;
       animation: toastIn 0.2s ease;
+    }
+    @media (max-width: 1024px) {
+      .notif-dropdown-panel { right: 16px; left: 16px; width: auto; }
     }
     .notif-dropdown-panel.active { display: flex; }
     .notif-header {
@@ -306,7 +301,7 @@ html_content = r'''<!DOCTYPE html>
     .notif-item-time { font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
     /* ========================================================
-       MAIN BODY & RIGHT SIDEBAR (RTL)
+       MAIN BODY & RIGHT SIDEBAR COMMAND CENTER (RTL)
        ======================================================== */
     .app-body {
       display: flex;
@@ -318,24 +313,81 @@ html_content = r'''<!DOCTYPE html>
     .app-sidebar {
       width: var(--sidebar-width);
       min-width: var(--sidebar-width);
-      background: rgba(8, 12, 20, 0.95);
+      background: rgba(8, 12, 20, 0.96);
       border-left: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
-      padding: 1.5rem 1rem 2rem 1rem;
+      padding: 1.25rem 0.9rem;
       gap: 6px;
       user-select: none;
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 68px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (max-width: 1024px) {
+      .app-sidebar {
+        position: fixed;
+        top: 68px;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.85);
+        transform: translateX(100%);
+      }
+      .app-sidebar.open {
+        transform: translateX(0);
+      }
+    }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 998;
+    }
+    .sidebar-backdrop.active { display: block; }
+
+    .sidebar-header-row {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 8px 4px;
+      border-bottom: 1px solid var(--panel-border);
+      margin-bottom: 6px;
+    }
+    @media (max-width: 1024px) {
+      .sidebar-header-row { display: flex; }
+    }
+    .sidebar-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .sidebar-close-btn:hover { color: #fff; }
+
+    .sidebar-section-title {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 6px 8px 2px 8px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 0.75rem 1rem;
+      gap: 10px;
+      padding: 0.65rem 0.85rem;
       border-radius: var(--radius-md);
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -351,22 +403,76 @@ html_content = r'''<!DOCTYPE html>
       border: 1px solid rgba(0, 229, 153, 0.25);
     }
     .nav-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    .sidebar-divider {
+      height: 1px;
+      background: var(--panel-border);
+      margin: 8px 4px;
+    }
+
+    .sidebar-actions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-action-btn {
+      width: 100%;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: var(--radius-md);
+      background: rgba(14, 20, 34, 0.85);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .sidebar-action-btn:hover {
+      background: rgba(22, 31, 52, 0.95);
+      color: #fff;
+      border-color: var(--panel-border-bright);
+      transform: translateX(-2px);
+    }
+    .sidebar-action-btn.crawler-btn {
+      background: rgba(0, 229, 153, 0.12) !important;
+      border: 1px solid rgba(0, 229, 153, 0.45) !important;
+      color: #fff !important;
+      box-shadow: 0 0 12px rgba(0, 229, 153, 0.15);
+    }
+    .sidebar-action-btn.crawler-btn:hover {
+      background: rgba(0, 229, 153, 0.22) !important;
+      border-color: var(--mint) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
+    }
+    .sidebar-action-btn.lock-btn:hover {
+      border-color: rgba(255, 77, 79, 0.4);
+      color: var(--red);
+    }
+
     .sidebar-user-block {
       margin-top: auto;
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 0.85rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--panel-border);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 10px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -385,6 +491,7 @@ html_content = r'''<!DOCTYPE html>
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     /* Main Content Area */
@@ -1137,78 +1244,47 @@ html_content = r'''<!DOCTYPE html>
 </head>
 <body>
 
-  <!-- Top Header (Matches Reference Image 1 with Pro Organization) -->
+  <!-- Top Header with Centered Brand -->
   <header class="top-header">
-    <div class="header-left-group">
-      <a href="#" class="brand-section" onclick="switchView('comparison'); return false;">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 3L22 21H2L12 3Z" fill="url(#mintGrad)" />
-            <path d="M12 3L2 21H12V3Z" fill="#00e599" opacity="0.85" />
-            <defs>
-              <linearGradient id="mintGrad" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#00e599" />
-                <stop offset="1" stop-color="#38bdf8" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-        <div class="brand-title">رادار السوق</div>
-      </a>
+    <!-- Right Toggle (For Mobile & Tablets) -->
+    <button class="sidebar-mobile-toggle" onclick="toggleSidebarDrawer()" title="فتح القائمة ولوحة التحكم">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>القائمة والتحكم</span>
+    </button>
 
-      <div class="header-pills-actions">
-        <!-- Instant Notifications Bell Button -->
-        <button class="header-pill-btn notif-pill-btn" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="مركز الإشعارات الفورية">
-          <span class="notif-badge-pill" id="notifCountBadge">3</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span>الإشعارات الفورية</span>
-        </button>
-
-        <!-- Crawler Bot Button -->
-        <button class="header-pill-btn crawler-pill-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لكافة المتاجر الـ 12">
-          <span class="pulse-dot"></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
-            <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
-            <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
-            <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
-          </svg>
-          <span>البوت الزاحف</span>
-        </button>
-
-        <!-- Refresh Prices Button -->
-        <button class="header-pill-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>
-          <span>تحديث الأسعار</span>
-        </button>
-
-        <!-- Alerts Button -->
-        <button class="header-pill-btn" onclick="switchView('alerts')" title="التنبيهات السعرية">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span>تنبيه سعري</span>
-        </button>
-
-        <!-- Stores Button -->
-        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر الـ 12 المعتمدة">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span>المتاجر (12)</span>
-        </button>
+    <!-- Center Brand (Centered Perfectly) -->
+    <div class="header-center-brand" onclick="switchView('comparison')">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L22 21H2L12 3Z" fill="url(#mintGrad)" />
+          <path d="M12 3L2 21H12V3Z" fill="#00e599" opacity="0.85" />
+          <defs>
+            <linearGradient id="mintGrad" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#00e599" />
+              <stop offset="1" stop-color="#38bdf8" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text-block">
+        <span class="brand-title">رادار السوق</span>
+        <span class="brand-subtitle">مقارنة أسعار الاشتراكات والمنتجات الرقمية</span>
       </div>
     </div>
 
-    <div class="header-right-group">
-      <!-- Quick Lock / Logout -->
-      <button class="header-pill-btn" onclick="logoutApp()" title="قفل التطبيق برمز المرور" style="border-color:rgba(255,255,255,0.15); color:var(--text-muted);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        <span>قفل</span>
-      </button>
-      <span class="badge-demo">بيانات حية 24/7</span>
-      <h1 class="page-main-heading">مقارنة أسعار الاشتراكات</h1>
+    <!-- Left Live Indicator -->
+    <div class="header-status-pill">
+      <span class="pulse-dot"></span>
+      <span>بيانات حية 24/7</span>
     </div>
   </header>
+
+  <!-- Mobile Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebarDrawer()"></div>
 
   <!-- Instant Store Notifications Dropdown Panel -->
   <div class="notif-dropdown-panel" id="notifDropdownPanel">
@@ -1238,72 +1314,142 @@ html_content = r'''<!DOCTYPE html>
   <!-- App Body Layout -->
   <div class="app-body">
 
-    <!-- Stationary Right Sidebar Navigation (RTL) -->
-    <aside class="app-sidebar">
-      <div class="nav-item active" data-view="comparison" onclick="switchView('comparison')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="20" x2="18" y2="10"></line>
-            <line x1="12" y1="20" x2="12" y2="4"></line>
-            <line x1="6" y1="20" x2="6" y2="14"></line>
-          </svg>
-        </div>
-        <span>مقارنة الأسعار</span>
+    <!-- Right Sidebar: Navigation & All Control Tools (RTL) -->
+    <aside class="app-sidebar" id="appSidebar">
+      
+      <!-- Mobile Header Row -->
+      <div class="sidebar-header-row">
+        <span class="sidebar-section-title" style="padding:0; margin:0;">لوحة التحكم والتنقل</span>
+        <button class="sidebar-close-btn" onclick="toggleSidebarDrawer()" title="إغلاق القائمة">✕</button>
       </div>
 
-      <div class="nav-item" data-view="merchants" onclick="switchView('merchants')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+      <!-- Section: Navigation -->
+      <div class="sidebar-section-title">الأقسام الرئيسية</div>
+      <nav style="display:flex; flex-direction:column; gap:4px;">
+        <div class="nav-item active" data-view="comparison" onclick="switchView('comparison'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <span>مقارنة الأسعار</span>
         </div>
-        <span>مراقبة التجار (12)</span>
+
+        <div class="nav-item" data-view="merchants" onclick="switchView('merchants'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <span>مراقبة المتاجر (12)</span>
+        </div>
+
+        <div class="nav-item" data-view="alerts" onclick="switchView('alerts'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <span>تنبيهات الأسعار</span>
+        </div>
+
+        <div class="nav-item" data-view="subscriptions" onclick="switchView('subscriptions'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+          </div>
+          <span>دليل المنتجات</span>
+        </div>
+
+        <div class="nav-item" data-view="reports" onclick="switchView('reports'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <span>التقارير</span>
+        </div>
+
+        <div class="nav-item" data-view="settings" onclick="switchView('settings'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <span>الإعدادات والأمان</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Section: أدوات التحكم والمزامنة -->
+      <div class="sidebar-section-title">أدوات التحكم والمزامنة</div>
+
+      <div class="sidebar-actions-stack">
+        <!-- Crawler Bot Button -->
+        <button class="sidebar-action-btn crawler-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لكافة المتاجر الـ 12">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+              <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
+              <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
+              <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
+            </svg>
+            <span style="font-weight:800;">البوت الزاحف</span>
+          </div>
+          <span class="pulse-dot"></span>
+        </button>
+
+        <!-- Refresh Prices Button -->
+        <button class="sidebar-action-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+            </svg>
+            <span>تحديث الأسعار</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-dim);">فوري</span>
+        </button>
+
+        <!-- Notifications Bell Button -->
+        <button class="sidebar-action-btn" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="مركز الإشعارات الفورية">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>الإشعارات الفورية</span>
+          </div>
+          <span class="notif-badge-pill" id="notifCountBadge">4</span>
+        </button>
+
+        <!-- Quick Lock / Logout -->
+        <button class="sidebar-action-btn lock-btn" onclick="logoutApp()" title="قفل التطبيق برمز المرور">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>قفل التطبيق (PIN)</span>
+          </div>
+          <span style="font-size:0.72rem; color:var(--text-dim);">أمان</span>
+        </button>
       </div>
 
-      <div class="nav-item" data-view="alerts" onclick="switchView('alerts')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-        </div>
-        <span>تنبيهات الأسعار</span>
-      </div>
-
-      <div class="nav-item" data-view="subscriptions" onclick="switchView('subscriptions')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          </svg>
-        </div>
-        <span>دليل المنتجات</span>
-      </div>
-
-      <div class="nav-item" data-view="reports" onclick="switchView('reports')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-        </div>
-        <span>التقارير</span>
-      </div>
-
-      <div class="nav-item" data-view="settings" onclick="switchView('settings')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
-        <span>الإعدادات والأمان</span>
-      </div>
-
-      <div class="sidebar-user-block" onclick="switchView('settings')">
+      <!-- User Profile Card -->
+      <div class="sidebar-user-block" onclick="switchView('settings'); closeSidebarOnMobile();">
         <div class="user-pill-avatar" id="sidebarAvatar">AD</div>
-        <span style="font-size:0.82rem; color:#fff; font-weight:700;">المستخدم</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-dim);"><path d="M6 9l6 6 6-6"></path></svg>
+        <div style="display:flex; flex-direction:column; line-height:1.2;">
+          <span style="font-size:0.84rem; color:#fff; font-weight:800;">المستخدم (Admin)</span>
+          <span style="font-size:0.72rem; color:var(--mint);">جلسة نشطة ومؤمنة 🔒</span>
+        </div>
       </div>
     </aside>
 
@@ -1896,19 +2042,60 @@ html_content += r'''
     }
 
     // ----------------------------------------------------
-    // Ultra-Fast & Fuzzy Substring Search Engine
+    // Sidebar Drawer Toggle for Mobile & Compact Screens
     // ----------------------------------------------------
-    const SEARCH_SYNONYMS = {
-      'micro': ['microsoft', 'office', '365', 'windows', 'ms365', 'outlook', 'مايكروسوفت', 'اوفيس', 'أوفيس'],
-      'office': ['microsoft', 'office', '365', 'm365', 'اوفيس', 'أوفيس', 'مايكروسوفت', 'word', 'excel'],
-      '365': ['office', 'microsoft', 'ms365', '365'],
-      'windows': ['windows', 'win11', 'win10', 'ويندوز'],
-      'gpt': ['chatgpt', 'openai', 'gpt4', 'gpt', 'شات'],
-      'chat': ['chatgpt', 'openai', 'شات'],
-      'gemini': ['gemini', 'google', 'جيمني', 'جمناي', 'جوجل'],
-      'canva': ['canva', 'كانفا', 'تصميم'],
+    function toggleSidebarDrawer() {
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar) return;
+      sidebar.classList.toggle('open');
+      if (backdrop) backdrop.classList.toggle('active');
+    }
+
+    function closeSidebarOnMobile() {
+      if (window.innerWidth <= 1024) {
+        const sidebar = document.getElementById('appSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar) sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('active');
+      }
+    }
+
+    // ----------------------------------------------------
+    // Ultra-Fast High-Precision Search Engine (Fuzzy + Typo Correction + Exact Multi-Word Precision)
+    // ----------------------------------------------------
+    const TYPO_MAP = {
+      'microsot': 'microsoft',
+      'micosoft': 'microsoft',
+      'micrsoft': 'microsoft',
+      'mcrosoft': 'microsoft',
+      'microsft': 'microsoft',
+      'ofice': 'office',
+      'offce': 'office',
+      'ofic': 'office',
+      'offic': 'office',
+      'gmini': 'gemini',
+      'gemni': 'gemini',
+      'gimini': 'gemini',
+      'chatgbt': 'chatgpt',
+      'chagpt': 'chatgpt',
+      'canwa': 'canva',
+      'netfix': 'netflix',
+      'netflex': 'netflix',
+      'claude': 'claude',
+      'claud': 'claude'
+    };
+
+    const TOKEN_SYNONYMS = {
+      'microsoft': ['microsoft', 'ms', 'مايكروسوفت', 'micro'],
+      'office': ['office', 'اوفيس', 'أوفيس'],
+      '365': ['365', 'ms365', 'm365'],
+      'windows': ['windows', 'ويندوز', 'win11', 'win10'],
+      'gemini': ['gemini', 'جيمني', 'جمناي', 'جوجل'],
+      'chatgpt': ['chatgpt', 'openai', 'gpt', 'شات'],
+      'canva': ['canva', 'كانفا'],
       'netflix': ['netflix', 'نتفلكس', 'نتفليكس'],
-      'claude': ['claude', 'كلود', 'anthropic']
+      'claude': ['claude', 'كلود']
     };
 
     function normalizeText(str) {
@@ -2009,28 +2196,74 @@ html_content += r'''
         }
       }
 
-      // Search query filter: Smart fuzzy and partial substring matching
+      // Search query filter: High precision multi-token matching & typo forgiveness
       if (state.search) {
         const queryNorm = normalizeText(state.search);
-        const queryTokens = queryNorm.split(/\s+/).filter(Boolean);
+        const rawTokens = queryNorm.split(/\s+/).filter(Boolean);
+        const tokens = rawTokens.map(t => TYPO_MAP[t] || t);
 
-        // Expand synonyms
-        let synonyms = [queryNorm];
-        for (const [key, synList] of Object.entries(SEARCH_SYNONYMS)) {
-          if (queryNorm.includes(key) || synList.some(s => s.includes(queryNorm))) {
-            synonyms.push(...synList);
+        const filtered = [];
+        for (const item of items) {
+          const nameNorm = normalizeText(item.name || '');
+          const familyNorm = normalizeText(item.product_family || '');
+          const storeNorm = normalizeText(item.store_name || '');
+          const combined = `${nameNorm} ${familyNorm} ${storeNorm}`;
+
+          // Precise match: EVERY token must be matched in the item!
+          let allMatched = true;
+          let score = 0;
+
+          // Full exact phrase bonus
+          if (nameNorm.includes(queryNorm)) score += 60;
+          else if (combined.includes(queryNorm)) score += 30;
+
+          for (const t of tokens) {
+            const syns = TOKEN_SYNONYMS[t] || [t];
+            let tokenMatched = false;
+
+            // Direct or synonym match in item name (highest quality)
+            for (const syn of syns) {
+              if (nameNorm.includes(syn)) {
+                tokenMatched = true;
+                score += 30;
+                break;
+              }
+            }
+
+            // Or match in family/store
+            if (!tokenMatched) {
+              for (const syn of syns) {
+                if (combined.includes(syn)) {
+                  tokenMatched = true;
+                  score += 15;
+                  break;
+                }
+              }
+            }
+
+            // Substring match for >= 3 chars
+            if (!tokenMatched && t.length >= 3) {
+              if (combined.split(/\s+/).some(w => w.includes(t))) {
+                tokenMatched = true;
+                score += 10;
+              }
+            }
+
+            if (!tokenMatched) {
+              allMatched = false;
+              break;
+            }
+          }
+
+          if (allMatched) {
+            item._searchScore = score;
+            filtered.push(item);
           }
         }
 
-        items = items.filter(item => {
-          const itemText = normalizeText(`${item.name} ${item.store_name} ${item.product_family || ''} ${item.duration_plan || ''}`);
-          
-          // Match any token or synonym
-          const matchesToken = queryTokens.some(token => itemText.includes(token));
-          const matchesSynonym = synonyms.some(syn => itemText.includes(syn));
-
-          return matchesToken || matchesSynonym;
-        });
+        // Sort by searchScore descending (highest match first)
+        filtered.sort((a, b) => (b._searchScore || 0) - (a._searchScore || 0));
+        items = filtered;
       }
 
       // Sorting

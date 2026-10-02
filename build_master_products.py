@@ -47,8 +47,12 @@ STORE_INITIALS = {
 
 def classify_family(name: str):
     n = name.lower()
-    if any(k in n for k in ['office', 'micro', '365', 'windows', 'word', 'excel', 'outlook', 'hotmail', 'ms365']):
+    if any(k in n for k in ['office', '365', 'ms365', 'word', 'excel', 'powerpoint', 'copilot']):
         return 'Microsoft 365 / Office', 'productivity'
+    elif any(k in n for k in ['windows', 'win11', 'win10']):
+        return 'Windows OS & Keys', 'productivity'
+    elif any(k in n for k in ['outlook', 'hotmail']):
+        return 'Outlook & Hotmail Mails', 'productivity'
     elif any(k in n for k in ['gemini', 'google ai', 'google one']):
         return 'Gemini Pro', 'ai'
     elif any(k in n for k in ['chatgpt', 'gpt', 'openai']):
@@ -153,7 +157,7 @@ microsoft_curated = [
         "store_name": "PA Store",
         "name": "Total 50 Outlook / Hotmail Mail Accounts (Good Quality)",
         "price": 1.00,
-        "product_family": "Microsoft 365 / Office",
+        "product_family": "Outlook & Hotmail Mails",
         "duration_plan": "حسابات جاهزة",
         "in_stock": 500
     },
@@ -169,7 +173,7 @@ microsoft_curated = [
         "store_name": "Digital Asset",
         "name": "Windows 11 Pro / Windows 10 Pro Genuine Retail Activation Key",
         "price": 1.50,
-        "product_family": "Microsoft 365 / Office",
+        "product_family": "Windows OS & Keys",
         "duration_plan": "مفتاح دائم (Lifetime)",
         "in_stock": 100
     },

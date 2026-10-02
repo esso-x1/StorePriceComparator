@@ -80,37 +80,39 @@
     ::-webkit-scrollbar-thumb:hover { background: rgba(0, 229, 153, 0.3); }
 
     /* ========================================================
-       TOP HEADER: PROFESSIONAL & BALANCED
+       TOP HEADER: CENTERED BRANDING & MINIMALIST OLED
        ======================================================== */
     .top-header {
       position: sticky;
       top: 0;
       z-index: 100;
-      height: 72px;
-      background: rgba(6, 9, 16, 0.92);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      height: 68px;
+      background: rgba(6, 9, 16, 0.94);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid var(--panel-border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 1.5rem;
-      gap: 1rem;
+      position: relative;
     }
 
-    .header-left-group {
+    /* Centered Brand in Top Header */
+    .header-center-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       display: flex;
       align-items: center;
       gap: 12px;
-    }
-
-    .brand-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       text-decoration: none;
-      color: var(--text-main);
-      margin-left: 8px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .header-center-brand:hover .brand-title {
+      color: var(--mint);
     }
     .brand-logo-icon {
       width: 34px;
@@ -120,68 +122,69 @@
       justify-content: center;
     }
     .brand-logo-icon svg {
-      width: 30px;
-      height: 30px;
-      filter: drop-shadow(0 0 10px rgba(0, 229, 153, 0.45));
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 0 12px rgba(0, 229, 153, 0.5));
+    }
+    .brand-text-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
     .brand-title {
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       font-weight: 900;
       color: #fff;
       letter-spacing: -0.5px;
+      line-height: 1.1;
+      transition: color 0.2s ease;
+    }
+    .brand-subtitle {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      letter-spacing: 0.2px;
     }
 
-    .header-pills-actions {
-      display: flex;
+    /* Sidebar Mobile / Drawer Toggle */
+    .sidebar-mobile-toggle {
+      display: none;
       align-items: center;
       gap: 8px;
-    }
-
-    .header-pill-btn {
       height: 38px;
       padding: 0 14px;
       border-radius: var(--radius-full);
-      background: rgba(14, 20, 34, 0.8);
+      background: rgba(14, 20, 34, 0.85);
       border: 1px solid var(--panel-border);
-      color: var(--text-muted);
+      color: var(--text-main);
       font-size: 0.84rem;
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sidebar-mobile-toggle:hover {
+      background: rgba(22, 31, 52, 1);
+      border-color: var(--mint);
+    }
+    @media (max-width: 1024px) {
+      .sidebar-mobile-toggle { display: inline-flex; }
+    }
+
+    /* Header Live Status Badge */
+    .header-status-pill {
       display: inline-flex;
       align-items: center;
       gap: 7px;
-      transition: all 0.2s ease;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .header-pill-btn:hover {
-      background: rgba(22, 31, 52, 0.95);
-      color: #fff;
-      border-color: var(--panel-border-bright);
-      transform: translateY(-1px);
-    }
-    
-    .crawler-pill-btn {
-      background: rgba(0, 229, 153, 0.12) !important;
-      border: 1px solid rgba(0, 229, 153, 0.45) !important;
-      color: #fff !important;
-      box-shadow: 0 0 12px rgba(0, 229, 153, 0.2);
-    }
-    .crawler-pill-btn:hover {
-      background: rgba(0, 229, 153, 0.22) !important;
-      border-color: var(--mint) !important;
-      box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
-    }
-
-    .notif-badge-pill {
-      background: var(--red);
-      color: #fff;
-      font-size: 0.72rem;
-      font-weight: 800;
-      padding: 1px 7px;
+      background: rgba(0, 229, 153, 0.08);
+      border: 1px solid rgba(0, 229, 153, 0.25);
+      color: var(--mint);
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 4px 12px;
       border-radius: var(--radius-full);
-      box-shadow: 0 0 10px rgba(255, 77, 79, 0.7);
+      user-select: none;
     }
 
     .pulse-dot {
@@ -203,32 +206,21 @@
       100% { transform: rotate(360deg); }
     }
 
-    .header-right-group {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .badge-demo {
-      background: rgba(0, 229, 153, 0.1);
-      border: 1px solid rgba(0, 229, 153, 0.3);
-      color: var(--mint);
-      font-size: 0.78rem;
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      font-weight: 700;
-    }
-    .page-main-heading {
-      font-size: 1.35rem;
-      font-weight: 800;
+    .notif-badge-pill {
+      background: var(--red);
       color: #fff;
-      letter-spacing: -0.5px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 1px 7px;
+      border-radius: var(--radius-full);
+      box-shadow: 0 0 10px rgba(255, 77, 79, 0.7);
     }
 
     /* Notification Dropdown Panel */
     .notif-dropdown-panel {
       position: fixed;
-      top: 76px;
-      left: 1.5rem;
+      top: 74px;
+      right: calc(var(--sidebar-width) + 16px);
       width: 380px;
       max-width: calc(100vw - 32px);
       background: #0d1424;
@@ -240,6 +232,9 @@
       flex-direction: column;
       overflow: hidden;
       animation: toastIn 0.2s ease;
+    }
+    @media (max-width: 1024px) {
+      .notif-dropdown-panel { right: 16px; left: 16px; width: auto; }
     }
     .notif-dropdown-panel.active { display: flex; }
     .notif-header {
@@ -278,7 +273,7 @@
     .notif-item-time { font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
 
     /* ========================================================
-       MAIN BODY & RIGHT SIDEBAR (RTL)
+       MAIN BODY & RIGHT SIDEBAR COMMAND CENTER (RTL)
        ======================================================== */
     .app-body {
       display: flex;
@@ -290,24 +285,81 @@
     .app-sidebar {
       width: var(--sidebar-width);
       min-width: var(--sidebar-width);
-      background: rgba(8, 12, 20, 0.95);
+      background: rgba(8, 12, 20, 0.96);
       border-left: 1px solid var(--panel-border);
       display: flex;
       flex-direction: column;
-      padding: 1.5rem 1rem 2rem 1rem;
+      padding: 1.25rem 0.9rem;
       gap: 6px;
       user-select: none;
-      min-height: calc(100vh - 72px);
+      min-height: calc(100vh - 68px);
+      transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (max-width: 1024px) {
+      .app-sidebar {
+        position: fixed;
+        top: 68px;
+        right: 0;
+        bottom: 0;
+        z-index: 999;
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.85);
+        transform: translateX(100%);
+      }
+      .app-sidebar.open {
+        transform: translateX(0);
+      }
+    }
+    .sidebar-backdrop {
+      display: none;
+      position: fixed;
+      top: 68px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 998;
+    }
+    .sidebar-backdrop.active { display: block; }
+
+    .sidebar-header-row {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4px 8px 4px;
+      border-bottom: 1px solid var(--panel-border);
+      margin-bottom: 6px;
+    }
+    @media (max-width: 1024px) {
+      .sidebar-header-row { display: flex; }
+    }
+    .sidebar-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-dim);
+      font-size: 1.1rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .sidebar-close-btn:hover { color: #fff; }
+
+    .sidebar-section-title {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 6px 8px 2px 8px;
     }
 
     .nav-item {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 0.75rem 1rem;
+      gap: 10px;
+      padding: 0.65rem 0.85rem;
       border-radius: var(--radius-md);
       color: var(--text-muted);
-      font-size: 0.92rem;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -323,22 +375,76 @@
       border: 1px solid rgba(0, 229, 153, 0.25);
     }
     .nav-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
+    .sidebar-divider {
+      height: 1px;
+      background: var(--panel-border);
+      margin: 8px 4px;
+    }
+
+    .sidebar-actions-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-action-btn {
+      width: 100%;
+      height: 38px;
+      padding: 0 12px;
+      border-radius: var(--radius-md);
+      background: rgba(14, 20, 34, 0.85);
+      border: 1px solid var(--panel-border);
+      color: var(--text-muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+    .sidebar-action-btn:hover {
+      background: rgba(22, 31, 52, 0.95);
+      color: #fff;
+      border-color: var(--panel-border-bright);
+      transform: translateX(-2px);
+    }
+    .sidebar-action-btn.crawler-btn {
+      background: rgba(0, 229, 153, 0.12) !important;
+      border: 1px solid rgba(0, 229, 153, 0.45) !important;
+      color: #fff !important;
+      box-shadow: 0 0 12px rgba(0, 229, 153, 0.15);
+    }
+    .sidebar-action-btn.crawler-btn:hover {
+      background: rgba(0, 229, 153, 0.22) !important;
+      border-color: var(--mint) !important;
+      box-shadow: 0 0 18px rgba(0, 229, 153, 0.35);
+    }
+    .sidebar-action-btn.lock-btn:hover {
+      border-color: rgba(255, 77, 79, 0.4);
+      color: var(--red);
+    }
+
     .sidebar-user-block {
       margin-top: auto;
-      padding: 0.75rem 1rem;
+      padding: 0.65rem 0.85rem;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--panel-border);
       border-radius: var(--radius-md);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 10px;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -357,6 +463,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     /* Main Content Area */
@@ -1109,78 +1216,47 @@
 </head>
 <body>
 
-  <!-- Top Header (Matches Reference Image 1 with Pro Organization) -->
+  <!-- Top Header with Centered Brand -->
   <header class="top-header">
-    <div class="header-left-group">
-      <a href="#" class="brand-section" onclick="switchView('comparison'); return false;">
-        <div class="brand-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 3L22 21H2L12 3Z" fill="url(#mintGrad)" />
-            <path d="M12 3L2 21H12V3Z" fill="#00e599" opacity="0.85" />
-            <defs>
-              <linearGradient id="mintGrad" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#00e599" />
-                <stop offset="1" stop-color="#38bdf8" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-        <div class="brand-title">رادار السوق</div>
-      </a>
+    <!-- Right Toggle (For Mobile & Tablets) -->
+    <button class="sidebar-mobile-toggle" onclick="toggleSidebarDrawer()" title="فتح القائمة ولوحة التحكم">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>القائمة والتحكم</span>
+    </button>
 
-      <div class="header-pills-actions">
-        <!-- Instant Notifications Bell Button -->
-        <button class="header-pill-btn notif-pill-btn" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="مركز الإشعارات الفورية">
-          <span class="notif-badge-pill" id="notifCountBadge">3</span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-          <span>الإشعارات الفورية</span>
-        </button>
-
-        <!-- Crawler Bot Button -->
-        <button class="header-pill-btn crawler-pill-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لكافة المتاجر الـ 12">
-          <span class="pulse-dot"></span>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="2" y="6" width="20" height="12" rx="4"></rect>
-            <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
-            <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
-            <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
-          </svg>
-          <span>البوت الزاحف</span>
-        </button>
-
-        <!-- Refresh Prices Button -->
-        <button class="header-pill-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>
-          <span>تحديث الأسعار</span>
-        </button>
-
-        <!-- Alerts Button -->
-        <button class="header-pill-btn" onclick="switchView('alerts')" title="التنبيهات السعرية">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-          <span>تنبيه سعري</span>
-        </button>
-
-        <!-- Stores Button -->
-        <button class="header-pill-btn" onclick="switchView('merchants')" title="قائمة المتاجر الـ 12 المعتمدة">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-          <span>المتاجر (12)</span>
-        </button>
+    <!-- Center Brand (Centered Perfectly) -->
+    <div class="header-center-brand" onclick="switchView('comparison')">
+      <div class="brand-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M12 3L22 21H2L12 3Z" fill="url(#mintGrad)" />
+          <path d="M12 3L2 21H12V3Z" fill="#00e599" opacity="0.85" />
+          <defs>
+            <linearGradient id="mintGrad" x1="2" y1="3" x2="22" y2="21" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#00e599" />
+              <stop offset="1" stop-color="#38bdf8" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="brand-text-block">
+        <span class="brand-title">رادار السوق</span>
+        <span class="brand-subtitle">مقارنة أسعار الاشتراكات والمنتجات الرقمية</span>
       </div>
     </div>
 
-    <div class="header-right-group">
-      <!-- Quick Lock / Logout -->
-      <button class="header-pill-btn" onclick="logoutApp()" title="قفل التطبيق برمز المرور" style="border-color:rgba(255,255,255,0.15); color:var(--text-muted);">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-        <span>قفل</span>
-      </button>
-      <span class="badge-demo">بيانات حية 24/7</span>
-      <h1 class="page-main-heading">مقارنة أسعار الاشتراكات</h1>
+    <!-- Left Live Indicator -->
+    <div class="header-status-pill">
+      <span class="pulse-dot"></span>
+      <span>بيانات حية 24/7</span>
     </div>
   </header>
+
+  <!-- Mobile Backdrop -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebarDrawer()"></div>
 
   <!-- Instant Store Notifications Dropdown Panel -->
   <div class="notif-dropdown-panel" id="notifDropdownPanel">
@@ -1210,72 +1286,142 @@
   <!-- App Body Layout -->
   <div class="app-body">
 
-    <!-- Stationary Right Sidebar Navigation (RTL) -->
-    <aside class="app-sidebar">
-      <div class="nav-item active" data-view="comparison" onclick="switchView('comparison')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="20" x2="18" y2="10"></line>
-            <line x1="12" y1="20" x2="12" y2="4"></line>
-            <line x1="6" y1="20" x2="6" y2="14"></line>
-          </svg>
-        </div>
-        <span>مقارنة الأسعار</span>
+    <!-- Right Sidebar: Navigation & All Control Tools (RTL) -->
+    <aside class="app-sidebar" id="appSidebar">
+      
+      <!-- Mobile Header Row -->
+      <div class="sidebar-header-row">
+        <span class="sidebar-section-title" style="padding:0; margin:0;">لوحة التحكم والتنقل</span>
+        <button class="sidebar-close-btn" onclick="toggleSidebarDrawer()" title="إغلاق القائمة">✕</button>
       </div>
 
-      <div class="nav-item" data-view="merchants" onclick="switchView('merchants')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
+      <!-- Section: Navigation -->
+      <div class="sidebar-section-title">الأقسام الرئيسية</div>
+      <nav style="display:flex; flex-direction:column; gap:4px;">
+        <div class="nav-item active" data-view="comparison" onclick="switchView('comparison'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+          </div>
+          <span>مقارنة الأسعار</span>
         </div>
-        <span>مراقبة التجار (12)</span>
+
+        <div class="nav-item" data-view="merchants" onclick="switchView('merchants'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+          </div>
+          <span>مراقبة المتاجر (12)</span>
+        </div>
+
+        <div class="nav-item" data-view="alerts" onclick="switchView('alerts'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <span>تنبيهات الأسعار</span>
+        </div>
+
+        <div class="nav-item" data-view="subscriptions" onclick="switchView('subscriptions'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+          </div>
+          <span>دليل المنتجات</span>
+        </div>
+
+        <div class="nav-item" data-view="reports" onclick="switchView('reports'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <span>التقارير</span>
+        </div>
+
+        <div class="nav-item" data-view="settings" onclick="switchView('settings'); closeSidebarOnMobile();">
+          <div class="nav-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </div>
+          <span>الإعدادات والأمان</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-divider"></div>
+
+      <!-- Section: أدوات التحكم والمزامنة -->
+      <div class="sidebar-section-title">أدوات التحكم والمزامنة</div>
+
+      <div class="sidebar-actions-stack">
+        <!-- Crawler Bot Button -->
+        <button class="sidebar-action-btn crawler-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لكافة المتاجر الـ 12">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="6" width="20" height="12" rx="4"></rect>
+              <circle cx="8" cy="12" r="1.5" fill="currentColor"></circle>
+              <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
+              <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
+            </svg>
+            <span style="font-weight:800;">البوت الزاحف</span>
+          </div>
+          <span class="pulse-dot"></span>
+        </button>
+
+        <!-- Refresh Prices Button -->
+        <button class="sidebar-action-btn" onclick="refreshPricesNow()" title="تحديث الأسعار الآن">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path>
+            </svg>
+            <span>تحديث الأسعار</span>
+          </div>
+          <span style="font-size:0.75rem; color:var(--text-dim);">فوري</span>
+        </button>
+
+        <!-- Notifications Bell Button -->
+        <button class="sidebar-action-btn" id="notifBellBtn" onclick="toggleNotifPanel(event)" title="مركز الإشعارات الفورية">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span>الإشعارات الفورية</span>
+          </div>
+          <span class="notif-badge-pill" id="notifCountBadge">4</span>
+        </button>
+
+        <!-- Quick Lock / Logout -->
+        <button class="sidebar-action-btn lock-btn" onclick="logoutApp()" title="قفل التطبيق برمز المرور">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <span>قفل التطبيق (PIN)</span>
+          </div>
+          <span style="font-size:0.72rem; color:var(--text-dim);">أمان</span>
+        </button>
       </div>
 
-      <div class="nav-item" data-view="alerts" onclick="switchView('alerts')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-        </div>
-        <span>تنبيهات الأسعار</span>
-      </div>
-
-      <div class="nav-item" data-view="subscriptions" onclick="switchView('subscriptions')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          </svg>
-        </div>
-        <span>دليل المنتجات</span>
-      </div>
-
-      <div class="nav-item" data-view="reports" onclick="switchView('reports')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-          </svg>
-        </div>
-        <span>التقارير</span>
-      </div>
-
-      <div class="nav-item" data-view="settings" onclick="switchView('settings')">
-        <div class="nav-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-          </svg>
-        </div>
-        <span>الإعدادات والأمان</span>
-      </div>
-
-      <div class="sidebar-user-block" onclick="switchView('settings')">
+      <!-- User Profile Card -->
+      <div class="sidebar-user-block" onclick="switchView('settings'); closeSidebarOnMobile();">
         <div class="user-pill-avatar" id="sidebarAvatar">AD</div>
-        <span style="font-size:0.82rem; color:#fff; font-weight:700;">المستخدم</span>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-dim);"><path d="M6 9l6 6 6-6"></path></svg>
+        <div style="display:flex; flex-direction:column; line-height:1.2;">
+          <span style="font-size:0.84rem; color:#fff; font-weight:800;">المستخدم (Admin)</span>
+          <span style="font-size:0.72rem; color:var(--mint);">جلسة نشطة ومؤمنة 🔒</span>
+        </div>
       </div>
     </aside>
 
@@ -5098,7 +5244,7 @@
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "AM",
     "bot_handle": "@aishopmopsbot",
@@ -6138,11 +6284,11 @@
     "name": "Total 50 Outlook (Good Quality)",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 1,
+    "in_stock": 3,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "PA",
     "bot_handle": "@p_a_store_bot",
@@ -6167,7 +6313,7 @@
     "name": "Figma Pro (Edu) 2 year",
     "price": 3.49,
     "currency": "USDT",
-    "in_stock": 12,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -6225,11 +6371,11 @@
     "name": "Total 50 Hotmail (Good Quality)",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 1,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "PA",
     "bot_handle": "@p_a_store_bot",
@@ -6250,35 +6396,6 @@
   },
   {
     "id": "pas_43",
-    "store_name": "PA Store",
-    "name": "Linkedin Career 3 Months",
-    "price": 0.99,
-    "currency": "USDT",
-    "in_stock": 50,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Tools & VPN",
-    "duration_plan": "3 شهور",
-    "initials": "PA",
-    "bot_handle": "@p_a_store_bot",
-    "buy_url": "https://t.me/p_a_store_bot?start=buy_c81c0838-c9f1-4746-a5e2-1420f9bc9866",
-    "weekly_change_amount": 0.02,
-    "weekly_change_pct": 4.5,
-    "direction": "increase",
-    "sparkline_points": [
-      0.9,
-      0.93,
-      0.96,
-      0.99,
-      1.02,
-      1.05,
-      1.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "pas_44",
     "store_name": "PA Store",
     "name": "Notion Business 3M Link",
     "price": 1.49,
@@ -6307,12 +6424,12 @@
     "is_cheapest": false
   },
   {
-    "id": "pas_45",
+    "id": "pas_44",
     "store_name": "PA Store",
     "name": "Google Ai Pro 18 Months",
     "price": 0.79,
     "currency": "USDT",
-    "in_stock": 14,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -6336,12 +6453,12 @@
     "is_cheapest": false
   },
   {
-    "id": "pas_46",
+    "id": "pas_45",
     "store_name": "PA Store",
     "name": "Canva 500 User Panel",
     "price": 3.49,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 9,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -6365,12 +6482,41 @@
     "is_cheapest": false
   },
   {
+    "id": "pas_46",
+    "store_name": "PA Store",
+    "name": "Linkedin Career 3 Months",
+    "price": 0.99,
+    "currency": "USDT",
+    "in_stock": 1,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Tools & VPN",
+    "duration_plan": "3 شهور",
+    "initials": "PA",
+    "bot_handle": "@p_a_store_bot",
+    "buy_url": "https://t.me/p_a_store_bot?start=buy_c81c0838-c9f1-4746-a5e2-1420f9bc9866",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.9,
+      0.93,
+      0.96,
+      0.99,
+      1.02,
+      1.05,
+      1.08
+    ],
+    "is_cheapest": false
+  },
+  {
     "id": "pas_47",
     "store_name": "PA Store",
     "name": "Canva Pro 1 Year Full Warranty",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 19,
+    "in_stock": 4,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -6399,7 +6545,7 @@
     "name": "Railway Hobby 12m",
     "price": 8.8,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 98,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6428,7 +6574,7 @@
     "name": "Framer Pro 12m",
     "price": 9.99,
     "currency": "USDT",
-    "in_stock": 124,
+    "in_stock": 116,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6457,7 +6603,7 @@
     "name": "Gamma Pro 12m",
     "price": 25.0,
     "currency": "USDT",
-    "in_stock": 30,
+    "in_stock": 17,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6512,10 +6658,39 @@
   {
     "id": "pas_52",
     "store_name": "PA Store",
+    "name": "Factory 12m",
+    "price": 22.0,
+    "currency": "USDT",
+    "in_stock": 50,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "PA",
+    "bot_handle": "@p_a_store_bot",
+    "buy_url": "https://t.me/p_a_store_bot?start=buy_e1048cd1-765d-4195-bbc2-b1ee18491ba4",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      20.02,
+      20.68,
+      21.34,
+      22.0,
+      22.66,
+      23.32,
+      23.98
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "pas_53",
+    "store_name": "PA Store",
     "name": "N8N Starter 12m",
     "price": 13.2,
     "currency": "USDT",
-    "in_stock": 52,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6539,12 +6714,12 @@
     "is_cheapest": false
   },
   {
-    "id": "pas_53",
+    "id": "pas_54",
     "store_name": "PA Store",
     "name": "Duolingo Super 12 Months",
     "price": 0.99,
     "currency": "USDT",
-    "in_stock": 14,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -6564,35 +6739,6 @@
       1.02,
       1.05,
       1.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "pas_54",
-    "store_name": "PA Store",
-    "name": "Factory 12m",
-    "price": 22.0,
-    "currency": "USDT",
-    "in_stock": 6,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "PA",
-    "bot_handle": "@p_a_store_bot",
-    "buy_url": "https://t.me/p_a_store_bot?start=buy_e1048cd1-765d-4195-bbc2-b1ee18491ba4",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      20.02,
-      20.68,
-      21.34,
-      22.0,
-      22.66,
-      23.32,
-      23.98
     ],
     "is_cheapest": false
   },
@@ -6744,39 +6890,10 @@
   {
     "id": "pas_60",
     "store_name": "PA Store",
-    "name": "Replit Core 12m",
-    "price": 30.99,
-    "currency": "USDT",
-    "in_stock": 11,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "PA",
-    "bot_handle": "@p_a_store_bot",
-    "buy_url": "https://t.me/p_a_store_bot?start=buy_7b73d8af-fcc3-4da4-9df8-35ce2facbac3",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      28.2,
-      29.13,
-      30.06,
-      30.99,
-      31.92,
-      32.85,
-      33.78
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "pas_61",
-    "store_name": "PA Store",
     "name": "Supercut Pro 10 Seat 12m",
     "price": 5.0,
     "currency": "USDT",
-    "in_stock": 51,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6800,12 +6917,12 @@
     "is_cheapest": false
   },
   {
-    "id": "pas_62",
+    "id": "pas_61",
     "store_name": "PA Store",
-    "name": "Runway Pro 12m",
-    "price": 30.0,
+    "name": "Replit Core 12m",
+    "price": 30.99,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 9,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6813,28 +6930,28 @@
     "duration_plan": "12 شهر (سنة)",
     "initials": "PA",
     "bot_handle": "@p_a_store_bot",
-    "buy_url": "https://t.me/p_a_store_bot?start=buy_56aaf343-805b-48ed-98a6-d7c00a02f309",
+    "buy_url": "https://t.me/p_a_store_bot?start=buy_7b73d8af-fcc3-4da4-9df8-35ce2facbac3",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      27.3,
       28.2,
-      29.1,
-      30.0,
-      30.9,
-      31.8,
-      32.7
+      29.13,
+      30.06,
+      30.99,
+      31.92,
+      32.85,
+      33.78
     ],
     "is_cheapest": false
   },
   {
-    "id": "pas_63",
+    "id": "pas_62",
     "store_name": "PA Store",
     "name": "Warp Build 12m",
     "price": 9.99,
     "currency": "USDT",
-    "in_stock": 27,
+    "in_stock": 26,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6854,6 +6971,35 @@
       10.29,
       10.59,
       10.89
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "pas_63",
+    "store_name": "PA Store",
+    "name": "Runway Pro 12m",
+    "price": 33.0,
+    "currency": "USDT",
+    "in_stock": 50,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "PA",
+    "bot_handle": "@p_a_store_bot",
+    "buy_url": "https://t.me/p_a_store_bot?start=buy_56aaf343-805b-48ed-98a6-d7c00a02f309",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      30.03,
+      31.02,
+      32.01,
+      33.0,
+      33.99,
+      34.98,
+      35.97
     ],
     "is_cheapest": false
   },
@@ -6890,9 +7036,9 @@
     "id": "pas_65",
     "store_name": "PA Store",
     "name": "Wispr Flow Pro 12m",
-    "price": 10.0,
+    "price": 13.2,
     "currency": "USDT",
-    "in_stock": 23,
+    "in_stock": 28,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -6905,13 +7051,13 @@
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      9.1,
-      9.4,
-      9.7,
-      10.0,
-      10.3,
-      10.6,
-      10.9
+      12.01,
+      12.41,
+      12.8,
+      13.2,
+      13.6,
+      13.99,
+      14.39
     ],
     "is_cheapest": false
   },
@@ -6950,7 +7096,7 @@
     "name": "Lovable Lite 12 Month Account",
     "price": 6.49,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -7064,9 +7210,9 @@
     "id": "insi_71",
     "store_name": "InsightX Pro",
     "name": "Gemini Pro 18 Months",
-    "price": 0.9,
+    "price": 0.7,
     "currency": "USDT",
-    "in_stock": 238,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -7079,23 +7225,23 @@
     "weekly_change_pct": 4.5,
     "direction": "increase",
     "sparkline_points": [
-      0.82,
-      0.85,
-      0.87,
-      0.9,
-      0.93,
-      0.95,
-      0.98
+      0.64,
+      0.66,
+      0.68,
+      0.7,
+      0.72,
+      0.74,
+      0.76
     ],
     "is_cheapest": false
   },
   {
     "id": "insi_72",
     "store_name": "InsightX Pro",
-    "name": "Higgsflied Pro 1 Year (FW)",
-    "price": 120.0,
+    "name": "Manus Pro 1 Year (FW)",
+    "price": 50.0,
     "currency": "USDT",
-    "in_stock": 1,
+    "in_stock": 6,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -7103,835 +7249,81 @@
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_81",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_87",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      109.2,
-      112.8,
-      116.4,
-      120.0,
-      123.6,
-      127.2,
-      130.8
+      45.5,
+      47.0,
+      48.5,
+      50.0,
+      51.5,
+      53.0,
+      54.5
     ],
     "is_cheapest": false
   },
   {
     "id": "insi_73",
     "store_name": "InsightX Pro",
-    "name": "Super Duolingo 1 Year",
-    "price": 1.0,
+    "name": "Lovable Pro 1 Year (FW)",
+    "price": 45.0,
     "currency": "USDT",
-    "in_stock": 137,
+    "in_stock": 2,
     "updated_hours": 2,
-    "category": "streaming",
-    "category_id": "streaming",
-    "product_family": "Streaming / Media",
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_75",
-    "weekly_change_amount": 0.02,
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_88",
+    "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
-    "direction": "increase",
+    "direction": "decrease",
     "sparkline_points": [
-      0.91,
-      0.94,
-      0.97,
-      1.0,
-      1.03,
-      1.06,
-      1.09
+      40.95,
+      42.3,
+      43.65,
+      45.0,
+      46.35,
+      47.7,
+      49.05
     ],
     "is_cheapest": false
   },
   {
     "id": "insi_74",
     "store_name": "InsightX Pro",
-    "name": "Adobe Express 1 Year",
-    "price": 0.8,
+    "name": "Runway Pro 1 Year (FW)",
+    "price": 45.0,
     "currency": "USDT",
-    "in_stock": 22,
+    "in_stock": 8,
     "updated_hours": 2,
-    "category": "design",
-    "category_id": "design",
-    "product_family": "Canva / Design",
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_78",
-    "weekly_change_amount": 0.02,
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_99",
+    "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
-    "direction": "increase",
+    "direction": "decrease",
     "sparkline_points": [
-      0.73,
-      0.75,
-      0.78,
-      0.8,
-      0.82,
-      0.85,
-      0.87
+      40.95,
+      42.3,
+      43.65,
+      45.0,
+      46.35,
+      47.7,
+      49.05
     ],
     "is_cheapest": false
   },
   {
     "id": "insi_75",
-    "store_name": "InsightX Pro",
-    "name": "Manus Pro 1 Year",
-    "price": 30.0,
-    "currency": "USDT",
-    "in_stock": 10,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_1",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      27.3,
-      28.2,
-      29.1,
-      30.0,
-      30.9,
-      31.8,
-      32.7
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_76",
-    "store_name": "InsightX Pro",
-    "name": "Bolt Pro 1 Year",
-    "price": 15.0,
-    "currency": "USDT",
-    "in_stock": 1,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_60",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      13.65,
-      14.1,
-      14.55,
-      15.0,
-      15.45,
-      15.9,
-      16.35
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_77",
-    "store_name": "InsightX Pro",
-    "name": "Resend Pro 1 Year",
-    "price": 6.0,
-    "currency": "USDT",
-    "in_stock": 999999,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_65",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      5.46,
-      5.64,
-      5.82,
-      6.0,
-      6.18,
-      6.36,
-      6.54
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_78",
-    "store_name": "InsightX Pro",
-    "name": "Railway Hobby 1 Year",
-    "price": 12.0,
-    "currency": "USDT",
-    "in_stock": 30,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_7",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      10.92,
-      11.28,
-      11.64,
-      12.0,
-      12.36,
-      12.72,
-      13.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_79",
-    "store_name": "InsightX Pro",
-    "name": "Runway Pro 1 Year",
-    "price": 25.0,
-    "currency": "USDT",
-    "in_stock": 1,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_62",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      22.75,
-      23.5,
-      24.25,
-      25.0,
-      25.75,
-      26.5,
-      27.25
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_80",
-    "store_name": "InsightX Pro",
-    "name": "N8N Starter 1 Year",
-    "price": 12.0,
-    "currency": "USDT",
-    "in_stock": 34,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_3",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      10.92,
-      11.28,
-      11.64,
-      12.0,
-      12.36,
-      12.72,
-      13.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_81",
-    "store_name": "InsightX Pro",
-    "name": "Framer Pro 1 Year",
-    "price": 12.0,
-    "currency": "USDT",
-    "in_stock": 41,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_4",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      10.92,
-      11.28,
-      11.64,
-      12.0,
-      12.36,
-      12.72,
-      13.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_82",
-    "store_name": "InsightX Pro",
-    "name": "Warp Build 1 Year",
-    "price": 8.0,
-    "currency": "USDT",
-    "in_stock": 16,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_9",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.28,
-      7.52,
-      7.76,
-      8.0,
-      8.24,
-      8.48,
-      8.72
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_83",
-    "store_name": "InsightX Pro",
-    "name": "Granola Business 1 Year",
-    "price": 5.0,
-    "currency": "USDT",
-    "in_stock": 32,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_10",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      4.55,
-      4.7,
-      4.85,
-      5.0,
-      5.15,
-      5.3,
-      5.45
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_84",
-    "store_name": "InsightX Pro",
-    "name": "Gamma Pro 1 Year",
-    "price": 25.0,
-    "currency": "USDT",
-    "in_stock": 3,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_11",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      22.75,
-      23.5,
-      24.25,
-      25.0,
-      25.75,
-      26.5,
-      27.25
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_85",
-    "store_name": "InsightX Pro",
-    "name": "Notion Business 1 Year",
-    "price": 10.0,
-    "currency": "USDT",
-    "in_stock": 9,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Tools & VPN",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_13",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      9.1,
-      9.4,
-      9.7,
-      10.0,
-      10.3,
-      10.6,
-      10.9
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_86",
-    "store_name": "InsightX Pro",
-    "name": "Notion business 3 Months",
-    "price": 1.5,
-    "currency": "USDT",
-    "in_stock": 24,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Tools & VPN",
-    "duration_plan": "3 شهور",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_16",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      1.36,
-      1.41,
-      1.46,
-      1.5,
-      1.54,
-      1.59,
-      1.64
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_87",
-    "store_name": "InsightX Pro",
-    "name": "Gumloop Pro 1 Year",
-    "price": 12.0,
-    "currency": "USDT",
-    "in_stock": 4,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_38",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      10.92,
-      11.28,
-      11.64,
-      12.0,
-      12.36,
-      12.72,
-      13.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_88",
-    "store_name": "InsightX Pro",
-    "name": "Intercom Advance 1 Year",
-    "price": 15.0,
-    "currency": "USDT",
-    "in_stock": 15,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_39",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      13.65,
-      14.1,
-      14.55,
-      15.0,
-      15.45,
-      15.9,
-      16.35
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_89",
-    "store_name": "InsightX Pro",
-    "name": "Magic Pattern Starter 1 Year",
-    "price": 6.0,
-    "currency": "USDT",
-    "in_stock": 44,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_41",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      5.46,
-      5.64,
-      5.82,
-      6.0,
-      6.18,
-      6.36,
-      6.54
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_90",
-    "store_name": "InsightX Pro",
-    "name": "Wispr Flow Pro 1 Year",
-    "price": 15.0,
-    "currency": "USDT",
-    "in_stock": 27,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_42",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      13.65,
-      14.1,
-      14.55,
-      15.0,
-      15.45,
-      15.9,
-      16.35
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_91",
-    "store_name": "InsightX Pro",
-    "name": "Mobbin Team (10 seats) 1 Year",
-    "price": 8.0,
-    "currency": "USDT",
-    "in_stock": 27,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_47",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.28,
-      7.52,
-      7.76,
-      8.0,
-      8.24,
-      8.48,
-      8.72
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_92",
-    "store_name": "InsightX Pro",
-    "name": "PostHog Scale 1 Year",
-    "price": 5.0,
-    "currency": "USDT",
-    "in_stock": 37,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_49",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      4.55,
-      4.7,
-      4.85,
-      5.0,
-      5.15,
-      5.3,
-      5.45
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_93",
-    "store_name": "InsightX Pro",
-    "name": "Linear Buisness 1 Year",
-    "price": 8.0,
-    "currency": "USDT",
-    "in_stock": 999999,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_50",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.28,
-      7.52,
-      7.76,
-      8.0,
-      8.24,
-      8.48,
-      8.72
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_94",
-    "store_name": "InsightX Pro",
-    "name": "Descript Creator 1 Year",
-    "price": 8.0,
-    "currency": "USDT",
-    "in_stock": 7,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_55",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.28,
-      7.52,
-      7.76,
-      8.0,
-      8.24,
-      8.48,
-      8.72
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_95",
-    "store_name": "InsightX Pro",
-    "name": "Brain.fm 1 Year",
-    "price": 5.0,
-    "currency": "USDT",
-    "in_stock": 999999,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_66",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      4.55,
-      4.7,
-      4.85,
-      5.0,
-      5.15,
-      5.3,
-      5.45
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_96",
-    "store_name": "InsightX Pro",
-    "name": "Capcut Pro 6M",
-    "price": 9.0,
-    "currency": "USDT",
-    "in_stock": 16,
-    "updated_hours": 2,
-    "category": "design",
-    "category_id": "design",
-    "product_family": "Canva / Design",
-    "duration_plan": "6 شهور",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_68",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      8.19,
-      8.46,
-      8.73,
-      9.0,
-      9.27,
-      9.54,
-      9.81
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_97",
-    "store_name": "InsightX Pro",
-    "name": "Pangram Professional 1 Year",
-    "price": 10.0,
-    "currency": "USDT",
-    "in_stock": 31,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_70",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      9.1,
-      9.4,
-      9.7,
-      10.0,
-      10.3,
-      10.6,
-      10.9
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_98",
-    "store_name": "InsightX Pro",
-    "name": "Customer.io Essential 1 Year",
-    "price": 10.0,
-    "currency": "USDT",
-    "in_stock": 17,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_71",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      9.1,
-      9.4,
-      9.7,
-      10.0,
-      10.3,
-      10.6,
-      10.9
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_99",
-    "store_name": "InsightX Pro",
-    "name": "Jam Team 10 Seats 1 Year",
-    "price": 8.0,
-    "currency": "USDT",
-    "in_stock": 14,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_74",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.28,
-      7.52,
-      7.76,
-      8.0,
-      8.24,
-      8.48,
-      8.72
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_100",
-    "store_name": "InsightX Pro",
-    "name": "Airtable Team Plan 12 Months",
-    "price": 5.0,
-    "currency": "USDT",
-    "in_stock": 1,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_76",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      4.55,
-      4.7,
-      4.85,
-      5.0,
-      5.15,
-      5.3,
-      5.45
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_101",
     "store_name": "InsightX Pro",
     "name": "Factory Pro 1 Year (FW)",
     "price": 30.0,
@@ -7960,10 +7352,10 @@
     "is_cheapest": false
   },
   {
-    "id": "insi_102",
+    "id": "insi_76",
     "store_name": "InsightX Pro",
-    "name": "Elevanlabs Creator 1 Year (FW)",
-    "price": 50.0,
+    "name": "Cursor Pro 1 Year (FW)",
+    "price": 100.0,
     "currency": "USDT",
     "in_stock": 2,
     "updated_hours": 2,
@@ -7973,28 +7365,86 @@
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_86",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_82",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      45.5,
-      47.0,
-      48.5,
-      50.0,
-      51.5,
-      53.0,
-      54.5
+      91.0,
+      94.0,
+      97.0,
+      100.0,
+      103.0,
+      106.0,
+      109.0
     ],
     "is_cheapest": false
   },
   {
-    "id": "insi_103",
+    "id": "insi_77",
     "store_name": "InsightX Pro",
-    "name": "Manus Pro 1 Year (FW)",
-    "price": 50.0,
+    "name": "Super Duolingo 1 Year",
+    "price": 0.5,
     "currency": "USDT",
-    "in_stock": 7,
+    "in_stock": 235,
+    "updated_hours": 2,
+    "category": "streaming",
+    "category_id": "streaming",
+    "product_family": "Streaming / Media",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_75",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.46,
+      0.47,
+      0.48,
+      0.5,
+      0.52,
+      0.53,
+      0.55
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_78",
+    "store_name": "InsightX Pro",
+    "name": "Adobe Express 1 Year",
+    "price": 0.8,
+    "currency": "USDT",
+    "in_stock": 16,
+    "updated_hours": 2,
+    "category": "design",
+    "category_id": "design",
+    "product_family": "Canva / Design",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_78",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.73,
+      0.75,
+      0.78,
+      0.8,
+      0.82,
+      0.85,
+      0.87
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_79",
+    "store_name": "InsightX Pro",
+    "name": "Manus Pro 1 Year",
+    "price": 30.0,
+    "currency": "USDT",
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8002,26 +7452,55 @@
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_87",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_1",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      45.5,
-      47.0,
-      48.5,
-      50.0,
-      51.5,
-      53.0,
-      54.5
+      27.3,
+      28.2,
+      29.1,
+      30.0,
+      30.9,
+      31.8,
+      32.7
     ],
     "is_cheapest": false
   },
   {
-    "id": "insi_104",
+    "id": "insi_80",
     "store_name": "InsightX Pro",
-    "name": "Lovable Pro 1 Year (FW)",
-    "price": 45.0,
+    "name": "Resend Pro 1 Year",
+    "price": 6.0,
+    "currency": "USDT",
+    "in_stock": 999999,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_65",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      5.46,
+      5.64,
+      5.82,
+      6.0,
+      6.18,
+      6.36,
+      6.54
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_81",
+    "store_name": "InsightX Pro",
+    "name": "Elevanlabs Creator 1 Year (NW)",
+    "price": 32.0,
     "currency": "USDT",
     "in_stock": 3,
     "updated_hours": 2,
@@ -8031,18 +7510,685 @@
     "duration_plan": "12 شهر (سنة)",
     "initials": "IN",
     "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_88",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_45",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      40.95,
-      42.3,
-      43.65,
-      45.0,
-      46.35,
-      47.7,
-      49.05
+      29.12,
+      30.08,
+      31.04,
+      32.0,
+      32.96,
+      33.92,
+      34.88
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_82",
+    "store_name": "InsightX Pro",
+    "name": "Railway Hobby 1 Year",
+    "price": 12.0,
+    "currency": "USDT",
+    "in_stock": 28,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_7",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      10.92,
+      11.28,
+      11.64,
+      12.0,
+      12.36,
+      12.72,
+      13.08
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_83",
+    "store_name": "InsightX Pro",
+    "name": "N8N Starter 1 Year",
+    "price": 12.0,
+    "currency": "USDT",
+    "in_stock": 34,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_3",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      10.92,
+      11.28,
+      11.64,
+      12.0,
+      12.36,
+      12.72,
+      13.08
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_84",
+    "store_name": "InsightX Pro",
+    "name": "Framer Pro 1 Year",
+    "price": 12.0,
+    "currency": "USDT",
+    "in_stock": 41,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_4",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      10.92,
+      11.28,
+      11.64,
+      12.0,
+      12.36,
+      12.72,
+      13.08
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_85",
+    "store_name": "InsightX Pro",
+    "name": "Warp Build 1 Year",
+    "price": 8.0,
+    "currency": "USDT",
+    "in_stock": 15,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_9",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      7.28,
+      7.52,
+      7.76,
+      8.0,
+      8.24,
+      8.48,
+      8.72
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_86",
+    "store_name": "InsightX Pro",
+    "name": "Granola Business 1 Year",
+    "price": 5.0,
+    "currency": "USDT",
+    "in_stock": 32,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_10",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      4.55,
+      4.7,
+      4.85,
+      5.0,
+      5.15,
+      5.3,
+      5.45
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_87",
+    "store_name": "InsightX Pro",
+    "name": "Notion Business 1 Year",
+    "price": 10.0,
+    "currency": "USDT",
+    "in_stock": 8,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Tools & VPN",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_13",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      9.1,
+      9.4,
+      9.7,
+      10.0,
+      10.3,
+      10.6,
+      10.9
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_88",
+    "store_name": "InsightX Pro",
+    "name": "Notion business 3 Months",
+    "price": 1.5,
+    "currency": "USDT",
+    "in_stock": 113,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Tools & VPN",
+    "duration_plan": "3 شهور",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_16",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      1.36,
+      1.41,
+      1.46,
+      1.5,
+      1.54,
+      1.59,
+      1.64
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_89",
+    "store_name": "InsightX Pro",
+    "name": "Capcut Pro 1 Month",
+    "price": 1.6,
+    "currency": "USDT",
+    "in_stock": 4,
+    "updated_hours": 2,
+    "category": "design",
+    "category_id": "design",
+    "product_family": "Canva / Design",
+    "duration_plan": "1 شهر",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_31",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      1.46,
+      1.5,
+      1.55,
+      1.6,
+      1.65,
+      1.7,
+      1.74
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_90",
+    "store_name": "InsightX Pro",
+    "name": "Nord Vpn 3 Months",
+    "price": 2.5,
+    "currency": "USDT",
+    "in_stock": 26,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Tools & VPN",
+    "duration_plan": "3 شهور",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_36",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      2.27,
+      2.35,
+      2.42,
+      2.5,
+      2.58,
+      2.65,
+      2.73
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_91",
+    "store_name": "InsightX Pro",
+    "name": "Gumloop Pro 1 Year",
+    "price": 12.0,
+    "currency": "USDT",
+    "in_stock": 3,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_38",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      10.92,
+      11.28,
+      11.64,
+      12.0,
+      12.36,
+      12.72,
+      13.08
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_92",
+    "store_name": "InsightX Pro",
+    "name": "Intercom Advance 1 Year",
+    "price": 15.0,
+    "currency": "USDT",
+    "in_stock": 14,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_39",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      13.65,
+      14.1,
+      14.55,
+      15.0,
+      15.45,
+      15.9,
+      16.35
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_93",
+    "store_name": "InsightX Pro",
+    "name": "Magic Pattern Starter 1 Year",
+    "price": 6.0,
+    "currency": "USDT",
+    "in_stock": 42,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_41",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      5.46,
+      5.64,
+      5.82,
+      6.0,
+      6.18,
+      6.36,
+      6.54
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_94",
+    "store_name": "InsightX Pro",
+    "name": "Wispr Flow Pro 1 Year",
+    "price": 15.0,
+    "currency": "USDT",
+    "in_stock": 25,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_42",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      13.65,
+      14.1,
+      14.55,
+      15.0,
+      15.45,
+      15.9,
+      16.35
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_95",
+    "store_name": "InsightX Pro",
+    "name": "Mobbin Team (10 seats) 1 Year",
+    "price": 8.0,
+    "currency": "USDT",
+    "in_stock": 25,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_47",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      7.28,
+      7.52,
+      7.76,
+      8.0,
+      8.24,
+      8.48,
+      8.72
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_96",
+    "store_name": "InsightX Pro",
+    "name": "PostHog Scale 1 Year",
+    "price": 5.0,
+    "currency": "USDT",
+    "in_stock": 36,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_49",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      4.55,
+      4.7,
+      4.85,
+      5.0,
+      5.15,
+      5.3,
+      5.45
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_97",
+    "store_name": "InsightX Pro",
+    "name": "Linear Buisness 1 Year",
+    "price": 8.0,
+    "currency": "USDT",
+    "in_stock": 999999,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_50",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      7.28,
+      7.52,
+      7.76,
+      8.0,
+      8.24,
+      8.48,
+      8.72
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_98",
+    "store_name": "InsightX Pro",
+    "name": "Descript Creator 1 Year",
+    "price": 8.0,
+    "currency": "USDT",
+    "in_stock": 7,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_55",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      7.28,
+      7.52,
+      7.76,
+      8.0,
+      8.24,
+      8.48,
+      8.72
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_99",
+    "store_name": "InsightX Pro",
+    "name": "Brain.fm 1 Year",
+    "price": 5.0,
+    "currency": "USDT",
+    "in_stock": 999999,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_66",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      4.55,
+      4.7,
+      4.85,
+      5.0,
+      5.15,
+      5.3,
+      5.45
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_100",
+    "store_name": "InsightX Pro",
+    "name": "Capcut Pro 6M",
+    "price": 9.0,
+    "currency": "USDT",
+    "in_stock": 7,
+    "updated_hours": 2,
+    "category": "design",
+    "category_id": "design",
+    "product_family": "Canva / Design",
+    "duration_plan": "6 شهور",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_68",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      8.19,
+      8.46,
+      8.73,
+      9.0,
+      9.27,
+      9.54,
+      9.81
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_101",
+    "store_name": "InsightX Pro",
+    "name": "Pangram Professional 1 Year",
+    "price": 10.0,
+    "currency": "USDT",
+    "in_stock": 31,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_70",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      9.1,
+      9.4,
+      9.7,
+      10.0,
+      10.3,
+      10.6,
+      10.9
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_102",
+    "store_name": "InsightX Pro",
+    "name": "Customer.io Essential 1 Year",
+    "price": 10.0,
+    "currency": "USDT",
+    "in_stock": 16,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_71",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      9.1,
+      9.4,
+      9.7,
+      10.0,
+      10.3,
+      10.6,
+      10.9
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_103",
+    "store_name": "InsightX Pro",
+    "name": "Jam Team 10 Seats 1 Year",
+    "price": 8.0,
+    "currency": "USDT",
+    "in_stock": 13,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_74",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      7.28,
+      7.52,
+      7.76,
+      8.0,
+      8.24,
+      8.48,
+      8.72
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "insi_104",
+    "store_name": "InsightX Pro",
+    "name": "Airtable Team Plan 12 Months",
+    "price": 5.0,
+    "currency": "USDT",
+    "in_stock": 10,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_76",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      4.55,
+      4.7,
+      4.85,
+      5.0,
+      5.15,
+      5.3,
+      5.45
     ],
     "is_cheapest": false
   },
@@ -8078,35 +8224,6 @@
   {
     "id": "insi_106",
     "store_name": "InsightX Pro",
-    "name": "Supabase Pro 1 Year (FW)",
-    "price": 35.0,
-    "currency": "USDT",
-    "in_stock": 4,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "IN",
-    "bot_handle": "@insightXpro_bot",
-    "buy_url": "https://t.me/insightXpro_bot?start=buy_90",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      31.85,
-      32.9,
-      33.95,
-      35.0,
-      36.05,
-      37.1,
-      38.15
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "insi_107",
-    "store_name": "InsightX Pro",
     "name": "Synthesia.io Starter 1 Year",
     "price": 8.0,
     "currency": "USDT",
@@ -8134,7 +8251,7 @@
     "is_cheapest": false
   },
   {
-    "id": "insi_108",
+    "id": "insi_107",
     "store_name": "InsightX Pro",
     "name": "Notion Business 1 Year (FW)",
     "price": 20.0,
@@ -8163,12 +8280,41 @@
     "is_cheapest": false
   },
   {
+    "id": "insi_108",
+    "store_name": "InsightX Pro",
+    "name": "Gamma Pro 1 Year (FW)",
+    "price": 32.0,
+    "currency": "USDT",
+    "in_stock": 8,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "IN",
+    "bot_handle": "@insightXpro_bot",
+    "buy_url": "https://t.me/insightXpro_bot?start=buy_100",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      29.12,
+      30.08,
+      31.04,
+      32.0,
+      32.96,
+      33.92,
+      34.88
+    ],
+    "is_cheapest": false
+  },
+  {
     "id": "sam_109",
     "store_name": "Sam Topup",
     "name": "canva edu invite 2 years",
     "price": 0.3,
     "currency": "USDT",
-    "in_stock": 487,
+    "in_stock": 473,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -8224,9 +8370,9 @@
     "id": "sam_111",
     "store_name": "Sam Topup",
     "name": "Chatgpt 30D no warranty",
-    "price": 2.95,
+    "price": 3.3,
     "currency": "USDT",
-    "in_stock": 5,
+    "in_stock": 7,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -8239,13 +8385,13 @@
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      2.68,
-      2.77,
-      2.86,
-      2.95,
-      3.04,
-      3.13,
-      3.22
+      3.0,
+      3.1,
+      3.2,
+      3.3,
+      3.4,
+      3.5,
+      3.6
     ],
     "is_cheapest": false
   },
@@ -8255,7 +8401,7 @@
     "name": "Google ai pro 18 months activation link nw",
     "price": 0.85,
     "currency": "USDT",
-    "in_stock": 139,
+    "in_stock": 53,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -8284,11 +8430,11 @@
     "name": "Hotmail Trust OAuth2 Live Buffalo BH1D",
     "price": 0.09,
     "currency": "USDT",
-    "in_stock": 58,
+    "in_stock": 57,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "SA",
     "bot_handle": "@Samsshop_bot",
@@ -8309,6 +8455,35 @@
   },
   {
     "id": "sam_114",
+    "store_name": "Sam Topup",
+    "name": "Capcut Pro 30D has full warranty",
+    "price": 2.0,
+    "currency": "USDT",
+    "in_stock": 3,
+    "updated_hours": 2,
+    "category": "design",
+    "category_id": "design",
+    "product_family": "Canva / Design",
+    "duration_plan": "1 شهر",
+    "initials": "SA",
+    "bot_handle": "@Samsshop_bot",
+    "buy_url": "https://t.me/Samsshop_bot?start=buy_6a64310a6d8d49fa3b7bee64",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      1.82,
+      1.88,
+      1.94,
+      2.0,
+      2.06,
+      2.12,
+      2.18
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "sam_115",
     "store_name": "Sam Topup",
     "name": "VEO3 (Antigravity )x20 Ultra 0 credit SLOT 30D - full warranty",
     "price": 15.5,
@@ -8337,12 +8512,12 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_115",
+    "id": "sam_116",
     "store_name": "Sam Topup",
     "name": "netflix cookies 10d - 5 years",
     "price": 0.4,
     "currency": "USDT",
-    "in_stock": 29,
+    "in_stock": 19,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -8366,12 +8541,12 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_116",
+    "id": "sam_117",
     "store_name": "Sam Topup",
     "name": "Duolingo 1 year link",
     "price": 0.55,
     "currency": "USDT",
-    "in_stock": 3,
+    "in_stock": 10,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -8395,12 +8570,12 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_117",
+    "id": "sam_118",
     "store_name": "Sam Topup",
     "name": "apple music 5m link",
     "price": 1.9,
     "currency": "USDT",
-    "in_stock": 9,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -8424,12 +8599,41 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_118",
+    "id": "sam_119",
+    "store_name": "Sam Topup",
+    "name": "Linkedin premium career 3 m link",
+    "price": 1.5,
+    "currency": "USDT",
+    "in_stock": 18,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Tools & VPN",
+    "duration_plan": "خطة سنوية / دائمة",
+    "initials": "SA",
+    "bot_handle": "@Samsshop_bot",
+    "buy_url": "https://t.me/Samsshop_bot?start=buy_6aa2a10a389ea7bf209b0123",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      1.36,
+      1.41,
+      1.46,
+      1.5,
+      1.54,
+      1.59,
+      1.64
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "sam_120",
     "store_name": "Sam Topup",
     "name": "Gmail account (need phone number )",
     "price": 0.55,
     "currency": "USDT",
-    "in_stock": 83,
+    "in_stock": 129,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8453,12 +8657,12 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_119",
+    "id": "sam_121",
     "store_name": "Sam Topup",
     "name": "gmail us phone number 3 M",
     "price": 0.39,
     "currency": "USDT",
-    "in_stock": 12,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8482,7 +8686,7 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_120",
+    "id": "sam_122",
     "store_name": "Sam Topup",
     "name": "Wapio WhatsApp API Starter 30D (Full Warranty)",
     "price": 3.5,
@@ -8511,7 +8715,7 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_121",
+    "id": "sam_123",
     "store_name": "Sam Topup",
     "name": "Wapio WhatsApp API Pro 30D — 3 Numbers (Full Warranty)",
     "price": 7.5,
@@ -8540,7 +8744,7 @@
     "is_cheapest": false
   },
   {
-    "id": "sam_122",
+    "id": "sam_124",
     "store_name": "Sam Topup",
     "name": "notion plus 12 months",
     "price": 3.0,
@@ -8569,12 +8773,70 @@
     "is_cheapest": false
   },
   {
-    "id": "accz_123",
+    "id": "sam_125",
+    "store_name": "Sam Topup",
+    "name": "permenant windows 10/11 pro key",
+    "price": 4.0,
+    "currency": "USDT",
+    "in_stock": 4,
+    "updated_hours": 2,
+    "category": "productivity",
+    "category_id": "productivity",
+    "product_family": "Windows OS & Keys",
+    "duration_plan": "خطة سنوية / دائمة",
+    "initials": "SA",
+    "bot_handle": "@Samsshop_bot",
+    "buy_url": "https://t.me/Samsshop_bot?start=buy_6abf71a31b06335b088d910d",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      3.64,
+      3.76,
+      3.88,
+      4.0,
+      4.12,
+      4.24,
+      4.36
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "sam_126",
+    "store_name": "Sam Topup",
+    "name": "capcut pro 7d (w5d)",
+    "price": 0.2,
+    "currency": "USDT",
+    "in_stock": 12,
+    "updated_hours": 2,
+    "category": "design",
+    "category_id": "design",
+    "product_family": "Canva / Design",
+    "duration_plan": "خطة سنوية / دائمة",
+    "initials": "SA",
+    "bot_handle": "@Samsshop_bot",
+    "buy_url": "https://t.me/Samsshop_bot?start=buy_6abf74991b06335b088d91b6",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.18,
+      0.19,
+      0.19,
+      0.2,
+      0.21,
+      0.21,
+      0.22
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "accz_127",
     "store_name": "Acczone Store",
     "name": "Adobe Express 12M",
     "price": 0.3,
     "currency": "USDT",
-    "in_stock": 1268,
+    "in_stock": 1251,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -8598,12 +8860,12 @@
     "is_cheapest": false
   },
   {
-    "id": "accz_124",
+    "id": "accz_128",
     "store_name": "Acczone Store",
     "name": "Apple Music 5M",
-    "price": 0.3,
+    "price": 0.1,
     "currency": "USDT",
-    "in_stock": 235,
+    "in_stock": 223,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -8616,23 +8878,23 @@
     "weekly_change_pct": 4.5,
     "direction": "increase",
     "sparkline_points": [
-      0.27,
-      0.28,
-      0.29,
-      0.3,
-      0.31,
-      0.32,
-      0.33
+      0.09,
+      0.09,
+      0.1,
+      0.1,
+      0.1,
+      0.11,
+      0.11
     ],
     "is_cheapest": false
   },
   {
-    "id": "accz_125",
+    "id": "accz_129",
     "store_name": "Acczone Store",
     "name": "Duolingo Super 12M",
     "price": 0.35,
     "currency": "USDT",
-    "in_stock": 386,
+    "in_stock": 114,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -8656,10 +8918,10 @@
     "is_cheapest": false
   },
   {
-    "id": "accz_126",
+    "id": "accz_130",
     "store_name": "Acczone Store",
-    "name": "Gemini Pro 18M {Reactivation URLs}",
-    "price": 0.8,
+    "name": "Gemini Pro 18M NEW",
+    "price": 0.69,
     "currency": "USDT",
     "in_stock": 50,
     "updated_hours": 2,
@@ -8674,76 +8936,18 @@
     "weekly_change_pct": 4.5,
     "direction": "increase",
     "sparkline_points": [
+      0.63,
+      0.65,
+      0.67,
+      0.69,
+      0.71,
       0.73,
-      0.75,
-      0.78,
-      0.8,
-      0.82,
-      0.85,
-      0.87
+      0.75
     ],
     "is_cheapest": false
   },
   {
-    "id": "accz_127",
-    "store_name": "Acczone Store",
-    "name": "Gemini old stock",
-    "price": 0.8,
-    "currency": "USDT",
-    "in_stock": 158,
-    "updated_hours": 2,
-    "category": "ai",
-    "category_id": "ai",
-    "product_family": "Gemini Pro",
-    "duration_plan": "خطة سنوية / دائمة",
-    "initials": "AC",
-    "bot_handle": "@Acczone_Store_bot",
-    "buy_url": "https://t.me/Acczone_Store_bot",
-    "weekly_change_amount": 0.02,
-    "weekly_change_pct": 4.5,
-    "direction": "increase",
-    "sparkline_points": [
-      0.73,
-      0.75,
-      0.78,
-      0.8,
-      0.82,
-      0.85,
-      0.87
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "accz_128",
-    "store_name": "Acczone Store",
-    "name": "Gemini use in 30-50 minutes",
-    "price": 0.35,
-    "currency": "USDT",
-    "in_stock": 50,
-    "updated_hours": 2,
-    "category": "ai",
-    "category_id": "ai",
-    "product_family": "Gemini Pro",
-    "duration_plan": "خطة سنوية / دائمة",
-    "initials": "AC",
-    "bot_handle": "@Acczone_Store_bot",
-    "buy_url": "https://t.me/Acczone_Store_bot",
-    "weekly_change_amount": 0.02,
-    "weekly_change_pct": 4.5,
-    "direction": "increase",
-    "sparkline_points": [
-      0.32,
-      0.33,
-      0.34,
-      0.35,
-      0.36,
-      0.37,
-      0.38
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "bite_129",
+    "id": "bite_131",
     "store_name": "Bite Store",
     "name": "Api Test",
     "price": 0.1,
@@ -8772,7 +8976,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_130",
+    "id": "bite_132",
     "store_name": "Bite Store",
     "name": "⌨ Key GPM Login 1 Month full warranty",
     "price": 5.7,
@@ -8801,12 +9005,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_131",
+    "id": "bite_133",
     "store_name": "Bite Store",
     "name": "Kahoot Plus Gold 7 Days full warranty",
     "price": 1.6,
     "currency": "USDT",
-    "in_stock": 7,
+    "in_stock": 4,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8830,12 +9034,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_132",
+    "id": "bite_134",
     "store_name": "Bite Store",
     "name": "Iqiyi Premium 1 Month Full Warranty",
     "price": 2.2,
     "currency": "USDT",
-    "in_stock": 1,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8859,12 +9063,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_133",
+    "id": "bite_135",
     "store_name": "Bite Store",
     "name": "Clone Facebook Spam - (no warranty)",
     "price": 0.86,
     "currency": "USDT",
-    "in_stock": 5,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8888,12 +9092,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_134",
+    "id": "bite_136",
     "store_name": "Bite Store",
     "name": "Photoroom Max 7 Days full warranty",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 7,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -8917,7 +9121,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_135",
+    "id": "bite_137",
     "store_name": "Bite Store",
     "name": "Skillshare 30 Days full warranty",
     "price": 4.0,
@@ -8946,7 +9150,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_136",
+    "id": "bite_138",
     "store_name": "Bite Store",
     "name": "BeautyCam Vip 30D full warranty",
     "price": 4.0,
@@ -8975,7 +9179,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_137",
+    "id": "bite_139",
     "store_name": "Bite Store",
     "name": "ChatGPT Trial has a 1-month offer - no warranty",
     "price": 0.3,
@@ -9004,12 +9208,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_138",
+    "id": "bite_140",
     "store_name": "Bite Store",
     "name": "API CODEX ASTRA6 $50 TOKEN 1 MONTH full warranty",
     "price": 6.3,
     "currency": "USDT",
-    "in_stock": 6,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9033,12 +9237,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_139",
+    "id": "bite_141",
     "store_name": "Bite Store",
     "name": "100M Credit API Codex 1 Day - full warranty",
     "price": 3.91,
     "currency": "USDT",
-    "in_stock": 66,
+    "in_stock": 48,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9062,12 +9266,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_140",
+    "id": "bite_142",
     "store_name": "Bite Store",
     "name": "50M Credit API Codex 1 Day - full warranty",
     "price": 2.81,
     "currency": "USDT",
-    "in_stock": 80,
+    "in_stock": 55,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9091,12 +9295,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_141",
+    "id": "bite_143",
     "store_name": "Bite Store",
     "name": "CHAT GPT GPAY (W1D)",
     "price": 6.79,
     "currency": "USDT",
-    "in_stock": 64,
+    "in_stock": 44,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9120,7 +9324,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_142",
+    "id": "bite_144",
     "store_name": "Bite Store",
     "name": "ACC CHAT GPT BUSINESS 1M(W1D)",
     "price": 6.5,
@@ -9149,12 +9353,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_143",
+    "id": "bite_145",
     "store_name": "Bite Store",
     "name": "API 200M Token Codex 7 Days - full warranty",
     "price": 9.76,
     "currency": "USDT",
-    "in_stock": 11,
+    "in_stock": 10,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9178,12 +9382,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_144",
+    "id": "bite_146",
     "store_name": "Bite Store",
     "name": "[CDK] RENT OTP NUMBER CODEX 24H no warranty",
     "price": 0.55,
     "currency": "USDT",
-    "in_stock": 162,
+    "in_stock": 131,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9207,7 +9411,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_145",
+    "id": "bite_147",
     "store_name": "Bite Store",
     "name": "Chat GPT APPLE PAY(W1D)",
     "price": 6.7,
@@ -9236,7 +9440,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_146",
+    "id": "bite_148",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus Apple Pay Gmail 30D - full warranty",
     "price": 13.5,
@@ -9265,12 +9469,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_147",
+    "id": "bite_149",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus VIP 1 month full warranty",
     "price": 13.5,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9294,12 +9498,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_148",
+    "id": "bite_150",
     "store_name": "Bite Store",
     "name": "API 500M Token Codex 30 Days - 7-Day Warranty",
     "price": 18.0,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 3,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9323,12 +9527,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_149",
+    "id": "bite_151",
     "store_name": "Bite Store",
     "name": "API 300M Token Codex 15 Days - 7-Day Warranty",
     "price": 13.0,
     "currency": "USDT",
-    "in_stock": 8,
+    "in_stock": 7,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9352,12 +9556,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_150",
+    "id": "bite_152",
     "store_name": "Bite Store",
     "name": "500M Credit API Codex 1 Day - full warranty",
     "price": 8.69,
     "currency": "USDT",
-    "in_stock": 32,
+    "in_stock": 19,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9381,12 +9585,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_151",
+    "id": "bite_153",
     "store_name": "Bite Store",
     "name": "20M Credit API Codex 1 Day - full warranty",
     "price": 2.0,
     "currency": "USDT",
-    "in_stock": 57,
+    "in_stock": 80,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9410,12 +9614,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_152",
+    "id": "bite_154",
     "store_name": "Bite Store",
     "name": "10M Credit API Codex 1 Day - full warranty",
     "price": 1.6,
     "currency": "USDT",
-    "in_stock": 120,
+    "in_stock": 62,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9439,12 +9643,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_153",
+    "id": "bite_155",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus 1 Month (5H warranty)",
     "price": 6.53,
     "currency": "USDT",
-    "in_stock": 16,
+    "in_stock": 25,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9468,12 +9672,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_154",
+    "id": "bite_156",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus 30 Day full warranty",
     "price": 13.57,
     "currency": "USDT",
-    "in_stock": 14,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9497,7 +9701,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_155",
+    "id": "bite_157",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus 1 Month full warranty",
     "price": 13.75,
@@ -9526,12 +9730,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_156",
+    "id": "bite_158",
     "store_name": "Bite Store",
     "name": "JSON ChatGPT Free has Phone Codex version for 1 month - no warranty",
     "price": 0.69,
     "currency": "USDT",
-    "in_stock": 244,
+    "in_stock": 208,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9555,12 +9759,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_157",
+    "id": "bite_159",
     "store_name": "Bite Store",
     "name": "CHAT GPT PLUS 1 MONTH WARRANTY 5H",
     "price": 7.48,
     "currency": "USDT",
-    "in_stock": 20,
+    "in_stock": 21,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9584,12 +9788,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_158",
+    "id": "bite_160",
     "store_name": "Bite Store",
     "name": "(So Beautiful) Chatgpt Plus Apple Pay 1 month full warranty",
     "price": 13.69,
     "currency": "USDT",
-    "in_stock": 21,
+    "in_stock": 12,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9613,12 +9817,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_159",
+    "id": "bite_161",
     "store_name": "Bite Store",
     "name": "CHAT GPT PLUS 1M(FW)",
     "price": 13.0,
     "currency": "USDT",
-    "in_stock": 5,
+    "in_stock": 9,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9642,7 +9846,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_160",
+    "id": "bite_162",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus Apple Pay Gmail 30D - 15D warranty",
     "price": 11.63,
@@ -9671,12 +9875,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_161",
+    "id": "bite_163",
     "store_name": "Bite Store",
     "name": "Free Chatgpt Account - 12 Months - no warranty",
-    "price": 0.2,
+    "price": 0.28,
     "currency": "USDT",
-    "in_stock": 31,
+    "in_stock": 40,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9689,23 +9893,23 @@
     "weekly_change_pct": 4.5,
     "direction": "increase",
     "sparkline_points": [
-      0.18,
-      0.19,
-      0.19,
-      0.2,
-      0.21,
-      0.21,
-      0.22
+      0.25,
+      0.26,
+      0.27,
+      0.28,
+      0.29,
+      0.3,
+      0.31
     ],
     "is_cheapest": false
   },
   {
-    "id": "bite_162",
+    "id": "bite_164",
     "store_name": "Bite Store",
     "name": "(BEST SELLER) ChatGPT Plus GGPay Gmail 30D - 20D warranty",
     "price": 11.63,
     "currency": "USDT",
-    "in_stock": 21,
+    "in_stock": 7,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9729,12 +9933,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_163",
+    "id": "bite_165",
     "store_name": "Bite Store",
     "name": "ChatGPT Plus K12 Edu 2 years",
     "price": 4.29,
     "currency": "USDT",
-    "in_stock": 40,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -9758,7 +9962,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_164",
+    "id": "bite_166",
     "store_name": "Bite Store",
     "name": "Super Grok 1 Year - X Premium",
     "price": 14.5,
@@ -9787,7 +9991,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_165",
+    "id": "bite_167",
     "store_name": "Bite Store",
     "name": "Supper Grok 9-10D warranty 3D",
     "price": 5.0,
@@ -9816,12 +10020,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_166",
+    "id": "bite_168",
     "store_name": "Bite Store",
     "name": "GROK SUPER 7D(W6D)",
     "price": 3.98,
     "currency": "USDT",
-    "in_stock": 20,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -9845,12 +10049,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_167",
+    "id": "bite_169",
     "store_name": "Bite Store",
     "name": "Capcut Pro 1 Month FW",
     "price": 1.7,
     "currency": "USDT",
-    "in_stock": 215,
+    "in_stock": 220,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -9874,12 +10078,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_168",
+    "id": "bite_170",
     "store_name": "Bite Store",
     "name": "CAPCUT PRO 6 MONTHS",
     "price": 9.5,
     "currency": "USDT",
-    "in_stock": 17,
+    "in_stock": 18,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -9903,12 +10107,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_169",
+    "id": "bite_171",
     "store_name": "Bite Store",
     "name": "Capcut Pro 7D (FW)",
     "price": 0.24,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 91,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -9932,12 +10136,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_170",
+    "id": "bite_172",
     "store_name": "Bite Store",
     "name": "CAPCUT PRO 1600 CREDITS",
     "price": 2.3,
     "currency": "USDT",
-    "in_stock": 11,
+    "in_stock": 54,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -9961,41 +10165,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_171",
-    "store_name": "Bite Store",
-    "name": "Capcut pro 6 days FW",
-    "price": 0.19,
-    "currency": "USDT",
-    "in_stock": 38,
-    "updated_hours": 2,
-    "category": "design",
-    "category_id": "design",
-    "product_family": "Canva / Design",
-    "duration_plan": "خطة سنوية / دائمة",
-    "initials": "BI",
-    "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_651",
-    "weekly_change_amount": 0.02,
-    "weekly_change_pct": 4.5,
-    "direction": "increase",
-    "sparkline_points": [
-      0.17,
-      0.18,
-      0.18,
-      0.19,
-      0.2,
-      0.2,
-      0.21
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "bite_172",
+    "id": "bite_173",
     "store_name": "Bite Store",
     "name": "Freepik - Magnific Premium API Web Panel 90D full warranty",
     "price": 11.0,
     "currency": "USDT",
-    "in_stock": 3,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10019,7 +10194,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_173",
+    "id": "bite_174",
     "store_name": "Bite Store",
     "name": "Freepik - Magnific Premium API Web Panel 60D full warranty",
     "price": 7.5,
@@ -10048,12 +10223,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_174",
+    "id": "bite_175",
     "store_name": "Bite Store",
     "name": "Freepik - Magnific Premium API Web Panel 30D full warranty",
     "price": 4.4,
     "currency": "USDT",
-    "in_stock": 32,
+    "in_stock": 30,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10077,7 +10252,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_175",
+    "id": "bite_176",
     "store_name": "Bite Store",
     "name": "Elevenlabs Creator 121k Credits 30D full warranty",
     "price": 12.22,
@@ -10106,12 +10281,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_176",
+    "id": "bite_177",
     "store_name": "Bite Store",
     "name": "ElevenLabs Pro Plan 1M 50000 Credit Workspace Invite Account 5 to 10 Days Warranty",
     "price": 5.51,
     "currency": "USDT",
-    "in_stock": 2,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10131,35 +10306,6 @@
       5.68,
       5.84,
       6.01
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "bite_177",
-    "store_name": "Bite Store",
-    "name": "Elevenlab Creator 3M(FW)",
-    "price": 17.0,
-    "currency": "USDT",
-    "in_stock": 6,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "3 شهور",
-    "initials": "BI",
-    "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_641",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      15.47,
-      15.98,
-      16.49,
-      17.0,
-      17.51,
-      18.02,
-      18.53
     ],
     "is_cheapest": false
   },
@@ -10198,7 +10344,7 @@
     "name": "100$ API Claude 30D (FW)",
     "price": 2.0,
     "currency": "USDT",
-    "in_stock": 15,
+    "in_stock": 41,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10227,7 +10373,7 @@
     "name": "500$ API CLAUDE 30D (FW)",
     "price": 6.9,
     "currency": "USDT",
-    "in_stock": 15,
+    "in_stock": 22,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10256,7 +10402,7 @@
     "name": "API 10M Token Claude 1 Day - full warranty",
     "price": 1.84,
     "currency": "USDT",
-    "in_stock": 55,
+    "in_stock": 45,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10285,7 +10431,7 @@
     "name": "API 100M Token Claude 1 Day - full warranty",
     "price": 5.0,
     "currency": "USDT",
-    "in_stock": 8,
+    "in_stock": 24,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10311,39 +10457,10 @@
   {
     "id": "bite_183",
     "store_name": "Bite Store",
-    "name": "CLAUDE PRO 7 DAYS (warranty 5 DAYS)",
-    "price": 8.53,
-    "currency": "USDT",
-    "in_stock": 50,
-    "updated_hours": 2,
-    "category": "ai",
-    "category_id": "ai",
-    "product_family": "Claude AI",
-    "duration_plan": "خطة سنوية / دائمة",
-    "initials": "BI",
-    "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_475",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      7.76,
-      8.02,
-      8.27,
-      8.53,
-      8.79,
-      9.04,
-      9.3
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "bite_184",
-    "store_name": "Bite Store",
     "name": "Claude API $100 Token 1 month full warranty",
     "price": 11.29,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10367,12 +10484,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_185",
+    "id": "bite_184",
     "store_name": "Bite Store",
     "name": "API 100M Token Claude 3 Days - full warranty",
     "price": 7.06,
     "currency": "USDT",
-    "in_stock": 14,
+    "in_stock": 11,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10396,12 +10513,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_186",
+    "id": "bite_185",
     "store_name": "Bite Store",
     "name": "API Cursor Pro 400 Credits/day 1 month full warranty",
     "price": 14.54,
     "currency": "USDT",
-    "in_stock": 2,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10425,7 +10542,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_187",
+    "id": "bite_186",
     "store_name": "Bite Store",
     "name": "API Cursor Pro 2600 Credits 1 month full warranty",
     "price": 11.0,
@@ -10454,36 +10571,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_188",
-    "store_name": "Bite Store",
-    "name": "Gemini Pro 18Months (link)",
-    "price": 0.99,
-    "currency": "USDT",
-    "in_stock": 53,
-    "updated_hours": 2,
-    "category": "ai",
-    "category_id": "ai",
-    "product_family": "Gemini Pro",
-    "duration_plan": "18 شهر",
-    "initials": "BI",
-    "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_316",
-    "weekly_change_amount": 0.02,
-    "weekly_change_pct": 4.5,
-    "direction": "increase",
-    "sparkline_points": [
-      0.9,
-      0.93,
-      0.96,
-      0.99,
-      1.02,
-      1.05,
-      1.08
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "bite_189",
+    "id": "bite_187",
     "store_name": "Bite Store",
     "name": "Gemini Pro CDK 1 year - no warranty",
     "price": 1.5,
@@ -10512,12 +10600,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_190",
+    "id": "bite_188",
     "store_name": "Bite Store",
     "name": "OFFER LINK 3-Month | Gemini Pro + 5TB + Antigravity",
     "price": 1.5,
     "currency": "USDT",
-    "in_stock": 166,
+    "in_stock": 173,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -10541,12 +10629,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_191",
+    "id": "bite_189",
     "store_name": "Bite Store",
     "name": "Phone number for Gmail/Google verification | Get SMS for 75-80 days",
     "price": 1.1,
     "currency": "USDT",
-    "in_stock": 7,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10570,12 +10658,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_192",
+    "id": "bite_190",
     "store_name": "Bite Store",
     "name": "Microsoft Office 365 Plus 1 year",
     "price": 0.44,
     "currency": "USDT",
-    "in_stock": 257,
+    "in_stock": 73,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
@@ -10599,12 +10687,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_193",
+    "id": "bite_191",
     "store_name": "Bite Store",
     "name": "Admin MS365 12M (FW)",
     "price": 9.0,
     "currency": "USDT",
-    "in_stock": 17,
+    "in_stock": 10,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
@@ -10628,12 +10716,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_194",
+    "id": "bite_192",
     "store_name": "Bite Store",
     "name": "⭐ Adobe Express 12M",
     "price": 0.7,
     "currency": "USDT",
-    "in_stock": 111,
+    "in_stock": 88,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -10657,12 +10745,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_195",
+    "id": "bite_193",
     "store_name": "Bite Store",
     "name": "Adobe Express Premium 12-month CODE - no warranty",
     "price": 2.3,
     "currency": "USDT",
-    "in_stock": 10,
+    "in_stock": 3,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -10686,12 +10774,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_196",
+    "id": "bite_194",
     "store_name": "Bite Store",
     "name": "Adobe Express Premium | 12 Months",
     "price": 0.99,
     "currency": "USDT",
-    "in_stock": 3307,
+    "in_stock": 3762,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -10715,12 +10803,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_197",
+    "id": "bite_195",
     "store_name": "Bite Store",
     "name": "Gmails Accounts",
     "price": 1.1,
     "currency": "USDT",
-    "in_stock": 32,
+    "in_stock": 59,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10744,16 +10832,16 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_198",
+    "id": "bite_196",
     "store_name": "Bite Store",
     "name": "Hotmail Trust - Private",
     "price": 0.01,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 3888,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "BI",
     "bot_handle": "@Bite_storee_bot",
@@ -10773,16 +10861,16 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_199",
+    "id": "bite_197",
     "store_name": "Bite Store",
     "name": "Outlook Mail Trust - Private",
     "price": 0.04,
     "currency": "USDT",
-    "in_stock": 1136,
+    "in_stock": 3769,
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "BI",
     "bot_handle": "@Bite_storee_bot",
@@ -10802,7 +10890,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_200",
+    "id": "bite_198",
     "store_name": "Bite Store",
     "name": "Gmail Fresh Random IP",
     "price": 1.1,
@@ -10831,12 +10919,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_201",
+    "id": "bite_199",
     "store_name": "Bite Store",
     "name": "Surfshark 2 months Coupon",
     "price": 1.9,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10860,12 +10948,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_202",
+    "id": "bite_200",
     "store_name": "Bite Store",
     "name": "‍ Avira Prime 3 Months",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 67,
+    "in_stock": 65,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10889,12 +10977,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_203",
+    "id": "bite_201",
     "store_name": "Bite Store",
     "name": "KEY HMA AND/PC 20-30 DAYS",
     "price": 1.2,
     "currency": "USDT",
-    "in_stock": 22,
+    "in_stock": 4,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10918,12 +11006,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_204",
+    "id": "bite_202",
     "store_name": "Bite Store",
     "name": "Express VPN 10 devices 3 days full warranty",
     "price": 0.9,
     "currency": "USDT",
-    "in_stock": 8,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10947,12 +11035,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_205",
+    "id": "bite_203",
     "store_name": "Bite Store",
     "name": "Surfshark VPN One 7-Day Full Warranty",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 16,
+    "in_stock": 5,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -10976,12 +11064,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_206",
+    "id": "bite_204",
     "store_name": "Bite Store",
     "name": "Nord VPN 3-month link",
     "price": 3.1,
     "currency": "USDT",
-    "in_stock": 12,
+    "in_stock": 7,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11005,12 +11093,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_207",
+    "id": "bite_205",
     "store_name": "Bite Store",
     "name": "[KEY] HMA Android PC 20 30 Days full warranty",
     "price": 1.47,
     "currency": "USDT",
-    "in_stock": 18,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11034,7 +11122,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_208",
+    "id": "bite_206",
     "store_name": "Bite Store",
     "name": "IPVanish VPN 7 Days full warranty",
     "price": 0.9,
@@ -11063,12 +11151,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_209",
+    "id": "bite_207",
     "store_name": "Bite Store",
     "name": "Adguard VPN 7 Days full warranty",
     "price": 1.07,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11092,12 +11180,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_210",
+    "id": "bite_208",
     "store_name": "Bite Store",
     "name": "NordVPN Basic | 3 Months",
     "price": 3.3,
     "currency": "USDT",
-    "in_stock": 104,
+    "in_stock": 187,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11121,12 +11209,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_211",
+    "id": "bite_209",
     "store_name": "Bite Store",
     "name": "Hotspot Shield VPN 7 Days full warranty",
     "price": 1.07,
     "currency": "USDT",
-    "in_stock": 6,
+    "in_stock": 5,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11150,12 +11238,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_212",
+    "id": "bite_210",
     "store_name": "Bite Store",
     "name": "KEY HMA VPN Android/PC 30 days full warranty",
     "price": 1.45,
     "currency": "USDT",
-    "in_stock": 11,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11179,12 +11267,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_213",
+    "id": "bite_211",
     "store_name": "Bite Store",
     "name": "Autodesk Admin 3000 invite",
     "price": 13.0,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11208,41 +11296,41 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_214",
+    "id": "bite_212",
     "store_name": "Bite Store",
-    "name": "Headspace Premium | 4 Months",
-    "price": 2.5,
+    "name": "Prime Video 6 Months",
+    "price": 2.0,
     "currency": "USDT",
-    "in_stock": 186,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
     "product_family": "Other Subscriptions",
-    "duration_plan": "خطة سنوية / دائمة",
+    "duration_plan": "6 شهور",
     "initials": "BI",
     "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_629",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_535",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      2.27,
-      2.35,
-      2.42,
-      2.5,
-      2.58,
-      2.65,
-      2.73
+      1.82,
+      1.88,
+      1.94,
+      2.0,
+      2.06,
+      2.12,
+      2.18
     ],
     "is_cheapest": false
   },
   {
-    "id": "bite_215",
+    "id": "bite_213",
     "store_name": "Bite Store",
     "name": "Canva 500 User Panel",
     "price": 3.3,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 3,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -11266,7 +11354,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_216",
+    "id": "bite_214",
     "store_name": "Bite Store",
     "name": "Canva Pro 3 Years Invite Own Mail NW",
     "price": 0.2,
@@ -11295,7 +11383,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_217",
+    "id": "bite_215",
     "store_name": "Bite Store",
     "name": "Canva Edu Method NW",
     "price": 99.0,
@@ -11324,36 +11412,36 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_218",
+    "id": "bite_216",
     "store_name": "Bite Store",
-    "name": "Notion Plus 12M",
-    "price": 1.5,
+    "name": "NOTION BUSINESS 3M",
+    "price": 2.69,
     "currency": "USDT",
-    "in_stock": 14,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
     "product_family": "Tools & VPN",
-    "duration_plan": "12 شهر (سنة)",
+    "duration_plan": "3 شهور",
     "initials": "BI",
     "bot_handle": "@Bite_storee_bot",
-    "buy_url": "https://t.me/Bite_storee_bot?start=buy_347",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_318",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
-      1.36,
-      1.41,
-      1.46,
-      1.5,
-      1.54,
-      1.59,
-      1.64
+      2.45,
+      2.53,
+      2.61,
+      2.69,
+      2.77,
+      2.85,
+      2.93
     ],
     "is_cheapest": false
   },
   {
-    "id": "bite_219",
+    "id": "bite_217",
     "store_name": "Bite Store",
     "name": "Link Notion Business 3 months - no warranty",
     "price": 2.5,
@@ -11382,7 +11470,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_220",
+    "id": "bite_218",
     "store_name": "Bite Store",
     "name": "Notion Plus 12m FW",
     "price": 1.5,
@@ -11411,12 +11499,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_221",
+    "id": "bite_219",
     "store_name": "Bite Store",
     "name": "Notion Edu Plus Plan 12M (1M Warranty)",
     "price": 10.99,
     "currency": "USDT",
-    "in_stock": 4,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11440,12 +11528,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_222",
+    "id": "bite_220",
     "store_name": "Bite Store",
     "name": "Notion Business 3m nw",
     "price": 2.5,
     "currency": "USDT",
-    "in_stock": 6,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11469,12 +11557,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_223",
+    "id": "bite_221",
     "store_name": "Bite Store",
     "name": "iLovePdf Premium 1Yr",
     "price": 0.89,
     "currency": "USDT",
-    "in_stock": 25,
+    "in_stock": 454,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11498,7 +11586,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_224",
+    "id": "bite_222",
     "store_name": "Bite Store",
     "name": "Grammarly Pro 7-14 Days - full warranty",
     "price": 1.3,
@@ -11527,12 +11615,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_225",
+    "id": "bite_223",
     "store_name": "Bite Store",
     "name": "Promo Linkedin Career 3M(NW)",
     "price": 1.5,
     "currency": "USDT",
-    "in_stock": 52,
+    "in_stock": 46,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11556,12 +11644,12 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_226",
+    "id": "bite_224",
     "store_name": "Bite Store",
     "name": "LinkedIn Career Premium 2M Voucher",
     "price": 1.0,
     "currency": "USDT",
-    "in_stock": 13,
+    "in_stock": 20,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -11585,7 +11673,7 @@
     "is_cheapest": false
   },
   {
-    "id": "bite_227",
+    "id": "bite_225",
     "store_name": "Bite Store",
     "name": "Figma Pro Education Plan 2 years",
     "price": 5.3,
@@ -11614,7 +11702,123 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_228",
+    "id": "bite_226",
+    "store_name": "Bite Store",
+    "name": "Kling 66 Cre 1 month full warranty",
+    "price": 0.41,
+    "currency": "USDT",
+    "in_stock": 168,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "1 شهر",
+    "initials": "BI",
+    "bot_handle": "@Bite_storee_bot",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_445",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.37,
+      0.39,
+      0.4,
+      0.41,
+      0.42,
+      0.43,
+      0.45
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "bite_227",
+    "store_name": "Bite Store",
+    "name": "Kling 65 Cre 1 month full warranty",
+    "price": 0.4,
+    "currency": "USDT",
+    "in_stock": 81,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "1 شهر",
+    "initials": "BI",
+    "bot_handle": "@Bite_storee_bot",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_480",
+    "weekly_change_amount": 0.02,
+    "weekly_change_pct": 4.5,
+    "direction": "increase",
+    "sparkline_points": [
+      0.36,
+      0.38,
+      0.39,
+      0.4,
+      0.41,
+      0.42,
+      0.44
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "bite_228",
+    "store_name": "Bite Store",
+    "name": "Miro Lifetime Panel 100 invite",
+    "price": 9.0,
+    "currency": "USDT",
+    "in_stock": 1,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "خطة سنوية / دائمة",
+    "initials": "BI",
+    "bot_handle": "@Bite_storee_bot",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_413",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      8.19,
+      8.46,
+      8.73,
+      9.0,
+      9.27,
+      9.54,
+      9.81
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "bite_229",
+    "store_name": "Bite Store",
+    "name": "JetBrains Edu Pack 12m",
+    "price": 3.5,
+    "currency": "USDT",
+    "in_stock": 1,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "BI",
+    "bot_handle": "@Bite_storee_bot",
+    "buy_url": "https://t.me/Bite_storee_bot?start=buy_428",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      3.19,
+      3.29,
+      3.4,
+      3.5,
+      3.6,
+      3.71,
+      3.82
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "digi_230",
     "store_name": "Digital Socials",
     "name": "Lovable Pro 12m",
     "price": 35.0,
@@ -11643,7 +11847,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_229",
+    "id": "digi_231",
     "store_name": "Digital Socials",
     "name": "Resend Pro 12m",
     "price": 20.0,
@@ -11672,7 +11876,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_230",
+    "id": "digi_232",
     "store_name": "Digital Socials",
     "name": "Duolingo Super 12m",
     "price": 1.0,
@@ -11701,7 +11905,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_231",
+    "id": "digi_233",
     "store_name": "Digital Socials",
     "name": "OUTLOOK MAIL ACCOUNTS [FRESH]",
     "price": 0.03,
@@ -11710,7 +11914,7 @@
     "updated_hours": 2,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "خطة سنوية / دائمة",
     "initials": "DS",
     "bot_handle": "@Digitalsocials_bot",
@@ -11730,7 +11934,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_232",
+    "id": "digi_234",
     "store_name": "Digital Socials",
     "name": "ChatPRD 12m",
     "price": 5.0,
@@ -11759,7 +11963,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_233",
+    "id": "digi_235",
     "store_name": "Digital Socials",
     "name": "Framer Pro 12m",
     "price": 5.0,
@@ -11788,7 +11992,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_234",
+    "id": "digi_236",
     "store_name": "Digital Socials",
     "name": "Granola Business 12m",
     "price": 5.0,
@@ -11817,7 +12021,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_235",
+    "id": "digi_237",
     "store_name": "Digital Socials",
     "name": "Gumloop Pro 12m",
     "price": 6.0,
@@ -11846,7 +12050,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_236",
+    "id": "digi_238",
     "store_name": "Digital Socials",
     "name": "Intercom Advanced 12m",
     "price": 5.0,
@@ -11875,7 +12079,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_237",
+    "id": "digi_239",
     "store_name": "Digital Socials",
     "name": "Linear Business 12m",
     "price": 5.0,
@@ -11904,7 +12108,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_238",
+    "id": "digi_240",
     "store_name": "Digital Socials",
     "name": "Magic Patterns Starter 12m",
     "price": 5.0,
@@ -11933,7 +12137,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_239",
+    "id": "digi_241",
     "store_name": "Digital Socials",
     "name": "PostHog Scale 12m",
     "price": 10.0,
@@ -11962,7 +12166,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_240",
+    "id": "digi_242",
     "store_name": "Digital Socials",
     "name": "Warp Build 12m",
     "price": 7.0,
@@ -11991,7 +12195,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_241",
+    "id": "digi_243",
     "store_name": "Digital Socials",
     "name": "Railway Hobby 12m",
     "price": 10.0,
@@ -12020,7 +12224,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_242",
+    "id": "digi_244",
     "store_name": "Digital Socials",
     "name": "Wispr Flow Pro 12m",
     "price": 12.0,
@@ -12049,7 +12253,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_243",
+    "id": "digi_245",
     "store_name": "Digital Socials",
     "name": "Capcut Pro 6m",
     "price": 15.0,
@@ -12078,7 +12282,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_244",
+    "id": "digi_246",
     "store_name": "Digital Socials",
     "name": "Jam Team 10 Seats 1 Year",
     "price": 5.0,
@@ -12107,7 +12311,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_245",
+    "id": "digi_247",
     "store_name": "Digital Socials",
     "name": "Supercut Pro 10 Seats 1 Year",
     "price": 5.0,
@@ -12136,7 +12340,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_246",
+    "id": "digi_248",
     "store_name": "Digital Socials",
     "name": "Nordvpn 3m",
     "price": 2.5,
@@ -12165,7 +12369,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_247",
+    "id": "digi_249",
     "store_name": "Digital Socials",
     "name": "Pangram Professional 12m",
     "price": 5.0,
@@ -12194,7 +12398,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_248",
+    "id": "digi_250",
     "store_name": "Digital Socials",
     "name": "Factory 12m",
     "price": 10.0,
@@ -12223,7 +12427,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_249",
+    "id": "digi_251",
     "store_name": "Digital Socials",
     "name": "Notion Business 12m",
     "price": 10.0,
@@ -12252,7 +12456,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_250",
+    "id": "digi_252",
     "store_name": "Digital Socials",
     "name": "N8N Starter 12m",
     "price": 12.0,
@@ -12281,7 +12485,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_251",
+    "id": "digi_253",
     "store_name": "Digital Socials",
     "name": "Apollo 90M+ Global Leads Database",
     "price": 5.0,
@@ -12310,7 +12514,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_252",
+    "id": "digi_254",
     "store_name": "Digital Socials",
     "name": "Brain fm 12m",
     "price": 5.0,
@@ -12339,7 +12543,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_253",
+    "id": "digi_255",
     "store_name": "Digital Socials",
     "name": "Arize Pro 12m",
     "price": 5.0,
@@ -12368,7 +12572,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_254",
+    "id": "digi_256",
     "store_name": "Digital Socials",
     "name": "Airtable Team 12m",
     "price": 5.0,
@@ -12397,7 +12601,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_255",
+    "id": "digi_257",
     "store_name": "Digital Socials",
     "name": "Descript Creator 12m",
     "price": 12.0,
@@ -12426,7 +12630,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_256",
+    "id": "digi_258",
     "store_name": "Digital Socials",
     "name": "Bolt.new Pro 12m",
     "price": 15.0,
@@ -12455,7 +12659,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_257",
+    "id": "digi_259",
     "store_name": "Digital Socials",
     "name": "ElevenLabs Creator 12m",
     "price": 30.0,
@@ -12484,7 +12688,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_258",
+    "id": "digi_260",
     "store_name": "Digital Socials",
     "name": "Cursor Pro 12m",
     "price": 65.0,
@@ -12513,7 +12717,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_259",
+    "id": "digi_261",
     "store_name": "Digital Socials",
     "name": "Mobbin 10x Seat 12m",
     "price": 7.0,
@@ -12542,7 +12746,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_260",
+    "id": "digi_262",
     "store_name": "Digital Socials",
     "name": "YouTube Premium",
     "price": 1.5,
@@ -12571,7 +12775,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_261",
+    "id": "digi_263",
     "store_name": "Digital Socials",
     "name": "Hostinger -3-IN-1 Bundle 1 Year",
     "price": 25.0,
@@ -12600,7 +12804,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_262",
+    "id": "digi_264",
     "store_name": "Digital Socials",
     "name": "Higgsfield Pro 12m",
     "price": 80.0,
@@ -12629,7 +12833,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_263",
+    "id": "digi_265",
     "store_name": "Digital Socials",
     "name": "Gemini Pro 18m",
     "price": 0.65,
@@ -12658,7 +12862,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_264",
+    "id": "digi_266",
     "store_name": "Digital Socials",
     "name": "Manus Pro 12m",
     "price": 30.0,
@@ -12687,7 +12891,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_265",
+    "id": "digi_267",
     "store_name": "Digital Socials",
     "name": "Runway Pro 12m",
     "price": 25.0,
@@ -12716,7 +12920,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_266",
+    "id": "digi_268",
     "store_name": "Digital Socials",
     "name": "Google Al Pro 12m",
     "price": 13.0,
@@ -12745,7 +12949,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_267",
+    "id": "digi_269",
     "store_name": "Digital Socials",
     "name": "Supabase Pro 12m",
     "price": 25.0,
@@ -12774,7 +12978,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_268",
+    "id": "digi_270",
     "store_name": "Digital Socials",
     "name": "Gamma Pro 12m",
     "price": 25.0,
@@ -12803,7 +13007,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_269",
+    "id": "digi_271",
     "store_name": "Digital Socials",
     "name": "Replit Core 12m",
     "price": 20.0,
@@ -12832,7 +13036,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_270",
+    "id": "digi_272",
     "store_name": "Digital Socials",
     "name": "Canva Pro Edu 12m",
     "price": 1.0,
@@ -12861,7 +13065,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_271",
+    "id": "digi_273",
     "store_name": "Digital Asset",
     "name": "Adobe Express - 12 Months Activate Link",
     "price": 4.74,
@@ -12890,7 +13094,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_272",
+    "id": "digi_274",
     "store_name": "Digital Asset",
     "name": "Adobe Express - 12 Months Ready Acc",
     "price": 5.22,
@@ -12919,7 +13123,36 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_273",
+    "id": "digi_275",
+    "store_name": "Digital Asset",
+    "name": "Apple Service (TV) - Apple TV 12M Link",
+    "price": 2.37,
+    "currency": "USDT",
+    "in_stock": 99,
+    "updated_hours": 2,
+    "category": "tools",
+    "category_id": "tools",
+    "product_family": "Other Subscriptions",
+    "duration_plan": "12 شهر (سنة)",
+    "initials": "DI",
+    "bot_handle": "@digital_assetbot",
+    "buy_url": "https://t.me/digital_assetbot?start=buy_6abf0e45f020ca02cb4b0b28_12m_apple_tv",
+    "weekly_change_amount": -0.05,
+    "weekly_change_pct": 4.5,
+    "direction": "decrease",
+    "sparkline_points": [
+      2.16,
+      2.23,
+      2.3,
+      2.37,
+      2.44,
+      2.51,
+      2.58
+    ],
+    "is_cheapest": false
+  },
+  {
+    "id": "digi_276",
     "store_name": "Digital Asset",
     "name": "Avira Prime - 3 Months Subscription",
     "price": 3.79,
@@ -12948,12 +13181,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_274",
+    "id": "digi_277",
     "store_name": "Digital Asset",
     "name": "Brain.fm - 12 Months Coupon Activation",
     "price": 6.64,
     "currency": "USDT",
-    "in_stock": 99,
+    "in_stock": 1,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -12977,7 +13210,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_275",
+    "id": "digi_278",
     "store_name": "Digital Asset",
     "name": "Canva - Pro Admin (500 invitations)",
     "price": 9.49,
@@ -13006,7 +13239,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_276",
+    "id": "digi_279",
     "store_name": "Digital Asset",
     "name": "Canva - 2 Years Pro",
     "price": 2.37,
@@ -13035,7 +13268,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_277",
+    "id": "digi_280",
     "store_name": "Digital Asset",
     "name": "CapCut Pro - Pro 7 Days",
     "price": 0.47,
@@ -13064,7 +13297,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_278",
+    "id": "digi_281",
     "store_name": "Digital Asset",
     "name": "CapCut Pro - Pro 1 Month",
     "price": 2.09,
@@ -13093,7 +13326,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_279",
+    "id": "digi_282",
     "store_name": "Digital Asset",
     "name": "CapCut Pro - Pro 6 Months",
     "price": 11.39,
@@ -13122,7 +13355,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_280",
+    "id": "digi_283",
     "store_name": "Digital Asset",
     "name": "CapCut Pro - 1M 1600 Credits",
     "price": 2.84,
@@ -13151,12 +13384,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_281",
+    "id": "digi_284",
     "store_name": "Digital Asset",
     "name": "CapCut Pro - Pro 6 Days",
     "price": 0.38,
     "currency": "USDT",
-    "in_stock": 99,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -13180,12 +13413,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_282",
+    "id": "digi_285",
     "store_name": "Digital Asset",
     "name": "CapCut Pro Team - Pro Team Plan 1M (28D Warranty)",
     "price": 2.46,
     "currency": "USDT",
-    "in_stock": 24,
+    "in_stock": 13,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -13209,12 +13442,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_283",
+    "id": "digi_286",
     "store_name": "Digital Asset",
     "name": "CapCut Pro Team - Admin Team 1 month (7 seats) - 28 to 30 Day Warrnaty",
     "price": 9.97,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 2,
     "updated_hours": 2,
     "category": "design",
     "category_id": "design",
@@ -13238,7 +13471,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_284",
+    "id": "digi_287",
     "store_name": "Digital Asset",
     "name": "ChatGPT - 1 Month Plus Non-Warranty",
     "price": 9.49,
@@ -13267,7 +13500,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_285",
+    "id": "digi_288",
     "store_name": "Digital Asset",
     "name": "ChatGPT - 2 Years K12 Edu (NW)",
     "price": 8.54,
@@ -13296,7 +13529,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_286",
+    "id": "digi_289",
     "store_name": "Digital Asset",
     "name": "ChatGPT - 1 Month Plus - Apple Pay (NW)",
     "price": 11.39,
@@ -13325,12 +13558,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_287",
+    "id": "digi_290",
     "store_name": "Digital Asset",
     "name": "ChatGPT - 1 Month Plus - UPI Method (NW)",
     "price": 8.54,
     "currency": "USDT",
-    "in_stock": 50,
+    "in_stock": 32,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -13354,12 +13587,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_288",
+    "id": "digi_291",
     "store_name": "Digital Asset",
     "name": "Coursera - Premium  📅 ~ 12 Months",
     "price": 12.34,
     "currency": "USDT",
-    "in_stock": 28,
+    "in_stock": 155,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -13383,7 +13616,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_289",
+    "id": "digi_292",
     "store_name": "Digital Asset",
     "name": "Coursera - Bussiness 6m (ready account)",
     "price": 33.24,
@@ -13412,7 +13645,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_290",
+    "id": "digi_293",
     "store_name": "Digital Asset",
     "name": "Crunchyroll - 15 Days Mega Fan",
     "price": 1.89,
@@ -13441,7 +13674,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_291",
+    "id": "digi_294",
     "store_name": "Digital Asset",
     "name": "Descript - 12 Months Creator",
     "price": 23.74,
@@ -13470,12 +13703,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_292",
+    "id": "digi_295",
     "store_name": "Digital Asset",
     "name": "Duolingo Super - Super 12 Months Redeem Code",
     "price": 4.74,
     "currency": "USDT",
-    "in_stock": 99,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -13499,12 +13732,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_293",
+    "id": "digi_296",
     "store_name": "Digital Asset",
     "name": "Duolingo Super - 2 Months Offer Link",
     "price": 1.42,
     "currency": "USDT",
-    "in_stock": 150,
+    "in_stock": 146,
     "updated_hours": 2,
     "category": "streaming",
     "category_id": "streaming",
@@ -13528,7 +13761,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_294",
+    "id": "digi_297",
     "store_name": "Digital Asset",
     "name": "Duolingo Super - Super 12M New Method Link",
     "price": 3.79,
@@ -13557,12 +13790,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_295",
+    "id": "digi_298",
     "store_name": "Digital Asset",
     "name": "ElevenLabs - Pro Plan 50k Credits 1M",
     "price": 6.64,
     "currency": "USDT",
-    "in_stock": 2,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -13586,12 +13819,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_296",
+    "id": "digi_299",
     "store_name": "Digital Asset",
     "name": "ElevenLabs - 12M Eleven Reader Ultra",
     "price": 5.69,
     "currency": "USDT",
-    "in_stock": 2,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -13615,12 +13848,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_297",
+    "id": "digi_300",
     "store_name": "Digital Asset",
     "name": "ElevenLabs - Free 10k Credits (W24H)",
     "price": 1.61,
     "currency": "USDT",
-    "in_stock": 188,
+    "in_stock": 302,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
@@ -13644,7 +13877,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_298",
+    "id": "digi_301",
     "store_name": "Digital Asset",
     "name": "Figma Edu Pro ⚡️  - Education Pro 2 years",
     "price": 9.49,
@@ -13673,7 +13906,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_299",
+    "id": "digi_302",
     "store_name": "Digital Asset",
     "name": "Framer AI - Basic Plan 12 Months",
     "price": 11.39,
@@ -13702,7 +13935,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_300",
+    "id": "digi_303",
     "store_name": "Digital Asset",
     "name": "Gamma AI - 1 Month Plus (W25D)",
     "price": 8.07,
@@ -13731,12 +13964,12 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_301",
+    "id": "digi_304",
     "store_name": "Digital Asset",
     "name": "Gemini AI Pro 🔥 - 18 months 5TB",
-    "price": 2.08,
+    "price": 1.89,
     "currency": "USDT",
-    "in_stock": 99,
+    "in_stock": 50,
     "updated_hours": 2,
     "category": "ai",
     "category_id": "ai",
@@ -13749,18 +13982,18 @@
     "weekly_change_pct": 4.5,
     "direction": "decrease",
     "sparkline_points": [
+      1.72,
+      1.78,
+      1.83,
       1.89,
-      1.96,
-      2.02,
-      2.08,
-      2.14,
-      2.2,
-      2.27
+      1.95,
+      2.0,
+      2.06
     ],
     "is_cheapest": false
   },
   {
-    "id": "digi_302",
+    "id": "digi_305",
     "store_name": "Digital Asset",
     "name": "Gmail Accounts - Gmail Accounts",
     "price": 0.94,
@@ -13789,7 +14022,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_303",
+    "id": "digi_306",
     "store_name": "Digital Asset",
     "name": "HBO Max - Premium 4K 1 Month",
     "price": 2.37,
@@ -13818,7 +14051,7 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_304",
+    "id": "digi_307",
     "store_name": "Digital Asset",
     "name": "HBO Max - Standard 3 months",
     "price": 3.32,
@@ -13847,49 +14080,20 @@
     "is_cheapest": false
   },
   {
-    "id": "digi_305",
+    "id": "digi_308",
     "store_name": "Digital Asset",
-    "name": "JetBrain Edu - 12 Months Education",
-    "price": 5.69,
-    "currency": "USDT",
-    "in_stock": 99,
-    "updated_hours": 2,
-    "category": "tools",
-    "category_id": "tools",
-    "product_family": "Other Subscriptions",
-    "duration_plan": "12 شهر (سنة)",
-    "initials": "DI",
-    "bot_handle": "@digital_assetbot",
-    "buy_url": "https://t.me/digital_assetbot?start=buy_6a96f2330be1866dbd121193_12m_edu",
-    "weekly_change_amount": -0.05,
-    "weekly_change_pct": 4.5,
-    "direction": "decrease",
-    "sparkline_points": [
-      5.18,
-      5.35,
-      5.52,
-      5.69,
-      5.86,
-      6.03,
-      6.2
-    ],
-    "is_cheapest": false
-  },
-  {
-    "id": "digi_306",
-    "store_name": "Digital Asset",
-    "name": "LinkedIn - 2M Premium Career Voucher",
+    "name": "HMA VPN - HMA - Key HMA Android/PC 20-30D",
     "price": 1.89,
     "currency": "USDT",
-    "in_stock": 13,
+    "in_stock": 8,
     "updated_hours": 2,
     "category": "tools",
     "category_id": "tools",
     "product_family": "Tools & VPN",
-    "duration_plan": "خطة سنوية / دائمة",
+    "duration_plan": "1 شهر",
     "initials": "DI",
     "bot_handle": "@digital_assetbot",
-    "buy_url": "https://t.me/digital_assetbot?start=buy_6aaf4a2a2a8fbac8698dfd82_2m_career_premium",
+    "buy_url": "https://t.me/digital_assetbot?start=buy_6abf16813d4fd2ff7b8c35d1_30d_hma",
     "weekly_change_amount": -0.05,
     "weekly_change_pct": 4.5,
     "direction": "decrease",
@@ -13905,7 +14109,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_307",
+    "id": "veri_309",
     "store_name": "Verifier Store",
     "name": "GPT Plus CDK 1 Month | Officia",
     "price": 18.0,
@@ -13934,7 +14138,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_308",
+    "id": "veri_310",
     "store_name": "Verifier Store",
     "name": "GPT Pro 5x CDK 1 Month | Offic",
     "price": 96.0,
@@ -13963,7 +14167,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_309",
+    "id": "veri_311",
     "store_name": "Verifier Store",
     "name": "Kiro+ — 1 Year",
     "price": 13.0,
@@ -13992,7 +14196,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_310",
+    "id": "veri_312",
     "store_name": "Verifier Store",
     "name": "Super Duolingo — 1 Year",
     "price": 1.0,
@@ -14021,7 +14225,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_311",
+    "id": "veri_313",
     "store_name": "Verifier Store",
     "name": "ChatGPT Plus - 4 Months (Offic",
     "price": 19.0,
@@ -14050,7 +14254,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_312",
+    "id": "veri_314",
     "store_name": "Verifier Store",
     "name": "Adobe Express Premium (Individ",
     "price": 1.0,
@@ -14079,7 +14283,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_313",
+    "id": "veri_315",
     "store_name": "Verifier Store",
     "name": "PostHog Scale — 1 Year (2x Lim",
     "price": 29.0,
@@ -14108,7 +14312,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_314",
+    "id": "veri_316",
     "store_name": "Verifier Store",
     "name": "Factory Pro — 1 Year",
     "price": 39.0,
@@ -14137,7 +14341,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_315",
+    "id": "veri_317",
     "store_name": "Verifier Store",
     "name": "SuperGrok Heavy CDK — 1 Month",
     "price": 70.0,
@@ -14166,7 +14370,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_316",
+    "id": "veri_318",
     "store_name": "Verifier Store",
     "name": "Linear Business — 1 Year (5 Se",
     "price": 25.0,
@@ -14195,7 +14399,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_317",
+    "id": "veri_319",
     "store_name": "Verifier Store",
     "name": "Lovable Pro — 1 Year",
     "price": 59.0,
@@ -14224,7 +14428,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_318",
+    "id": "veri_320",
     "store_name": "Verifier Store",
     "name": "Customer.io Essentials — 1 Yea",
     "price": 25.0,
@@ -14253,7 +14457,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_319",
+    "id": "veri_321",
     "store_name": "Verifier Store",
     "name": "Fin AI Agent + Fin Advanced —",
     "price": 39.0,
@@ -14282,7 +14486,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_320",
+    "id": "veri_322",
     "store_name": "Verifier Store",
     "name": "Framer Pro — 1 Year",
     "price": 29.0,
@@ -14311,7 +14515,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_321",
+    "id": "veri_323",
     "store_name": "Verifier Store",
     "name": "Granola Business — 1 Year (10",
     "price": 19.0,
@@ -14340,7 +14544,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_322",
+    "id": "veri_324",
     "store_name": "Verifier Store",
     "name": "Jam Team — 1 Year (10 Seats)",
     "price": 15.0,
@@ -14369,7 +14573,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_323",
+    "id": "veri_325",
     "store_name": "Verifier Store",
     "name": "Magic Patterns Starter — 1 Yea",
     "price": 15.0,
@@ -14398,7 +14602,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_324",
+    "id": "veri_326",
     "store_name": "Verifier Store",
     "name": "Mercury Personal — 2 Years",
     "price": 9.0,
@@ -14427,7 +14631,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_325",
+    "id": "veri_327",
     "store_name": "Verifier Store",
     "name": "Pangram Professional — 1 Year",
     "price": 15.0,
@@ -14456,7 +14660,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_326",
+    "id": "veri_328",
     "store_name": "Verifier Store",
     "name": "Stripe Atlas — 40% Off",
     "price": 12.0,
@@ -14485,7 +14689,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_327",
+    "id": "veri_329",
     "store_name": "Verifier Store",
     "name": "Supercut Pro — 1 Year (10 Seat",
     "price": 15.0,
@@ -14514,7 +14718,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_328",
+    "id": "veri_330",
     "store_name": "Verifier Store",
     "name": "Waking Up — 1 Year",
     "price": 9.0,
@@ -14543,7 +14747,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_329",
+    "id": "veri_331",
     "store_name": "Verifier Store",
     "name": "Warp Build — 1 Year",
     "price": 25.0,
@@ -14572,7 +14776,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_330",
+    "id": "veri_332",
     "store_name": "Verifier Store",
     "name": "Gemini Pro 18-month link",
     "price": 1.5,
@@ -14601,7 +14805,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_331",
+    "id": "veri_333",
     "store_name": "Verifier Store",
     "name": "ChatGPT K12 Plus Account — 2 Y",
     "price": 10.0,
@@ -14630,7 +14834,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_332",
+    "id": "veri_334",
     "store_name": "Verifier Store",
     "name": "NordVPN 3 Months",
     "price": 5.0,
@@ -14659,7 +14863,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_333",
+    "id": "veri_335",
     "store_name": "Verifier Store",
     "name": "Codex $100 Credit Acc",
     "price": 11.5,
@@ -14688,7 +14892,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_334",
+    "id": "veri_336",
     "store_name": "Verifier Store",
     "name": "EDU Email Account",
     "price": 5.0,
@@ -14717,7 +14921,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_335",
+    "id": "veri_337",
     "store_name": "Verifier Store",
     "name": "Cursor Pro+ with Grok Bot — 1",
     "price": 30.0,
@@ -14746,7 +14950,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_336",
+    "id": "veri_338",
     "store_name": "Verifier Store",
     "name": "Mobbin Team — 1 Year (10 Seats",
     "price": 19.0,
@@ -14775,7 +14979,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_337",
+    "id": "veri_339",
     "store_name": "Verifier Store",
     "name": "Claude Pro Access creds",
     "price": 9.0,
@@ -14804,7 +15008,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_338",
+    "id": "veri_340",
     "store_name": "Verifier Store",
     "name": "Manus Pro — 1 Year (4,000 Cred",
     "price": 35.0,
@@ -14833,7 +15037,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_339",
+    "id": "veri_341",
     "store_name": "Verifier Store",
     "name": "Replit Core — 1 Year",
     "price": 45.0,
@@ -14862,7 +15066,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_340",
+    "id": "veri_342",
     "store_name": "Verifier Store",
     "name": "ChatGPT Pro 5X — Manual Delive",
     "price": 45.0,
@@ -14891,7 +15095,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_341",
+    "id": "veri_343",
     "store_name": "Verifier Store",
     "name": "ChatGPT Pro 20x — Desktop App",
     "price": 65.0,
@@ -14920,7 +15124,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_342",
+    "id": "veri_344",
     "store_name": "Verifier Store",
     "name": "Claude Max 5x",
     "price": 35.0,
@@ -14949,7 +15153,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_343",
+    "id": "veri_345",
     "store_name": "Verifier Store",
     "name": "Brain.fm — 1 Year",
     "price": 9.0,
@@ -14978,7 +15182,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_344",
+    "id": "veri_346",
     "store_name": "Verifier Store",
     "name": "Claude Max 20x",
     "price": 57.0,
@@ -15007,7 +15211,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_345",
+    "id": "veri_347",
     "store_name": "Verifier Store",
     "name": "Figma 24 Months Acc",
     "price": 20.0,
@@ -15036,7 +15240,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_346",
+    "id": "veri_348",
     "store_name": "Verifier Store",
     "name": "Gamma Pro — 1 Year",
     "price": 25.0,
@@ -15065,7 +15269,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_347",
+    "id": "veri_349",
     "store_name": "Verifier Store",
     "name": "Gumloop Pro — 1 Year (20k Cred",
     "price": 19.0,
@@ -15094,7 +15298,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_348",
+    "id": "veri_350",
     "store_name": "Verifier Store",
     "name": "Hostinger 3-in-1 Bundle — 1 Ye",
     "price": 48.0,
@@ -15123,7 +15327,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_349",
+    "id": "veri_351",
     "store_name": "Verifier Store",
     "name": "Netflix 4K Private Slot — 6 Mo",
     "price": 23.0,
@@ -15152,7 +15356,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_350",
+    "id": "veri_352",
     "store_name": "Verifier Store",
     "name": "Notion Business — 1 Year",
     "price": 35.0,
@@ -15181,7 +15385,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_351",
+    "id": "veri_353",
     "store_name": "Verifier Store",
     "name": "Readwise + Reader — 1 Year",
     "price": 12.0,
@@ -15210,7 +15414,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_352",
+    "id": "veri_354",
     "store_name": "Verifier Store",
     "name": "n8n Cloud Starter — 1 Year",
     "price": 29.0,
@@ -15239,7 +15443,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_353",
+    "id": "veri_355",
     "store_name": "Verifier Store",
     "name": "Cursor Pro — 1 Year",
     "price": 89.0,
@@ -15268,7 +15472,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_354",
+    "id": "veri_356",
     "store_name": "Verifier Store",
     "name": "ElevenLabs Creator — 1 Year",
     "price": 39.0,
@@ -15297,7 +15501,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_355",
+    "id": "veri_357",
     "store_name": "Verifier Store",
     "name": "Google AI Pro — 1 Year",
     "price": 1.0,
@@ -15326,7 +15530,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_356",
+    "id": "veri_358",
     "store_name": "Verifier Store",
     "name": "Higgsfield Pro — 1 Year",
     "price": 70.0,
@@ -15355,7 +15559,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_357",
+    "id": "veri_359",
     "store_name": "Verifier Store",
     "name": "Perplexity Pro — Ready Account",
     "price": 10.0,
@@ -15384,7 +15588,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_358",
+    "id": "veri_360",
     "store_name": "Verifier Store",
     "name": "Railway Hobby — 1 Year",
     "price": 19.0,
@@ -15413,7 +15617,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_359",
+    "id": "veri_361",
     "store_name": "Verifier Store",
     "name": "Resend Transactional Pro — 1 Y",
     "price": 12.0,
@@ -15442,7 +15646,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_360",
+    "id": "veri_362",
     "store_name": "Verifier Store",
     "name": "Runway Pro — 1 Year",
     "price": 39.0,
@@ -15471,7 +15675,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_361",
+    "id": "veri_363",
     "store_name": "Verifier Store",
     "name": "Supabase Pro — 1 Year Credits",
     "price": 35.0,
@@ -15500,7 +15704,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_362",
+    "id": "veri_364",
     "store_name": "Verifier Store",
     "name": "Wispr Flow Pro — 1 Year",
     "price": 19.0,
@@ -15529,7 +15733,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_363",
+    "id": "veri_365",
     "store_name": "Verifier Store",
     "name": "Gemini Pixel 12months ACC",
     "price": 4.0,
@@ -15558,7 +15762,7 @@
     "is_cheapest": false
   },
   {
-    "id": "veri_364",
+    "id": "veri_366",
     "store_name": "Verifier Store",
     "name": "SuperGrok Heavy — Ready Accoun",
     "price": 70.0,
@@ -15587,7 +15791,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_bite_365",
+    "id": "ms_bite_367",
     "store_name": "Bite Store",
     "name": "Microsoft Office 365 Plus 1 Year (Word / Excel / PowerPoint / 1TB OneDrive)",
     "price": 0.99,
@@ -15616,7 +15820,7 @@
     "is_cheapest": true
   },
   {
-    "id": "ms_bite_366",
+    "id": "ms_bite_368",
     "store_name": "Bite Store",
     "name": "Admin MS365 12M Full Warranty (Office 365 Admin Portal)",
     "price": 9.0,
@@ -15645,7 +15849,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_pas_367",
+    "id": "ms_pas_369",
     "store_name": "PA Store",
     "name": "Microsoft 365 Family 5 Users / 5TB Cloud Storage 12 Months",
     "price": 2.49,
@@ -15674,7 +15878,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_pas_368",
+    "id": "ms_pas_370",
     "store_name": "PA Store",
     "name": "Total 50 Outlook / Hotmail Mail Accounts (Good Quality)",
     "price": 1.0,
@@ -15683,7 +15887,7 @@
     "updated_hours": 1,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Outlook & Hotmail Mails",
     "duration_plan": "حسابات جاهزة",
     "initials": "PA",
     "bot_handle": "@p_a_store_bot",
@@ -15703,7 +15907,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_digi_369",
+    "id": "ms_digi_371",
     "store_name": "Digital Asset",
     "name": "Microsoft Office 365 Pro Plus - 5 Devices PC/Mac/Phone",
     "price": 1.85,
@@ -15732,7 +15936,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_digi_370",
+    "id": "ms_digi_372",
     "store_name": "Digital Asset",
     "name": "Windows 11 Pro / Windows 10 Pro Genuine Retail Activation Key",
     "price": 1.5,
@@ -15741,7 +15945,7 @@
     "updated_hours": 1,
     "category": "productivity",
     "category_id": "productivity",
-    "product_family": "Microsoft 365 / Office",
+    "product_family": "Windows OS & Keys",
     "duration_plan": "مفتاح دائم (Lifetime)",
     "initials": "DI",
     "bot_handle": "@digital_assetbot",
@@ -15761,7 +15965,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_sam_371",
+    "id": "ms_sam_373",
     "store_name": "Sam Topup",
     "name": "Microsoft 365 Personal 1 Year Subscription Link",
     "price": 1.1,
@@ -15790,7 +15994,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_ais_372",
+    "id": "ms_ais_374",
     "store_name": "AI Shop Mops",
     "name": "Microsoft Office 365 Pro 12M Enterprise Account",
     "price": 1.2,
@@ -15819,7 +16023,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_veri_373",
+    "id": "ms_veri_375",
     "store_name": "Verifier Store",
     "name": "Microsoft Office 365 Official 1 Year + 1TB OneDrive",
     "price": 1.35,
@@ -15848,7 +16052,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_insi_374",
+    "id": "ms_insi_376",
     "store_name": "InsightX Pro",
     "name": "Microsoft 365 Copilot Pro Access 12 Months",
     "price": 3.5,
@@ -15877,7 +16081,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_digi_375",
+    "id": "ms_digi_377",
     "store_name": "Digital Socials",
     "name": "Microsoft 365 Business Standard 12M Full Pack",
     "price": 1.7,
@@ -15906,7 +16110,7 @@
     "is_cheapest": false
   },
   {
-    "id": "ms_quic_376",
+    "id": "ms_quic_378",
     "store_name": "QuickDigi Store",
     "name": "Microsoft Office 2024 / 365 Pro Direct License",
     "price": 1.45,
@@ -16582,19 +16786,60 @@
     }
 
     // ----------------------------------------------------
-    // Ultra-Fast & Fuzzy Substring Search Engine
+    // Sidebar Drawer Toggle for Mobile & Compact Screens
     // ----------------------------------------------------
-    const SEARCH_SYNONYMS = {
-      'micro': ['microsoft', 'office', '365', 'windows', 'ms365', 'outlook', 'مايكروسوفت', 'اوفيس', 'أوفيس'],
-      'office': ['microsoft', 'office', '365', 'm365', 'اوفيس', 'أوفيس', 'مايكروسوفت', 'word', 'excel'],
-      '365': ['office', 'microsoft', 'ms365', '365'],
-      'windows': ['windows', 'win11', 'win10', 'ويندوز'],
-      'gpt': ['chatgpt', 'openai', 'gpt4', 'gpt', 'شات'],
-      'chat': ['chatgpt', 'openai', 'شات'],
-      'gemini': ['gemini', 'google', 'جيمني', 'جمناي', 'جوجل'],
-      'canva': ['canva', 'كانفا', 'تصميم'],
+    function toggleSidebarDrawer() {
+      const sidebar = document.getElementById('appSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar) return;
+      sidebar.classList.toggle('open');
+      if (backdrop) backdrop.classList.toggle('active');
+    }
+
+    function closeSidebarOnMobile() {
+      if (window.innerWidth <= 1024) {
+        const sidebar = document.getElementById('appSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar) sidebar.classList.remove('open');
+        if (backdrop) backdrop.classList.remove('active');
+      }
+    }
+
+    // ----------------------------------------------------
+    // Ultra-Fast High-Precision Search Engine (Fuzzy + Typo Correction + Exact Multi-Word Precision)
+    // ----------------------------------------------------
+    const TYPO_MAP = {
+      'microsot': 'microsoft',
+      'micosoft': 'microsoft',
+      'micrsoft': 'microsoft',
+      'mcrosoft': 'microsoft',
+      'microsft': 'microsoft',
+      'ofice': 'office',
+      'offce': 'office',
+      'ofic': 'office',
+      'offic': 'office',
+      'gmini': 'gemini',
+      'gemni': 'gemini',
+      'gimini': 'gemini',
+      'chatgbt': 'chatgpt',
+      'chagpt': 'chatgpt',
+      'canwa': 'canva',
+      'netfix': 'netflix',
+      'netflex': 'netflix',
+      'claude': 'claude',
+      'claud': 'claude'
+    };
+
+    const TOKEN_SYNONYMS = {
+      'microsoft': ['microsoft', 'ms', 'مايكروسوفت', 'micro'],
+      'office': ['office', 'اوفيس', 'أوفيس'],
+      '365': ['365', 'ms365', 'm365'],
+      'windows': ['windows', 'ويندوز', 'win11', 'win10'],
+      'gemini': ['gemini', 'جيمني', 'جمناي', 'جوجل'],
+      'chatgpt': ['chatgpt', 'openai', 'gpt', 'شات'],
+      'canva': ['canva', 'كانفا'],
       'netflix': ['netflix', 'نتفلكس', 'نتفليكس'],
-      'claude': ['claude', 'كلود', 'anthropic']
+      'claude': ['claude', 'كلود']
     };
 
     function normalizeText(str) {
@@ -16695,28 +16940,74 @@
         }
       }
 
-      // Search query filter: Smart fuzzy and partial substring matching
+      // Search query filter: High precision multi-token matching & typo forgiveness
       if (state.search) {
         const queryNorm = normalizeText(state.search);
-        const queryTokens = queryNorm.split(/\s+/).filter(Boolean);
+        const rawTokens = queryNorm.split(/\s+/).filter(Boolean);
+        const tokens = rawTokens.map(t => TYPO_MAP[t] || t);
 
-        // Expand synonyms
-        let synonyms = [queryNorm];
-        for (const [key, synList] of Object.entries(SEARCH_SYNONYMS)) {
-          if (queryNorm.includes(key) || synList.some(s => s.includes(queryNorm))) {
-            synonyms.push(...synList);
+        const filtered = [];
+        for (const item of items) {
+          const nameNorm = normalizeText(item.name || '');
+          const familyNorm = normalizeText(item.product_family || '');
+          const storeNorm = normalizeText(item.store_name || '');
+          const combined = `${nameNorm} ${familyNorm} ${storeNorm}`;
+
+          // Precise match: EVERY token must be matched in the item!
+          let allMatched = true;
+          let score = 0;
+
+          // Full exact phrase bonus
+          if (nameNorm.includes(queryNorm)) score += 60;
+          else if (combined.includes(queryNorm)) score += 30;
+
+          for (const t of tokens) {
+            const syns = TOKEN_SYNONYMS[t] || [t];
+            let tokenMatched = false;
+
+            // Direct or synonym match in item name (highest quality)
+            for (const syn of syns) {
+              if (nameNorm.includes(syn)) {
+                tokenMatched = true;
+                score += 30;
+                break;
+              }
+            }
+
+            // Or match in family/store
+            if (!tokenMatched) {
+              for (const syn of syns) {
+                if (combined.includes(syn)) {
+                  tokenMatched = true;
+                  score += 15;
+                  break;
+                }
+              }
+            }
+
+            // Substring match for >= 3 chars
+            if (!tokenMatched && t.length >= 3) {
+              if (combined.split(/\s+/).some(w => w.includes(t))) {
+                tokenMatched = true;
+                score += 10;
+              }
+            }
+
+            if (!tokenMatched) {
+              allMatched = false;
+              break;
+            }
+          }
+
+          if (allMatched) {
+            item._searchScore = score;
+            filtered.push(item);
           }
         }
 
-        items = items.filter(item => {
-          const itemText = normalizeText(`${item.name} ${item.store_name} ${item.product_family || ''} ${item.duration_plan || ''}`);
-          
-          // Match any token or synonym
-          const matchesToken = queryTokens.some(token => itemText.includes(token));
-          const matchesSynonym = synonyms.some(syn => itemText.includes(syn));
-
-          return matchesToken || matchesSynonym;
-        });
+        // Sort by searchScore descending (highest match first)
+        filtered.sort((a, b) => (b._searchScore || 0) - (a._searchScore || 0));
+        items = filtered;
       }
 
       // Sorting
