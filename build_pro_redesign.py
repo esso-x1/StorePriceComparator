@@ -507,15 +507,52 @@ html_content = r'''<!DOCTYPE html>
       transform: translateX(-2px);
     }
     .sidebar-action-btn.crawler-btn {
-      background: rgba(0, 229, 153, 0.12) !important;
-      border: 1px solid rgba(0, 229, 153, 0.45) !important;
-      color: #fff !important;
-      box-shadow: 0 0 10px rgba(0, 229, 153, 0.15);
+      transition: all 0.25s ease;
+      cursor: pointer;
     }
-    .sidebar-action-btn.crawler-btn:hover {
-      background: rgba(0, 229, 153, 0.22) !important;
-      border-color: var(--mint) !important;
-      box-shadow: 0 0 16px rgba(0, 229, 153, 0.35);
+    .sidebar-action-btn.crawler-btn.active {
+      background: rgba(0, 229, 153, 0.16) !important;
+      border: 1px solid #00e599 !important;
+      color: #fff !important;
+      box-shadow: 0 0 16px rgba(0, 229, 153, 0.35), inset 0 0 10px rgba(0, 229, 153, 0.15) !important;
+    }
+    .sidebar-action-btn.crawler-btn:not(.active) {
+      background: rgba(14, 20, 34, 0.85) !important;
+      border: 1px solid var(--panel-border) !important;
+      color: var(--text-muted) !important;
+      box-shadow: none !important;
+    }
+
+    /* Blue LED Bulb (اللمبة ليد زرقاء كهربائية) */
+    .crawler-led-bulb {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      transition: all 0.25s ease;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .crawler-led-bulb.active {
+      background: #00d2ff;
+      box-shadow: 0 0 8px #00d2ff, 0 0 16px #00b0ff, 0 0 22px rgba(0, 210, 255, 0.9);
+      animation: pulseBlueLED 1.2s infinite ease-in-out;
+    }
+    .crawler-led-bulb.idle {
+      background: #475569;
+      box-shadow: none;
+      animation: none;
+    }
+    @keyframes pulseBlueLED {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        box-shadow: 0 0 8px #00d2ff, 0 0 16px #00b0ff, 0 0 22px rgba(0, 210, 255, 0.95);
+      }
+      50% {
+        transform: scale(0.85);
+        opacity: 0.55;
+        box-shadow: 0 0 3px #00d2ff, 0 0 7px #00b0ff;
+      }
     }
     .sidebar-action-btn.lock-btn:hover {
       border-color: rgba(255, 77, 79, 0.4);
@@ -1684,8 +1721,8 @@ html_content = r'''<!DOCTYPE html>
       <div class="sidebar-section-title">أدوات التحكم والمزامنة</div>
 
       <div class="sidebar-actions-stack">
-        <!-- Crawler Bot Button -->
-        <button class="sidebar-action-btn crawler-btn" id="crawlerBtn" onclick="runCrawlerNow()" title="تشغيل وتحديث البوت الزاحف لحظياً لكافة المتاجر الـ 12">
+        <!-- Crawler Bot Toggle Button with Solid Green LED and Electric Blue LED Bulb -->
+        <button class="sidebar-action-btn crawler-btn" id="crawlerBtn" onclick="toggleCrawlerBot()" title="تشغيل / إيقاف البوت الزاحف لمراقبة المتاجر الـ 12">
           <div style="display:flex; align-items:center; gap:8px;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="6" width="20" height="12" rx="4"></rect>
@@ -1693,9 +1730,12 @@ html_content = r'''<!DOCTYPE html>
               <circle cx="16" cy="12" r="1.5" fill="currentColor"></circle>
               <path d="M9 2v4M15 2v4M10 18v4M14 18v4M2 10h2M2 14h2M20 10h2M20 14h2"></path>
             </svg>
-            <span style="font-weight:800;">البوت الزاحف</span>
+            <span id="crawlerStatusText" style="font-weight:700;">البوت الزاحف</span>
           </div>
-          <span class="pulse-dot"></span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <span id="crawlerStatusBadge" style="font-size:0.7rem; color:var(--text-dim); font-weight:700;">إيقاف</span>
+            <span class="crawler-led-bulb idle" id="crawlerLedBulb" title="مؤشر الليد الأزرق"></span>
+          </div>
         </button>
 
         <!-- Refresh Prices Button -->
@@ -2403,18 +2443,13 @@ html_content += r'''
       alerts: JSON.parse(localStorage.getItem('user_alerts') || '[]')
     };
 
-    // DOM Ready Initialization
+    // Fast High-Performance DOM Initialization (Lazy Renders Inactive Views)
     document.addEventListener('DOMContentLoaded', () => {
       initAuth();
       executeSearch();
       renderMarketChart();
-      renderMerchantsView();
-      renderAlertsTable();
-      renderCatalogView();
-      renderReportsView();
-      renderNotifList();
-      renderFullNotificationsView();
       updateNotifBadges();
+      initServiceWorkerAndSystemNotifications();
     });
 
     // ----------------------------------------------------
@@ -3245,28 +3280,63 @@ html_content += r'''
     // ----------------------------------------------------
     // User Actions: Crawler, Refresh, Alerts, Favorites
     // ----------------------------------------------------
-    function runCrawlerNow() {
+    let crawlerActive = false;
+    let crawlerInterval = null;
+
+    function toggleCrawlerBot() {
+      crawlerActive = !crawlerActive;
       const btn = document.getElementById('crawlerBtn');
-      if (!btn) return;
-      const orig = btn.innerHTML;
-      btn.style.pointerEvents = 'none';
-      btn.innerHTML = `
-        <svg class="spinning-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--mint)" stroke-width="2.5"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"></path></svg>
-        <span style="color:var(--mint); font-weight:700; font-size:0.78rem;">جاري الزحف...</span>
-      `;
-      showToast('🤖 بدأ البوت الزاحف بمسح وتحديث أسعار 12 متجر من تيليجرام...', 'info');
+      const bulb = document.getElementById('crawlerLedBulb');
+      const textEl = document.getElementById('crawlerStatusText');
+      const badgeEl = document.getElementById('crawlerStatusBadge');
 
-      try { fetch('/api/crawl', { method: 'POST' }).catch(() => null); } catch(e) {}
-
-      setTimeout(() => {
-        btn.innerHTML = orig;
-        btn.style.pointerEvents = 'auto';
-        state.offers.forEach(o => o.updated_hours = 0);
-        renderKPIs();
-        renderOfferCards();
-        showToast('✅ اكتمل الزحف: تم تحديث أسعار ومخزون 12 متجر بالكامل!', 'success');
+      if (crawlerActive) {
+        if (btn) btn.classList.add('active');
+        if (bulb) {
+          bulb.className = 'crawler-led-bulb active';
+        }
+        if (textEl) textEl.innerText = 'البوت الزاحف';
+        if (badgeEl) {
+          badgeEl.innerText = 'شغّال ⚡';
+          badgeEl.style.color = '#00d2ff';
+        }
+        showToast('🟢 تم تشغيل البوت الزاحف (LED أزرق نشط): جاري فحص وتحديث 12 متجر بشكل دوري', 'success');
         playChime();
-      }, 1400);
+        runSingleCrawlCycle();
+
+        if (crawlerInterval) clearInterval(crawlerInterval);
+        crawlerInterval = setInterval(() => {
+          if (crawlerActive) runSingleCrawlCycle(true);
+        }, 22000);
+      } else {
+        if (btn) btn.classList.remove('active');
+        if (bulb) {
+          bulb.className = 'crawler-led-bulb idle';
+        }
+        if (textEl) textEl.innerText = 'البوت الزاحف';
+        if (badgeEl) {
+          badgeEl.innerText = 'إيقاف';
+          badgeEl.style.color = 'var(--text-dim)';
+        }
+        if (crawlerInterval) {
+          clearInterval(crawlerInterval);
+          crawlerInterval = null;
+        }
+        showToast('⚪ تم إيقاف البوت الزاحف', 'info');
+      }
+    }
+
+    function runSingleCrawlCycle(isSilent = false) {
+      if (!isSilent) {
+        showToast('🤖 البوت الزاحف يقوم بمسح وتحديث أسعار 12 متجر الآن...', 'info');
+      }
+      try { fetch('/api/crawl', { method: 'POST' }).catch(() => null); } catch(e) {}
+      state.offers.forEach(o => o.updated_hours = 0);
+      renderKPIs();
+      if (!isSilent) {
+        renderOfferCards();
+        playChime();
+      }
     }
 
     function refreshPricesNow() {
@@ -3549,10 +3619,19 @@ html_content += r'''
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      // Fast on-demand rendering of target views
       if (viewName === 'comparison') {
         setTimeout(() => renderMarketChart(), 60);
       } else if (viewName === 'notifications') {
         renderFullNotificationsView();
+      } else if (viewName === 'subscriptions') {
+        renderCatalogView();
+      } else if (viewName === 'merchants') {
+        renderMerchantsView();
+      } else if (viewName === 'alerts') {
+        renderAlertsTable();
+      } else if (viewName === 'reports') {
+        renderReportsView();
       }
     }
 
@@ -4024,23 +4103,83 @@ html_content += r'''
       showToast('تم مسح جميع الإشعارات', 'info');
     }
 
-    function requestBrowserNotifications() {
+    // ----------------------------------------------------
+    // System Web Push & Service Worker Notifications Engine
+    // ----------------------------------------------------
+    let swRegistration = null;
+
+    async function initServiceWorkerAndSystemNotifications() {
+      if ('serviceWorker' in navigator) {
+        try {
+          swRegistration = await navigator.serviceWorker.register('/sw.js');
+          console.log('SW Registered for OS Notifications');
+        } catch(e) {
+          console.warn('SW register error:', e);
+        }
+      }
+
+      // If user hasn't made a choice yet, prompt gently on first tap
+      if ("Notification" in window && Notification.permission === "default") {
+        const askOnFirstTap = () => {
+          document.removeEventListener('click', askOnFirstTap);
+          requestBrowserNotifications(true);
+        };
+        document.addEventListener('click', askOnFirstTap, { once: true });
+      }
+    }
+
+    async function sendSystemNotification(title, body, url, tag) {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") return;
+
+      const options = {
+        body: body,
+        icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+        badge: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
+        tag: tag || ('radar-alert-' + Date.now()),
+        renotify: true,
+        data: { url: url || 'https://store-price-comparator.vercel.app/' }
+      };
+
+      // 1. Try Service Worker showNotification (Windows Action Center & Android shade)
+      try {
+        if ('serviceWorker' in navigator) {
+          const reg = swRegistration || await navigator.serviceWorker.ready;
+          if (reg && reg.showNotification) {
+            await reg.showNotification(title, options);
+            return;
+          }
+        }
+      } catch(e) {}
+
+      // 2. Direct Window Notification fallback
+      try {
+        const notif = new Notification(title, options);
+        notif.onclick = function() {
+          window.focus();
+          if (url) window.open(url, '_blank');
+        };
+      } catch(e) {}
+    }
+
+    function requestBrowserNotifications(isSilentPrompt = false) {
       if (!("Notification" in window)) {
-        showToast("متصفحك لا يدعم الإشعارات المباشرة", "error");
+        if (!isSilentPrompt) showToast("متصفحك لا يدعم إشعارات النظام المباشرة", "error");
         return;
       }
       Notification.requestPermission().then(permission => {
         if (permission === "granted") {
-          showToast("✅ تم تفعيل إشعارات المتصفح بنجاح!", "success");
-          try {
-            new Notification("رادار السوق 🔔", {
-              body: "تم تفعيل الإشعارات الفورية! ستصلك تنبيهات الأسعار ومتاجر Microsoft فوراً.",
-              icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
-            });
-          } catch(e) {}
+          showToast("✅ تم تفعيل إشعارات نظام التشغيل (Windows / Mobile) بنجاح!", "success");
+          sendSystemNotification(
+            "رادار السوق 🔔",
+            "تم تفعيل إشعارات النظام بنجاح! ستصلك تنبيهات الأسعار ومتاجر Microsoft فوراً على سطح المكتب.",
+            "https://store-price-comparator.vercel.app/"
+          );
           playChime();
-        } else {
-          showToast("تم رفض إذن إشعارات المتصفح", "info");
+        } else if (permission === "denied") {
+          if (!isSilentPrompt) {
+            showToast("تم حظر إشعارات المتصفح، يرجى السماح بها من إعدادات الموقع أو أيقونة القفل", "error");
+          }
         }
       });
     }
@@ -4082,24 +4221,25 @@ html_content += r'''
       STORE_NOTIFICATIONS.unshift(alertItem);
       if (STORE_NOTIFICATIONS.length > 30) STORE_NOTIFICATIONS.pop();
 
-      renderNotifList();
-      renderFullNotificationsView();
+      // Non-blocking update: Only re-render notification DOM if panel or view is currently active
+      const notifPanel = document.getElementById('notifDropdownPanel');
+      if (notifPanel && notifPanel.classList.contains('active')) {
+        renderNotifList();
+      }
+      const notifView = document.getElementById('view-notifications');
+      if (notifView && notifView.classList.contains('active')) {
+        renderFullNotificationsView();
+      }
       updateNotifBadges();
 
       showClickableToast(`⚡ إشعار فوري من ${storeName}: ${selected.name} بسعر $${selected.price}!`, storeName, directUrl, alertItem.id);
 
-      if ("Notification" in window && Notification.permission === "granted") {
-        try {
-          const n = new Notification(`رادار السوق | ${storeName}`, {
-            body: `${alertItem.text}\nكود الشراء: ${quickCmd}`,
-            icon: "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg"
-          });
-          n.onclick = function() {
-            window.focus();
-            window.open(directUrl, '_blank');
-          };
-        } catch(e) {}
-      }
+      sendSystemNotification(
+        `رادار السوق | ${storeName}`,
+        `${alertItem.text}\n🏷️ كود الشراء: ${quickCmd}`,
+        directUrl,
+        'alert-' + alertItem.id
+      );
 
       playChime();
     }
@@ -4166,5 +4306,45 @@ targets = [
 for t in targets:
     with open(t, "w", encoding="utf-8") as f:
         f.write(html_content)
+
+sw_content = '''// Service Worker for OS System Notifications
+self.addEventListener('install', (event) => {
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const urlToOpen = (event.notification.data && event.notification.data.url) || '/';
+
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
+      for (const client of clientList) {
+        if (client.url && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      if (clients.openWindow) {
+        return clients.openWindow(urlToOpen);
+      }
+    })
+  );
+});
+'''
+
+sw_targets = [
+    "sw.js",
+    "public/sw.js",
+    "static/sw.js"
+]
+for sw in sw_targets:
+    try:
+        with open(sw, "w", encoding="utf-8") as f:
+            f.write(sw_content)
+    except Exception:
+        pass
 
 print(f"Generated all {len(targets)} HTML targets successfully ({len(html_content)} bytes).")
